@@ -1,0 +1,2 @@
+# CoinBot
+Discord Cryptocurrency Bot
