@@ -109,6 +109,13 @@ namespace CoinBot.Discord
             SocketUserMessage message = messageParam as SocketUserMessage;
             if (message == null) return;
 
+            // don't respond to messages in general, access to all other channels can be controlled with
+            // permissions on discord
+            if (string.Compare(message.Channel.Name, "general", StringComparison.OrdinalIgnoreCase) == 0)
+            {
+                return;
+            }
+
             // Create a number to track where the prefix ends and the command begins
             int argPos = 0;
 
