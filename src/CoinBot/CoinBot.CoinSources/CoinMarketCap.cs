@@ -59,6 +59,8 @@ namespace CoinBot.CoinSources.CoinMarketCap
 
         private async Task Tick()
         {
+            this._logger.LogInformation("Updating Coins from CoinMarketCap");
+
             try
             {
                 Task<Stream> streamTask = _httpClient.GetStreamAsync("https://api.coinmarketcap.com/v1/ticker/?convert=ETH");
