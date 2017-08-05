@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 
 namespace CoinBot.Discord
 {
-    public class Bot
+    public class DiscordBot
     {
-        private readonly BotToken _botToken;
+        private readonly DiscordBotToken _botToken;
         private readonly DiscordSocketClient _client;
         private readonly CommandService _commands;
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger _logger;
 
-        public Bot(BotToken botToken, IServiceProvider serviceProvider, ILogger logger)
+        public DiscordBot(DiscordBotToken botToken, IServiceProvider serviceProvider, ILogger logger)
         {
             this._botToken = botToken;
             this._client = new DiscordSocketClient();
@@ -89,7 +89,7 @@ namespace CoinBot.Discord
         public async Task Start()
         {
             // Discover all of the commands in this assembly and load them.
-            await this._commands.AddModulesAsync(typeof(Bot).GetTypeInfo().Assembly);
+            await this._commands.AddModulesAsync(typeof(DiscordBot).GetTypeInfo().Assembly);
 
             // login
             await this._client.LoginAsync(TokenType.Bot, this._botToken.Token);

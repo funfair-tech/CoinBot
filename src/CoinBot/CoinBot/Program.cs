@@ -1,4 +1,6 @@
-﻿using CoinBot.Discord;
+﻿using CoinBot.CoinSources;
+using CoinBot.CoinSources.CoinMarketCap;
+using CoinBot.Discord;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -15,18 +17,31 @@ namespace CoinBotCore
 
         static async Task MainAsync()
         {
+            // set up an ILogger
             ILoggerFactory loggerFactory = new LoggerFactory().AddConsole();
             ILogger logger = loggerFactory.CreateLogger("CoinBot");
 
+            // set up the CoinMarketCap source
+            ICoinSource coinSource = new CoinMarketCap(logger);
+            coinSource.Start();
+
+            // Create our DI container
             ServiceCollection serviceCollection = new ServiceCollection();
+            serviceCollection.AddSingleton(coinSource);
+            serviceCollection.AddSingleton(logger);
             IServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
 
-            Bot bot = new Bot(BotToken.Load("token.json"), serviceProvider, logger);
+            // create the discord bot and start it
+            DiscordBot bot = new DiscordBot(DiscordBotToken.Load("token.json"), serviceProvider, logger);
             await bot.Start();
 
             Console.ReadLine();
 
+            // stop the discord bot
             await bot.Stop();
+
+            // stop the source
+            coinSource.Stop();
         }
     }
 }
