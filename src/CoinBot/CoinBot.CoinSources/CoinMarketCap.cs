@@ -14,7 +14,7 @@ namespace CoinBot.CoinSources.CoinMarketCap
     {
         public string Name => "CoinMarketCap";
         private Timer _timer;
-        private TimeSpan _tickInterval => TimeSpan.FromMinutes(2);
+        private TimeSpan _tickInterval => TimeSpan.FromSeconds(10);
         private readonly ILogger _logger;
         private readonly HttpClient _httpClient;
         private readonly DataContractJsonSerializer _serializer;

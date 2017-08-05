@@ -41,42 +41,40 @@ namespace CoinBot.Discord.Commands
                 {
                     decimal marketCap = Convert.ToDecimal(coin.MarketCap);
                     decimal price = Convert.ToDecimal(coin.PriceUsd);
+                    decimal volume = Convert.ToDecimal(coin.Volume);
+                    decimal dayChange = Convert.ToDecimal(coin.DayChange);
 
                     EmbedBuilder builder = new EmbedBuilder();
-                    builder.WithTitle($"{coin.Symbol} - {coin.Name} (Rank {coin.Rank}, Market Cap ${marketCap:n})");
+                    builder.WithTitle($"{coin.Symbol} - { coin.Name}");
+                    builder.Color = dayChange > 0 ? Color.Green : Color.Red;
+
+                    StringBuilder descriptionBuilder = new StringBuilder();
+                    descriptionBuilder.AppendLine($"Market cap ${marketCap:n} (Rank {coin.Rank})");
+                    descriptionBuilder.AppendLine($"24 hour volume: ${volume:n}");
+                    builder.WithDescription(descriptionBuilder.ToString());
+                    builder.WithUrl($"https://coinmarketcap.com/currencies/{coin.Id}/");
                     builder.WithThumbnailUrl($"https://files.coinmarketcap.com/static/img/coins/64x64/{coin.Id}.png");
 
-                    EmbedFieldBuilder priceFieldBuilder = new EmbedFieldBuilder();
-                    priceFieldBuilder.Name = "Price";
                     StringBuilder priceStringBuilder = new StringBuilder();
                     priceStringBuilder.AppendLine($"${ price.ToString("#,##0.#################")}");
                     priceStringBuilder.AppendLine($"{coin.PriceBtc} BTC");
                     priceStringBuilder.AppendLine($"{coin.PriceEth} ETH");
-                    priceFieldBuilder.Value = priceStringBuilder.ToString();
-                    builder.Fields.Add(priceFieldBuilder);
+                    builder.AddInlineField("Price", priceStringBuilder.ToString());
 
-                    EmbedFieldBuilder changeFieldBuilder = new EmbedFieldBuilder();
-                    changeFieldBuilder.Name = "Change";
                     StringBuilder changeStringBuilder = new StringBuilder();
                     changeStringBuilder.AppendLine($"Hour: {coin.HourChange}%");
                     changeStringBuilder.AppendLine($"Day: {coin.DayChange}%");
                     changeStringBuilder.AppendLine($"Week: {coin.WeekChange}%");
-                    changeFieldBuilder.Value = changeStringBuilder.ToString();
-                    builder.Fields.Add(changeFieldBuilder);
+                    builder.AddInlineField("Change", changeStringBuilder.ToString());
 
                     if (coin.LastUpdated.HasValue)
                     {
-                        DateTimeOffset updated = DateTimeOffset.FromUnixTimeSeconds(Convert.ToInt64(coin.LastUpdated));
-
-                        EmbedFieldBuilder updatedFieldBuilder = new EmbedFieldBuilder();
-                        updatedFieldBuilder.Name = "Last updated";
-                        updatedFieldBuilder.Value = $"{updated.ToString("yyyy-MM-dd HH:mm:ss")} UTC";
-                        builder.Fields.Add(updatedFieldBuilder);
+                        builder.Timestamp = DateTimeOffset.FromUnixTimeSeconds(Convert.ToInt64(coin.LastUpdated));
                     }
 
                     EmbedFooterBuilder footerBuilder = new EmbedFooterBuilder();
                     footerBuilder.IconUrl = $"https://files.coinmarketcap.com/static/img/coins/32x32/funfair.png";
-                    footerBuilder.Text = "FunFair CoinBot - learn about FunFair's blockchain casino platform at https://funfair.io";
+                    footerBuilder.Text = "FunFair CoinBot - https://funfair.io";
                     builder.Footer = footerBuilder;
 
                     await ReplyAsync(string.Empty, false, builder);
