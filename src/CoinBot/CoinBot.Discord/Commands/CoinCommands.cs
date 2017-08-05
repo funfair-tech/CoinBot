@@ -19,7 +19,7 @@ namespace CoinBot.Discord.Commands
             this._logger = logger;
         }
 
-        [Command("coin"), Summary("get info for a coin")]
+        [Command("coin"), Summary("get info for a coin, e.g. !coin FUN")]
         public async Task Coin([Remainder, Summary("The symbol for the coin")] string symbol)
         {
             using (Context.Channel.EnterTypingState())

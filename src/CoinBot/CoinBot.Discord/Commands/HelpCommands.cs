@@ -18,17 +18,17 @@ namespace CoinBot.Discord.Commands
         public async Task Help()
         {
             EmbedBuilder builder = new EmbedBuilder();
-            builder.WithTitle("Commands");
+            builder.WithTitle("Help");
 
             StringBuilder stringBuilder = new StringBuilder();
             foreach (CommandInfo command in _commandService.Commands)
             {
-                stringBuilder.AppendLine($"{command.Name} - {command.Summary}");
+                stringBuilder.AppendLine($"!{command.Name} - {command.Summary}");
             }
 
             builder.WithDescription(stringBuilder.ToString());
 
-            await Context.User.SendMessageAsync(string.Empty, false, builder);
+            await ReplyAsync(string.Empty, false, builder);
         }
     }
 }
