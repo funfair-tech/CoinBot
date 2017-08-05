@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.16
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoinBot.Discord", "CoinBot.Discord\CoinBot.Discord.csproj", "{3E19CF74-9579-4D3B-B8C5-4DD3ED95330B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoinBot.CoinSources", "CoinBot.CoinSources\CoinBot.CoinSources.csproj", "{8318AC2B-103A-4F0B-9E6D-B09FD4273AEF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinBot", "CoinBot\CoinBot.csproj", "{7B29E344-333E-4648-988D-8316EE8E980F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3E19CF74-9579-4D3B-B8C5-4DD3ED95330B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E19CF74-9579-4D3B-B8C5-4DD3ED95330B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E19CF74-9579-4D3B-B8C5-4DD3ED95330B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E19CF74-9579-4D3B-B8C5-4DD3ED95330B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8318AC2B-103A-4F0B-9E6D-B09FD4273AEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8318AC2B-103A-4F0B-9E6D-B09FD4273AEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8318AC2B-103A-4F0B-9E6D-B09FD4273AEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8318AC2B-103A-4F0B-9E6D-B09FD4273AEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B29E344-333E-4648-988D-8316EE8E980F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B29E344-333E-4648-988D-8316EE8E980F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B29E344-333E-4648-988D-8316EE8E980F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B29E344-333E-4648-988D-8316EE8E980F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
