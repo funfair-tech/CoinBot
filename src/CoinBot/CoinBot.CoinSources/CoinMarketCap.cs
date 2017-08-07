@@ -19,7 +19,7 @@ namespace CoinBot.CoinSources.CoinMarketCap
         private readonly HttpClient _httpClient;
         private readonly DataContractJsonSerializer _serializer;
         private List<ICoin> _coins;
-        private readonly SemaphoreSlim _semaphore;
+        private readonly ReaderWriterLockSlim _readerWriterLock;
 
         public CoinMarketCap(ILogger logger)
         {
@@ -27,33 +27,33 @@ namespace CoinBot.CoinSources.CoinMarketCap
             this._httpClient = new HttpClient();
             this._coins = new List<ICoin>();
             this._serializer = new DataContractJsonSerializer(typeof(List<CoinMarketCapCoin>));
-            this._semaphore = new SemaphoreSlim(1);
             this._tickInterval = TimeSpan.FromSeconds(10);
+            this._readerWriterLock = new ReaderWriterLockSlim();
         }
 
         public ICoin GetCoinBySymbol(string symbol)
         {
-            this._semaphore.Wait();
+            this._readerWriterLock.EnterReadLock();
             try
             {
                 return this._coins.FirstOrDefault(c => string.Compare(c.Symbol, symbol, StringComparison.OrdinalIgnoreCase) == 0);
             }
             finally
             {
-                this._semaphore.Release();
+                this._readerWriterLock.ExitReadLock();
             }
         }
 
         public ICoin GetCoinByName(string name)
         {
-            this._semaphore.Wait();
+            this._readerWriterLock.EnterReadLock();
             try
             {
                 return this._coins.FirstOrDefault(c => string.Compare(c.Name, name, StringComparison.OrdinalIgnoreCase) == 0);
             }
             finally
             {
-                this._semaphore.Release();
+                this._readerWriterLock.ExitReadLock();
             }
         }
 
@@ -63,17 +63,19 @@ namespace CoinBot.CoinSources.CoinMarketCap
 
             try
             {
+                // get the list of coin info from coinmarketcap
                 Task<Stream> streamTask = _httpClient.GetStreamAsync("https://api.coinmarketcap.com/v1/ticker/?convert=ETH");
                 List<CoinMarketCapCoin> coinMarketCapCoins = _serializer.ReadObject(await streamTask) as List<CoinMarketCapCoin>;
 
-                await this._semaphore.WaitAsync();
+                this._readerWriterLock.EnterWriteLock();
                 try
                 {
+                    // update our local list
                     this._coins = coinMarketCapCoins.Select(c => (ICoin)c).ToList();
                 }
                 finally
                 {
-                    this._semaphore.Release();
+                    this._readerWriterLock.ExitWriteLock();
                 }
             }
             catch (Exception e)
