@@ -13,10 +13,10 @@ namespace CoinBotCore
     {
         static void Main(string[] args)
         {
-            MainAsync().GetAwaiter().GetResult();
+            MainAsync(args).GetAwaiter().GetResult();
         }
 
-        static async Task MainAsync()
+        static async Task MainAsync(string[] args)
         {
             Log.Logger = new LoggerConfiguration()
                 .Enrich.FromLogContext()
@@ -38,7 +38,9 @@ namespace CoinBotCore
             IServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
 
             // create the discord bot and start it
-            DiscordBot bot = new DiscordBot(DiscordBotToken.Load("token.json"), serviceProvider, logger);
+            string jsonFile = args.Length > 0 ? args[0] : "token.json";
+
+            DiscordBot bot = new DiscordBot(DiscordBotToken.Load(jsonFile), serviceProvider, logger);
             await bot.Start();
 
             Console.ReadLine();
