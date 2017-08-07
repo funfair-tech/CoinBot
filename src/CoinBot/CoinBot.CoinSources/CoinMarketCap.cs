@@ -59,8 +59,6 @@ namespace CoinBot.CoinSources.CoinMarketCap
 
         private async Task Tick()
         {
-            this._logger.LogInformation("Updating Coins from CoinMarketCap");
-
             try
             {
                 // get the list of coin info from coinmarketcap

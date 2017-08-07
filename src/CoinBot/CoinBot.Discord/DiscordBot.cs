@@ -128,7 +128,7 @@ namespace CoinBot.Discord
             // Execute the command. (result does not indicate a return value, 
             // rather an object stating if the command executed successfully)
             var result = await this._commands.ExecuteAsync(context, argPos, this._serviceProvider);
-            if (!result.IsSuccess)
+            if (!result.IsSuccess && result.Error != CommandError.UnknownCommand)
             {
                 await context.Channel.SendMessageAsync(result.ErrorReason);
             }

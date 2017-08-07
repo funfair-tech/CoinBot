@@ -45,7 +45,7 @@ namespace CoinBot.Discord.Commands
                     decimal dayChange = Convert.ToDecimal(coin.DayChange);
 
                     EmbedBuilder builder = new EmbedBuilder();
-                    builder.WithTitle($"{coin.Name} - ({coin.Symbol})");
+                    builder.WithTitle($"{coin.Name} ({coin.Symbol})");
                     builder.Color = dayChange > 0 ? Color.Green : Color.Red;
 
                     StringBuilder descriptionBuilder = new StringBuilder();

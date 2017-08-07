@@ -3,6 +3,7 @@ using CoinBot.CoinSources.CoinMarketCap;
 using CoinBot.Discord;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Serilog;
 using System;
 using System.Threading.Tasks;
 
@@ -17,9 +18,14 @@ namespace CoinBotCore
 
         static async Task MainAsync()
         {
+            Log.Logger = new LoggerConfiguration()
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+                .CreateLogger();
+
             // set up an ILogger
-            ILoggerFactory loggerFactory = new LoggerFactory().AddConsole();
-            ILogger logger = loggerFactory.CreateLogger("CoinBot");
+            ILoggerFactory loggerFactory = new LoggerFactory().AddSerilog();
+            Microsoft.Extensions.Logging.ILogger logger = loggerFactory.CreateLogger("CoinBot");
 
             // set up the CoinMarketCap source
             ICoinSource coinSource = new CoinMarketCap(logger);
