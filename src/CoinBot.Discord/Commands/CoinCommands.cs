@@ -48,6 +48,12 @@ namespace CoinBot.Discord.Commands
                     builder.WithTitle($"{coin.Name} ({coin.Symbol})");
                     builder.Color = dayChange > 0 ? Color.Green : Color.Red;
 
+                    EmbedAuthorBuilder authorBuilder = new EmbedAuthorBuilder();
+                    authorBuilder.Name = "FunFair CoinBot";
+                    authorBuilder.Url = "https://funfair.io";
+                    authorBuilder.IconUrl = "https://files.coinmarketcap.com/static/img/coins/32x32/funfair.png";
+                    builder.WithAuthor(authorBuilder);
+
                     StringBuilder descriptionBuilder = new StringBuilder();
                     descriptionBuilder.AppendLine($"Market cap ${marketCap:n} (Rank {coin.Rank})");
                     descriptionBuilder.AppendLine($"24 hour volume: ${volume:n}");
@@ -73,8 +79,7 @@ namespace CoinBot.Discord.Commands
                     }
 
                     EmbedFooterBuilder footerBuilder = new EmbedFooterBuilder();
-                    footerBuilder.IconUrl = $"https://files.coinmarketcap.com/static/img/coins/32x32/funfair.png";
-                    footerBuilder.Text = "FunFair CoinBot - https://funfair.io";
+                    footerBuilder.Text = "Updated";
                     builder.Footer = footerBuilder;
 
                     await ReplyAsync(string.Empty, false, builder);
