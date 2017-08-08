@@ -18,6 +18,14 @@ namespace CoinBotCore
 
         static async Task MainAsync(string[] args)
         {
+            // set up a task completion source so we can quit on CTRL+C
+            TaskCompletionSource<bool> exitSource = new TaskCompletionSource<bool>();
+            Console.CancelKeyPress += (sender, eventArgs) =>
+            {
+                eventArgs.Cancel = true;
+                exitSource.SetResult(true);
+            };
+
             Log.Logger = new LoggerConfiguration()
                 .Enrich.FromLogContext()
                 .WriteTo.Console()
@@ -43,7 +51,8 @@ namespace CoinBotCore
             DiscordBot bot = new DiscordBot(DiscordBotToken.Load(jsonFile), serviceProvider, logger);
             await bot.Start();
 
-            Console.ReadLine();
+            //wait for CTRL+C
+            await exitSource.Task;
 
             // stop the discord bot
             await bot.Stop();
