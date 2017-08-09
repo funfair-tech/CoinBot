@@ -27,7 +27,7 @@ namespace CoinBot.Discord.Commands
                 ICoin coin;
                 try
                 {
-                    coin = this._coinSource.GetCoinBySymbol(symbol) ?? this._coinSource.GetCoinByName(symbol);
+                    coin = this._coinSource.Get(symbol);
                 }
                 catch (Exception e)
                 {

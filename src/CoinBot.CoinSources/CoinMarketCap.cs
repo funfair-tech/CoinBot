@@ -31,6 +31,11 @@ namespace CoinBot.CoinSources.CoinMarketCap
             this._readerWriterLock = new ReaderWriterLockSlim();
         }
 
+        public ICoin Get(string nameOrSymbol)
+        {
+            return this.GetCoinBySymbol(nameOrSymbol) ?? this.GetCoinByName(nameOrSymbol);
+        }
+
         public ICoin GetCoinBySymbol(string symbol)
         {
             this._readerWriterLock.EnterReadLock();
