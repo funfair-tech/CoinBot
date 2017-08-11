@@ -78,11 +78,13 @@ namespace CoinBot.Discord.Commands
                         builder.Timestamp = DateTimeOffset.FromUnixTimeSeconds(Convert.ToInt64(coin.LastUpdated));
                     }
 
+                    builder.AddField("Find me annoying?", "If you don't like me, you can block me. Just right click on me in the top right and click 'block'.");
+
                     EmbedFooterBuilder footerBuilder = new EmbedFooterBuilder();
-                    footerBuilder.Text = "Updated";
+                    footerBuilder.Text = "Prices updated";
                     builder.Footer = footerBuilder;
 
-                    await ReplyAsync(string.Empty, false, builder);
+                    await ReplyAsync(string.Empty, false, builder.Build());
                 }
                 else
                 {
