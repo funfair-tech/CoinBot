@@ -49,7 +49,7 @@ namespace CoinBot.Discord.Commands
                     builder.Color = dayChange > 0 ? Color.Green : Color.Red;
 
                     EmbedAuthorBuilder authorBuilder = new EmbedAuthorBuilder();
-                    authorBuilder.Name = "FunFair CoinBot (you can block me!)";
+                    authorBuilder.Name = "FunFair CoinBot - right click above to block";
                     authorBuilder.Url = "https://funfair.io";
                     authorBuilder.IconUrl = "https://files.coinmarketcap.com/static/img/coins/32x32/funfair.png";
                     builder.WithAuthor(authorBuilder);
