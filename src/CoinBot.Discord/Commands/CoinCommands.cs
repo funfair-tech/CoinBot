@@ -49,7 +49,7 @@ namespace CoinBot.Discord.Commands
                     builder.Color = dayChange > 0 ? Color.Green : Color.Red;
 
                     EmbedAuthorBuilder authorBuilder = new EmbedAuthorBuilder();
-                    authorBuilder.Name = "FunFair CoinBot";
+                    authorBuilder.Name = "FunFair CoinBot (you can block me!)";
                     authorBuilder.Url = "https://funfair.io";
                     authorBuilder.IconUrl = "https://files.coinmarketcap.com/static/img/coins/32x32/funfair.png";
                     builder.WithAuthor(authorBuilder);
@@ -79,7 +79,7 @@ namespace CoinBot.Discord.Commands
                     }
 
                     EmbedFooterBuilder footerBuilder = new EmbedFooterBuilder();
-                    footerBuilder.Text = "You can block me! Prices updated";
+                    footerBuilder.Text = "Prices updated";
                     builder.Footer = footerBuilder;
 
                     await ReplyAsync(string.Empty, false, builder.Build());
