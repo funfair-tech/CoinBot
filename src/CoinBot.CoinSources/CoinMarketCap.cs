@@ -67,8 +67,9 @@ namespace CoinBot.CoinSources.CoinMarketCap
            this._readerWriterLock.EnterReadLock();
            try
            {
-               return this._coins.Where(x => x.Rank <= 100).OrderByDescending(x => x.DayChange);
-           } finally 
+               return this._coins.Where(x => x.Rank <= 100).OrderByDescending(x => Convert.ToDouble(x.DayChange));
+           } 
+           finally 
            {
                this._readerWriterLock.ExitReadLock();
            }
