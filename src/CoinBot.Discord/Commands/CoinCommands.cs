@@ -90,5 +90,66 @@ namespace CoinBot.Discord.Commands
                 }
             }
         }
+
+        [Command("gainers"), Summary("get list of top 5 coins by Day Change of top 100 coins, e.g. !gainers")]
+        public async Task Gainers()
+        {
+               using(Context.Channel.EnterTypingState())
+               {
+                    IEnumerable<ICoin> coins;
+
+                    try
+                    {
+                         coins = this._coinSource.GetTop100().Take(5);
+                    }
+                    catch (Exception e)
+                    {
+                         this._logger.LogError(new EventId(e.HResult), e, e.Message);
+                         await ReplyAsync($"oops, something went wrong, sorry!");
+
+                         return;
+                    }
+
+                    await fiveCoinReply(coins);
+                    
+               }
+        }
+
+        [Command("losers"), Summary("get list of bottom 5 coins by Day Change of top 100 coins, e.g. !losers")]
+        public async Task Losers()
+        {
+               using(Context.Channel.EnterTypingState())
+               {
+                    IEnumerable<ICoin> coins;
+
+                    try
+                    {
+                         coins = this._coinSource.GetTop100().Reverse().Take(5);
+                    }
+                    catch (Exception e)
+                    {
+                         this._logger.LogError(new EventId(e.HResult), e, e.Message);
+                         await ReplyAsync($"oops, something went wrong, sorry!");
+
+                         return;
+                    }
+
+                    await fiveCoinReply(coins);
+                    
+               }
+        }
+
+        private async Task fiveCoinReply(IEnumerable<ICoin> coins)
+        {
+               string result = "";
+               int position = 1;
+               foreach(var coin in coins){
+                    decimal price = Convert.ToDecimal(coin.PriceUsd);
+                    result += $"{position}. {coin.Symbol} - ${price.ToString("#,##0.#################")}/{coin.PriceBtc} BTC (Day Change: {coin.DayChange}%)\n";
+                    position++;
+               }
+
+               await ReplyAsync(result);
+        }
     }
 }

@@ -62,6 +62,18 @@ namespace CoinBot.CoinSources.CoinMarketCap
             }
         }
 
+        public IEnumerable<ICoin> GetTop100()
+        {
+           this._readerWriterLock.EnterReadLock();
+           try
+           {
+               return this._coins.Where(x => x.Rank <= 100).OrderByDescending(x => x.DayChange);
+           } finally 
+           {
+               this._readerWriterLock.ExitReadLock();
+           }
+        }
+
         private async Task Tick()
         {
             try
