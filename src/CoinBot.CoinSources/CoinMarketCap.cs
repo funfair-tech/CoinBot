@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -62,12 +63,12 @@ namespace CoinBot.CoinSources.CoinMarketCap
             }
         }
 
-        public IEnumerable<ICoin> GetTop100()
+        public List<ICoin> GetTop100()
         {
            this._readerWriterLock.EnterReadLock();
            try
            {
-               return this._coins.Where(x => x.Rank <= 100).OrderByDescending(x => Convert.ToDouble(x.DayChange));
+               return this._coins.Where(x => x.Rank <= 100).OrderByDescending(x => Convert.ToDouble(x.DayChange)).ToList();
            } 
            finally 
            {
