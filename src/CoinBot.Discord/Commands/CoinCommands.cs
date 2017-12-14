@@ -176,15 +176,13 @@ namespace CoinBot.Discord.Commands
         {
                using(Context.Channel.EnterTypingState())
                {
-                    IEnumerable<ICoin> coins;
+                    List<ICoin> coins;
 
                     try
                     {
-                         var top100 = this._coinSource.GetTop100();
+                         coins = this._coinSource.GetTop100();
 
-                         top100.Reverse();
-
-                         coins = top100;
+                         coins.Reverse();
                     }
                     catch (Exception e)
                     {
