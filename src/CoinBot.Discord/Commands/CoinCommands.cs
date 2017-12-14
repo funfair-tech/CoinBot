@@ -106,12 +106,12 @@ namespace CoinBot.Discord.Commands
                     {
                         var coin = this._coinSource.Get(symbol.Trim());
 
-                        if(coin == null)
+                        if(coin != null)
                         {
-                            coin = new EmptyCoin();
+                            coins.Add(coin);
                         }
-
-                        coins.Add(coin);
+                    
+                       
                     }
                     catch (Exception e)
                     {
@@ -132,8 +132,6 @@ namespace CoinBot.Discord.Commands
 
                 foreach (var coin in coins)
                 {
-                    if (coin is EmptyCoin) continue;
-
                     decimal price = Convert.ToDecimal(coin.PriceUsd);
                     sBuilder.Append($"**{coin.Name} ({coin.Symbol})** \n\n**Price:** ${price.ToString("#,##0.#################")} / {coin.PriceBtc} BTC \n**Change:** 1 Hour: {coin.HourChange}%   24 Hour: {coin.DayChange}%    7 Day: {coin.WeekChange}%\n");
                     sBuilder.Append($"https://coinmarketcap.com/currencies/{coin.Id}/ \n\n");
