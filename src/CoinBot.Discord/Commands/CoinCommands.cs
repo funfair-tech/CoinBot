@@ -77,7 +77,7 @@ namespace CoinBot.Discord.Commands
                     descriptionBuilder.AppendLine($"24 hour volume: ${volume:n}");
                     builder.WithDescription(descriptionBuilder.ToString());
                     builder.WithUrl(coin.GetCoinMarketCapLink());
-                    builder.WithThumbnailUrl($"https://files.coinmarketcap.com/static/img/coins/64x64/{coin.Id}.png");
+                    builder.WithThumbnailUrl(coin.GetCoinImageUrl());
 
                     StringBuilder priceStringBuilder = new StringBuilder();
                     priceStringBuilder.AppendLine($"${coin.FormatPrice()}");
@@ -157,7 +157,6 @@ namespace CoinBot.Discord.Commands
                using(Context.Channel.EnterTypingState())
                {
                     IEnumerable<ICoin> coins;
-
                     try
                     {
                          coins = this._coinSource.GetTop100();
@@ -171,7 +170,6 @@ namespace CoinBot.Discord.Commands
                     }
 
                     await MultiCoinReply(coins.Take(5), Color.Green, "Gainers", "The 5 coins in the top 100 with the biggest 24 hour gain");
-                    
                }
         }
 
@@ -181,7 +179,6 @@ namespace CoinBot.Discord.Commands
                using(Context.Channel.EnterTypingState())
                {
                     List<ICoin> coins;
-
                     try
                     {
                          coins = this._coinSource.GetTop100();
@@ -196,7 +193,6 @@ namespace CoinBot.Discord.Commands
                     }
 
                     await MultiCoinReply(coins.Take(5), Color.Red, "Losers", "The 5 coins in the top 100 with the biggest 24 hour loss");
-                    
                }
         }
 
@@ -211,12 +207,11 @@ namespace CoinBot.Discord.Commands
 
             foreach (var coin in coins)
             {
-                EmbedFieldBuilder fieldBuilder = new EmbedFieldBuilder();
-                fieldBuilder.Name = $"{coin.Name} ({coin.Symbol}) | {coin.DayChange}% | ${coin.GetPriceSummary()}";
-                fieldBuilder.Value = $"[{coin.GetChangeSummary()}";
-                fieldBuilder.Value += $"{Environment.NewLine}Cap ${coin.FormatMarketCap()} | Vol ${coin.FormatVolume()} | Rank {coin.Rank}]({coin.GetCoinMarketCapLink()})";
-
-                builder.Fields.Add(fieldBuilder);
+                builder.Fields.Add(new EmbedFieldBuilder
+                {
+                    Name = $"{coin.Name} ({coin.Symbol}) | {coin.DayChange}% | ${coin.GetPriceSummary()}",
+                    Value = $"[{coin.GetChangeSummary()}{Environment.NewLine}Cap ${coin.FormatMarketCap()} | Vol ${coin.FormatVolume()} | Rank {coin.Rank}]({coin.GetCoinMarketCapLink()})"
+                });
             }
 
             await ReplyAsync(string.Empty, false, builder.Build());

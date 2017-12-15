@@ -37,5 +37,10 @@ namespace CoinBot.Discord.Extensions
         {
             return $"https://coinmarketcap.com/currencies/{coin.Id}/";
         }
+
+        public static string GetCoinImageUrl(this ICoin coin)
+        {
+            return $"https://files.coinmarketcap.com/static/img/coins/64x64/{coin.Id}.png";
+        }
     }
 }
