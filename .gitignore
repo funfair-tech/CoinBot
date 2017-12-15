@@ -288,3 +288,5 @@ __pycache__/
 *.xsd.cs
 src/CoinBot/CoinBot/token.json
 src/CoinBot/token.json
+/.vscode/launch.json
+/.vscode/tasks.json

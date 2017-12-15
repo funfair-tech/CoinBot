@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace CoinBot.Discord.Commands
 {
@@ -89,6 +90,138 @@ namespace CoinBot.Discord.Commands
                     await ReplyAsync($"sorry, {symbol} was not found");
                 }
             }
+        }
+
+        [Command("snapshot"), Summary("get info on up to 5 coins, !snapshot FUN,BTC,IOTA,ETH,ETC")]
+        public async Task Snapshot([Remainder, Summary("A Comma separated list of coin symbols")] string symbols)
+        {
+            using (Context.Channel.EnterTypingState())
+            {
+                var symbolsList = symbols.Split(',');
+                var coins = new List<ICoin>();
+
+                foreach (var symbol in symbolsList)
+                {
+                    try
+                    {
+                        var coin = this._coinSource.Get(symbol.Trim());
+
+                        if(coin != null)
+                        {
+                            coins.Add(coin);
+                        }
+                    
+                       
+                    }
+                    catch (Exception e)
+                    {
+                        this._logger.LogError(new EventId(e.HResult), e, e.Message);
+                        await ReplyAsync($"oops, something went wrong, sorry!");
+
+                        return;
+                    }
+                }
+
+                int max = 5;
+
+                EmbedBuilder builder = new EmbedBuilder();
+                builder.WithTitle("Snapshot");
+               
+                StringBuilder sBuilder = new StringBuilder();
+                builder.Color = Color.DarkPurple;
+
+                foreach (var coin in coins)
+                {
+                    decimal price = Convert.ToDecimal(coin.PriceUsd);
+                    sBuilder.Append($"**{coin.Name} ({coin.Symbol})** \n\n**Price:** ${price.ToString("#,##0.#################")} / {coin.PriceBtc} BTC \n**Change:** 1 Hour: {coin.HourChange}%   24 Hour: {coin.DayChange}%    7 Day: {coin.WeekChange}%\n");
+                    sBuilder.Append($"https://coinmarketcap.com/currencies/{coin.Id}/ \n\n");
+
+                    max--;
+                    if (max == 0) break;
+                }
+
+                builder.AddInlineField("-", sBuilder.ToString());
+                builder.WithCurrentTimestamp();
+
+                await ReplyAsync(string.Empty, false, builder.Build());
+            }
+        }
+
+        [Command("gainers"), Summary("get list of top 5 coins by Day Change of top 100 coins, e.g. !gainers")]
+        public async Task Gainers()
+        {
+               using(Context.Channel.EnterTypingState())
+               {
+                    IEnumerable<ICoin> coins;
+
+                    try
+                    {
+                         coins = this._coinSource.GetTop100();
+                    }
+                    catch (Exception e)
+                    {
+                         this._logger.LogError(new EventId(e.HResult), e, e.Message);
+                         await ReplyAsync($"oops, something went wrong, sorry!");
+
+                         return;
+                    }
+
+                    await fiveCoinReply(coins, "Top 5");
+                    
+               }
+        }
+
+        [Command("losers"), Summary("get list of bottom 5 coins by Day Change of top 100 coins, e.g. !losers")]
+        public async Task Losers()
+        {
+               using(Context.Channel.EnterTypingState())
+               {
+                    List<ICoin> coins;
+
+                    try
+                    {
+                         coins = this._coinSource.GetTop100();
+
+                         coins.Reverse();
+                    }
+                    catch (Exception e)
+                    {
+                         this._logger.LogError(new EventId(e.HResult), e, e.Message);
+                         await ReplyAsync($"oops, something went wrong, sorry!");
+
+                         return;
+                    }
+
+                    await fiveCoinReply(coins, "Bottom 5");
+                    
+               }
+        }
+
+        private async Task fiveCoinReply(IEnumerable<ICoin> coins, string title)
+        {
+              EmbedBuilder builder = new EmbedBuilder();
+            StringBuilder sBuilder = new StringBuilder();
+              int position = 0;
+
+              builder.Color = title.Contains("Top") ? Color.Green : Color.Red;
+
+             foreach (var coin in coins){
+                    decimal price = Convert.ToDecimal(coin.PriceUsd);
+                    sBuilder.Append($"{position + 1}. {coin.Name} ({coin.Symbol}) - ${price.ToString("#,##0.#################")} / {coin.PriceBtc} BTC {coin.HourChange}% / {coin.DayChange}% / {coin.WeekChange}%\n\n");
+                    position++;
+                    if (position == 5) break;   
+                }
+
+            builder.AddInlineField(title, sBuilder.ToString());
+
+            sBuilder.Clear();
+
+            sBuilder.Append($"Of the Top 100 coins sorted by 24 hour % change \n");
+            sBuilder.Append($"Format 1h / 24 hours / 7 days");
+
+            builder.AddInlineField("Description", sBuilder.ToString());
+
+               await ReplyAsync(string.Empty, false, builder.Build());
         }
     }
 }
