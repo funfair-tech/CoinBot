@@ -81,7 +81,7 @@ namespace CoinBot.CoinSources.CoinMarketCap
             try
             {
                 // get the list of coin info from coinmarketcap
-                Task<Stream> streamTask = _httpClient.GetStreamAsync("https://api.coinmarketcap.com/v1/ticker/?convert=ETH");
+                Task<Stream> streamTask = _httpClient.GetStreamAsync("https://api.coinmarketcap.com/v1/ticker/?convert=ETH&limit=1000");
                 List<CoinMarketCapCoin> coinMarketCapCoins = _serializer.ReadObject(await streamTask) as List<CoinMarketCapCoin>;
 
                 this._readerWriterLock.EnterWriteLock();
