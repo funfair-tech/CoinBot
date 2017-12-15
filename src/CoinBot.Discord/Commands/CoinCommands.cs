@@ -6,6 +6,8 @@ using System;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Linq;
+using CoinBot.Discord.Extensions;
 
 namespace CoinBot.Discord.Commands
 {
@@ -18,6 +20,27 @@ namespace CoinBot.Discord.Commands
         {
             this._coinSource = coinSource;
             this._logger = logger;
+        }
+
+        private static void AddAuthor(EmbedBuilder builder)
+        {
+            EmbedAuthorBuilder authorBuilder = new EmbedAuthorBuilder();
+            authorBuilder.Name = "FunFair CoinBot - right click above to block";
+            authorBuilder.Url = "https://funfair.io";
+            authorBuilder.IconUrl = "https://files.coinmarketcap.com/static/img/coins/32x32/funfair.png";
+            builder.WithAuthor(authorBuilder);
+        }
+
+        private static void AddFooter(EmbedBuilder builder, long? lastUpdated)
+        {
+            if (lastUpdated.HasValue)
+            {
+                builder.Timestamp = DateTimeOffset.FromUnixTimeSeconds((long) lastUpdated);
+            }
+
+            EmbedFooterBuilder footerBuilder = new EmbedFooterBuilder();
+            footerBuilder.Text = "Prices updated";
+            builder.Footer = footerBuilder;
         }
 
         [Command("coin"), Summary("get info for a coin, e.g. !coin FUN")]
@@ -41,29 +64,23 @@ namespace CoinBot.Discord.Commands
                 if (coin != null)
                 {
                     decimal marketCap = Convert.ToDecimal(coin.MarketCap);
-                    decimal price = Convert.ToDecimal(coin.PriceUsd);
                     decimal volume = Convert.ToDecimal(coin.Volume);
                     decimal dayChange = Convert.ToDecimal(coin.DayChange);
 
                     EmbedBuilder builder = new EmbedBuilder();
                     builder.WithTitle($"{coin.Name} ({coin.Symbol})");
                     builder.Color = dayChange > 0 ? Color.Green : Color.Red;
-
-                    EmbedAuthorBuilder authorBuilder = new EmbedAuthorBuilder();
-                    authorBuilder.Name = "FunFair CoinBot - right click above to block";
-                    authorBuilder.Url = "https://funfair.io";
-                    authorBuilder.IconUrl = "https://files.coinmarketcap.com/static/img/coins/32x32/funfair.png";
-                    builder.WithAuthor(authorBuilder);
+                    AddAuthor(builder);
 
                     StringBuilder descriptionBuilder = new StringBuilder();
                     descriptionBuilder.AppendLine($"Market cap ${marketCap:n} (Rank {coin.Rank})");
                     descriptionBuilder.AppendLine($"24 hour volume: ${volume:n}");
                     builder.WithDescription(descriptionBuilder.ToString());
-                    builder.WithUrl($"https://coinmarketcap.com/currencies/{coin.Id}/");
+                    builder.WithUrl(coin.GetCoinMarketCapLink());
                     builder.WithThumbnailUrl($"https://files.coinmarketcap.com/static/img/coins/64x64/{coin.Id}.png");
 
                     StringBuilder priceStringBuilder = new StringBuilder();
-                    priceStringBuilder.AppendLine($"${ price.ToString("#,##0.#################")}");
+                    priceStringBuilder.AppendLine($"${coin.FormatPrice()}");
                     priceStringBuilder.AppendLine($"{coin.PriceBtc} BTC");
                     priceStringBuilder.AppendLine($"{coin.PriceEth} ETH");
                     builder.AddInlineField("Price", priceStringBuilder.ToString());
@@ -74,14 +91,7 @@ namespace CoinBot.Discord.Commands
                     changeStringBuilder.AppendLine($"Week: {coin.WeekChange}%");
                     builder.AddInlineField("Change", changeStringBuilder.ToString());
 
-                    if (coin.LastUpdated.HasValue)
-                    {
-                        builder.Timestamp = DateTimeOffset.FromUnixTimeSeconds(Convert.ToInt64(coin.LastUpdated));
-                    }
-
-                    EmbedFooterBuilder footerBuilder = new EmbedFooterBuilder();
-                    footerBuilder.Text = "Prices updated";
-                    builder.Footer = footerBuilder;
+                    AddFooter(builder, coin.LastUpdated);
 
                     await ReplyAsync(string.Empty, false, builder.Build());
                 }
@@ -92,26 +102,28 @@ namespace CoinBot.Discord.Commands
             }
         }
 
-        [Command("snapshot"), Summary("get info on up to 5 coins, !snapshot FUN,BTC,IOTA,ETH,ETC")]
-        public async Task Snapshot([Remainder, Summary("A Comma separated list of coin symbols")] string symbols)
+        [Command("snapshot"), Summary("get info on a list of coins, !snapshot FUN,BTC,IOTA,ETH,ETC")]
+        public async Task Snapshot([Remainder, Summary("A comma separated list of coin symbols")] string symbols)
         {
             using (Context.Channel.EnterTypingState())
             {
-                var symbolsList = symbols.Split(',');
-                var coins = new List<ICoin>();
+                string[] symbolsList = symbols.Split(',').Select(s => s.Trim()).ToArray();
+                IList<ICoin> coins = new List<ICoin>();
+                IList<string> notFound = new List<string>();
 
-                foreach (var symbol in symbolsList)
+                foreach (string symbol in symbolsList)
                 {
                     try
                     {
-                        var coin = this._coinSource.Get(symbol.Trim());
-
-                        if(coin != null)
+                        ICoin coin = this._coinSource.Get(symbol);
+                        if (coin != null)
                         {
                             coins.Add(coin);
                         }
-                    
-                       
+                        else
+                        {
+                            notFound.Add(symbol);
+                        }
                     }
                     catch (Exception e)
                     {
@@ -122,28 +134,20 @@ namespace CoinBot.Discord.Commands
                     }
                 }
 
-                int max = 5;
-
-                EmbedBuilder builder = new EmbedBuilder();
-                builder.WithTitle("Snapshot");
-               
-                StringBuilder sBuilder = new StringBuilder();
-                builder.Color = Color.DarkPurple;
-
-                foreach (var coin in coins)
+                if (notFound.Count > 0)
                 {
-                    decimal price = Convert.ToDecimal(coin.PriceUsd);
-                    sBuilder.Append($"**{coin.Name} ({coin.Symbol})** \n\n**Price:** ${price.ToString("#,##0.#################")} / {coin.PriceBtc} BTC \n**Change:** 1 Hour: {coin.HourChange}%   24 Hour: {coin.DayChange}%    7 Day: {coin.WeekChange}%\n");
-                    sBuilder.Append($"https://coinmarketcap.com/currencies/{coin.Id}/ \n\n");
-
-                    max--;
-                    if (max == 0) break;
+                    if (notFound.Count > 1)
+                    {
+                        await ReplyAsync($"sorry, {string.Join(", ", notFound)} were not found");
+                    }
+                    else
+                    {
+                        await ReplyAsync($"sorry, {notFound[0]} was not found");
+                    }
                 }
 
-                builder.AddInlineField("-", sBuilder.ToString());
-                builder.WithCurrentTimestamp();
-
-                await ReplyAsync(string.Empty, false, builder.Build());
+                decimal totalChange = coins.Sum(c => Convert.ToDecimal(c.DayChange));
+                await MultiCoinReply(coins, totalChange > 0 ? Color.Green : Color.Red, "Snapshot", string.Join(", ", coins.Select(c => c.Symbol)));
             }
         }
 
@@ -166,7 +170,7 @@ namespace CoinBot.Discord.Commands
                          return;
                     }
 
-                    await fiveCoinReply(coins, "Top 5");
+                    await MultiCoinReply(coins.Take(5), Color.Green, "Gainers", "The 5 coins in the top 100 with the biggest 24 hour gain");
                     
                }
         }
@@ -181,7 +185,6 @@ namespace CoinBot.Discord.Commands
                     try
                     {
                          coins = this._coinSource.GetTop100();
-
                          coins.Reverse();
                     }
                     catch (Exception e)
@@ -192,36 +195,31 @@ namespace CoinBot.Discord.Commands
                          return;
                     }
 
-                    await fiveCoinReply(coins, "Bottom 5");
+                    await MultiCoinReply(coins.Take(5), Color.Red, "Losers", "The 5 coins in the top 100 with the biggest 24 hour loss");
                     
                }
         }
 
-        private async Task fiveCoinReply(IEnumerable<ICoin> coins, string title)
+        private async Task MultiCoinReply(IEnumerable<ICoin> coins, Color color, string title, string description)
         {
-              EmbedBuilder builder = new EmbedBuilder();
-            StringBuilder sBuilder = new StringBuilder();
-              int position = 0;
+            EmbedBuilder builder = new EmbedBuilder();
+            builder.WithTitle(title);
+            builder.WithDescription(description);
+            builder.Color = color;
+            AddAuthor(builder);
+            AddFooter(builder, coins.Max(c => c.LastUpdated));
 
-              builder.Color = title.Contains("Top") ? Color.Green : Color.Red;
+            foreach (var coin in coins)
+            {
+                EmbedFieldBuilder fieldBuilder = new EmbedFieldBuilder();
+                fieldBuilder.Name = $"{coin.Name} ({coin.Symbol}) | {coin.DayChange}% | ${coin.GetPriceSummary()}";
+                fieldBuilder.Value = $"[{coin.GetChangeSummary()}";
+                fieldBuilder.Value += $"{Environment.NewLine}Cap ${coin.FormatMarketCap()} | Vol ${coin.FormatVolume()} | Rank {coin.Rank}]({coin.GetCoinMarketCapLink()})";
 
-             foreach (var coin in coins){
-                    decimal price = Convert.ToDecimal(coin.PriceUsd);
-                    sBuilder.Append($"{position + 1}. {coin.Name} ({coin.Symbol}) - ${price.ToString("#,##0.#################")} / {coin.PriceBtc} BTC {coin.HourChange}% / {coin.DayChange}% / {coin.WeekChange}%\n\n");
-                    position++;
-                    if (position == 5) break;   
-                }
+                builder.Fields.Add(fieldBuilder);
+            }
 
-            builder.AddInlineField(title, sBuilder.ToString());
-
-            sBuilder.Clear();
-
-            sBuilder.Append($"Of the Top 100 coins sorted by 24 hour % change \n");
-            sBuilder.Append($"Format 1h / 24 hours / 7 days");
-
-            builder.AddInlineField("Description", sBuilder.ToString());
-
-               await ReplyAsync(string.Empty, false, builder.Build());
+            await ReplyAsync(string.Empty, false, builder.Build());
         }
     }
 }

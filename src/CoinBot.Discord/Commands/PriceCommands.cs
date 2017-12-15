@@ -1,4 +1,5 @@
 ﻿using CoinBot.CoinSources;
+using CoinBot.Discord.Extensions;
 using Discord.Commands;
 using Microsoft.Extensions.Logging;
 using System;
@@ -37,8 +38,7 @@ namespace CoinBot.Discord.Commands
 
                 if (coin != null)
                 {
-                    decimal price = Convert.ToDecimal(coin.PriceUsd);
-                    await ReplyAsync($"{coin.Symbol} - ${price.ToString("#,##0.#################")}/{coin.PriceBtc} BTC ({coin.HourChange}%/{coin.DayChange}%/{coin.WeekChange}%)");
+                    await ReplyAsync($"{coin.Symbol} - ${coin.GetPriceSummary()} ({coin.GetChangeSummary()})");
                 }
                 else
                 {
