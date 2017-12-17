@@ -11,7 +11,7 @@ using CoinBot.Discord.Extensions;
 
 namespace CoinBot.Discord.Commands
 {
-    public class CoinCommands : ModuleBase
+    public class CoinCommands : CommandBase
     {
         private readonly ICoinSource _coinSource;
         private readonly ILogger _logger;
@@ -20,28 +20,6 @@ namespace CoinBot.Discord.Commands
         {
             this._coinSource = coinSource;
             this._logger = logger;
-        }
-
-        private static void AddAuthor(EmbedBuilder builder)
-        {
-            builder.WithAuthor(new EmbedAuthorBuilder
-            {
-                Name = "FunFair CoinBot - right click above to block",
-                Url = "https://funfair.io",
-                IconUrl = "https://files.coinmarketcap.com/static/img/coins/32x32/funfair.png"
-            });
-        }
-
-        private static void AddFooter(EmbedBuilder builder, long? lastUpdated)
-        {
-            if (lastUpdated.HasValue)
-            {
-                builder.Timestamp = DateTimeOffset.FromUnixTimeSeconds((long) lastUpdated);
-                builder.Footer = new EmbedFooterBuilder
-                {
-                    Text = "Prices updated"
-                };
-            }
         }
 
         [Command("coin"), Summary("get info for a coin, e.g. !coin FUN")]

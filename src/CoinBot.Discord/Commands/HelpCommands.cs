@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace CoinBot.Discord.Commands
 {
-    public class HelpCommands : ModuleBase
+    public class HelpCommands : CommandBase
     {
         private readonly CommandService _commandService;
 
@@ -19,6 +19,8 @@ namespace CoinBot.Discord.Commands
         {
             EmbedBuilder builder = new EmbedBuilder();
             builder.WithTitle("Help");
+            AddAuthor(builder);
+            AddFooter(builder);
 
             StringBuilder stringBuilder = new StringBuilder();
             foreach (CommandInfo command in _commandService.Commands)

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CoinBot.Discord.Commands
 {
-    public class PriceCommands : ModuleBase
+    public class PriceCommands : CommandBase
     {
         private readonly ICoinSource _coinSource;
         private readonly ILogger _logger;
