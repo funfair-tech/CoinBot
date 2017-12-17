@@ -9,5 +9,11 @@ namespace CoinBot.Discord.Extensions
             decimal value = Convert.ToDecimal(s);
             return value.ToString("#,##0.#################");
         }
+
+        public static string FormatNumber(this string s)
+        {
+            int value = Convert.ToInt32(s);
+            return value.ToString("#,##0");
+        }
     }
 }
