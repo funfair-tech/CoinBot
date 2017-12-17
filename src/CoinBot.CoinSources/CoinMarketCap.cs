@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Collections;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -19,7 +18,9 @@ namespace CoinBot.CoinSources.CoinMarketCap
         private readonly ILogger _logger;
         private readonly HttpClient _httpClient;
         private readonly DataContractJsonSerializer _serializer;
+        private readonly DataContractJsonSerializer _globalSerializer;
         private List<ICoin> _coins;
+        private IGlobalInfo _globalInfo;
         private readonly ReaderWriterLockSlim _readerWriterLock;
 
         public CoinMarketCap(ILogger logger)
@@ -28,8 +29,14 @@ namespace CoinBot.CoinSources.CoinMarketCap
             this._httpClient = new HttpClient();
             this._coins = new List<ICoin>();
             this._serializer = new DataContractJsonSerializer(typeof(List<CoinMarketCapCoin>));
+            this._globalSerializer = new DataContractJsonSerializer(typeof(CoinMarketCapGlobalInfo));
             this._tickInterval = TimeSpan.FromSeconds(10);
             this._readerWriterLock = new ReaderWriterLockSlim();
+        }
+
+        public IGlobalInfo GetGlobalInfo()
+        {
+            return this._globalInfo;
         }
 
         public ICoin Get(string nameOrSymbol)
@@ -76,24 +83,47 @@ namespace CoinBot.CoinSources.CoinMarketCap
            }
         }
 
+        private async Task UpdateCoins()
+        {
+            // get the list of coin info from coinmarketcap
+            Task<Stream> streamTask = _httpClient.GetStreamAsync("https://api.coinmarketcap.com/v1/ticker/?convert=ETH&limit=1000");
+            List<CoinMarketCapCoin> coinMarketCapCoins = _serializer.ReadObject(await streamTask) as List<CoinMarketCapCoin>;
+
+            this._readerWriterLock.EnterWriteLock();
+            try
+            {
+                // update our local list
+                this._coins = coinMarketCapCoins.Select(c => (ICoin)c).ToList();
+            }
+            finally
+            {
+                this._readerWriterLock.ExitWriteLock();
+            }
+        }
+
+        private async Task UpdateGlobalInfo()
+        {
+            // update the global info from coinmarketcap
+            Task<Stream> streamTask = _httpClient.GetStreamAsync("https://api.coinmarketcap.com/v1/global/");
+            CoinMarketCapGlobalInfo coinMarketCapGlobalInfo = _globalSerializer.ReadObject(await streamTask) as CoinMarketCapGlobalInfo;
+
+            this._readerWriterLock.EnterWriteLock();
+            try
+            {
+                // update our local list
+                this._globalInfo = coinMarketCapGlobalInfo;
+            }
+            finally
+            {
+                this._readerWriterLock.ExitWriteLock();
+            }
+        }
+
         private async Task Tick()
         {
             try
             {
-                // get the list of coin info from coinmarketcap
-                Task<Stream> streamTask = _httpClient.GetStreamAsync("https://api.coinmarketcap.com/v1/ticker/?convert=ETH&limit=1000");
-                List<CoinMarketCapCoin> coinMarketCapCoins = _serializer.ReadObject(await streamTask) as List<CoinMarketCapCoin>;
-
-                this._readerWriterLock.EnterWriteLock();
-                try
-                {
-                    // update our local list
-                    this._coins = coinMarketCapCoins.Select(c => (ICoin)c).ToList();
-                }
-                finally
-                {
-                    this._readerWriterLock.ExitWriteLock();
-                }
+                await Task.WhenAll(UpdateCoins(), UpdateGlobalInfo());
             }
             catch (Exception e)
             {

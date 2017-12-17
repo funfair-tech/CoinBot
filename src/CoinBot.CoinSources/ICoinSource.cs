@@ -9,6 +9,7 @@ namespace CoinBot.CoinSources
         ICoin GetCoinByName(string name);
         ICoin Get(string nameOrSymbol);
         List<ICoin> GetTop100();
+        IGlobalInfo GetGlobalInfo();
 
         void Start();
         void Stop();

@@ -24,11 +24,12 @@ namespace CoinBot.Discord.Commands
 
         private static void AddAuthor(EmbedBuilder builder)
         {
-            EmbedAuthorBuilder authorBuilder = new EmbedAuthorBuilder();
-            authorBuilder.Name = "FunFair CoinBot - right click above to block";
-            authorBuilder.Url = "https://funfair.io";
-            authorBuilder.IconUrl = "https://files.coinmarketcap.com/static/img/coins/32x32/funfair.png";
-            builder.WithAuthor(authorBuilder);
+            builder.WithAuthor(new EmbedAuthorBuilder
+            {
+                Name = "FunFair CoinBot - right click above to block",
+                Url = "https://funfair.io",
+                IconUrl = "https://files.coinmarketcap.com/static/img/coins/32x32/funfair.png"
+            });
         }
 
         private static void AddFooter(EmbedBuilder builder, long? lastUpdated)
@@ -36,11 +37,11 @@ namespace CoinBot.Discord.Commands
             if (lastUpdated.HasValue)
             {
                 builder.Timestamp = DateTimeOffset.FromUnixTimeSeconds((long) lastUpdated);
+                builder.Footer = new EmbedFooterBuilder
+                {
+                    Text = "Prices updated"
+                };
             }
-
-            EmbedFooterBuilder footerBuilder = new EmbedFooterBuilder();
-            footerBuilder.Text = "Prices updated";
-            builder.Footer = footerBuilder;
         }
 
         [Command("coin"), Summary("get info for a coin, e.g. !coin FUN")]
@@ -63,8 +64,6 @@ namespace CoinBot.Discord.Commands
                 
                 if (coin != null)
                 {
-                    decimal marketCap = Convert.ToDecimal(coin.MarketCap);
-                    decimal volume = Convert.ToDecimal(coin.Volume);
                     decimal dayChange = Convert.ToDecimal(coin.DayChange);
 
                     EmbedBuilder builder = new EmbedBuilder();
@@ -73,8 +72,8 @@ namespace CoinBot.Discord.Commands
                     AddAuthor(builder);
 
                     StringBuilder descriptionBuilder = new StringBuilder();
-                    descriptionBuilder.AppendLine($"Market cap ${marketCap:n} (Rank {coin.Rank})");
-                    descriptionBuilder.AppendLine($"24 hour volume: ${volume:n}");
+                    descriptionBuilder.AppendLine($"Market cap ${coin.MarketCap.FormatCurrencyValue()} (Rank {coin.Rank})");
+                    descriptionBuilder.AppendLine($"24 hour volume: ${coin.Volume.FormatCurrencyValue()}");
                     builder.WithDescription(descriptionBuilder.ToString());
                     builder.WithUrl(coin.GetCoinMarketCapLink());
                     builder.WithThumbnailUrl(coin.GetCoinImageUrl());

@@ -12,8 +12,7 @@ namespace CoinBot.Discord.Extensions
 
         public static string FormatPrice(this ICoin coin)
         {
-            decimal price = Convert.ToDecimal(coin.PriceUsd);
-            return price.ToString("#,##0.#################");
+            return coin.PriceUsd.FormatCurrencyValue();
         }
 
         public static string GetPriceSummary(this ICoin coin)
@@ -23,14 +22,12 @@ namespace CoinBot.Discord.Extensions
 
         public static string FormatVolume(this ICoin coin)
         {
-            decimal volume = Convert.ToDecimal(coin.Volume);
-            return $"{volume:n}";
+            return coin.Volume.FormatCurrencyValue();
         }
 
         public static string FormatMarketCap(this ICoin coin)
         {
-            decimal marketCap = Convert.ToDecimal(coin.MarketCap);
-            return $"{marketCap:n}";
+            return coin.MarketCap.FormatCurrencyValue();
         }
 
         public static string GetCoinMarketCapLink(this ICoin coin)
