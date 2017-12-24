@@ -286,7 +286,8 @@ __pycache__/
 *.btm.cs
 *.odx.cs
 *.xsd.cs
-src/CoinBot/CoinBot/token.json
-src/CoinBot/token.json
 /.vscode/launch.json
 /.vscode/tasks.json
+
+# App settings
+appsettings.json
