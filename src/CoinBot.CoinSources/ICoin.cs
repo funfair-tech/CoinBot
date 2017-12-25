@@ -1,21 +1,90 @@
-﻿namespace CoinBot.CoinSources
+﻿using System;
+
+namespace CoinBot.CoinSources
 {
-    public interface ICoin
-    {
-        string Id { get; }
-        string Name { get; }
-        string Symbol { get; }
-        int Rank { get; }
-        string PriceUsd { get; set; }
-        string PriceBtc { get; set; }
-        string PriceEth { get; set; }
-        string Volume { get; set; }
-        string MarketCap { get; set; }
-        string AvailableSupply { get; set; }
-        string TotalSupply { get; set; }
-        string HourChange { get; set; }
-        string DayChange { get; set; }
-        string WeekChange { get; set; }
-        long? LastUpdated { get; set; }
-    }
+	/// <summary>
+	/// Coin information.
+	/// </summary>
+	public interface ICoin
+	{
+		/// <summary>
+		/// The identifier.
+		/// </summary>
+		string Id { get; }
+
+		/// <summary>
+		/// The coin name.
+		/// </summary>
+		string Name { get; }
+
+		/// <summary>
+		/// The token symbol.
+		/// </summary>
+		string Symbol { get; }
+
+		/// <summary>
+		/// The position of a cryptocurrency.
+		/// </summary>
+		int? Rank { get; }
+
+		/// <summary>
+		/// The USD price.
+		/// </summary>
+		double? PriceUsd { get; }
+
+		/// <summary>
+		/// The BTC price.
+		/// </summary>
+		decimal? PriceBtc { get; }
+
+		/// <summary>
+		/// The ETH price.
+		/// </summary>
+		decimal? PriceEth { get; }
+
+		/// <summary>
+		/// The 24H volume in USD.
+		/// </summary>
+		double? Volume { get; }
+
+		/// <summary>
+		/// The USD market cap.
+		/// </summary>
+		double? MarketCap { get; }
+
+		/// <summary>
+		/// Available supply is the best approximation of the number of coins that are circulating in the market and in the general public's hands.
+		/// </summary>
+		decimal? AvailableSupply { get; }
+
+		/// <summary>
+		/// Total supply is the total amount of coins in existence right now (minus any coins that have been verifiably burned).
+		/// </summary>
+		decimal? TotalSupply { get; }
+
+		/// <summary>
+		/// Max supply the best approximation of the maximum amount of coins that will ever exist in the lifetime of the cryptocurrency.
+		/// </summary>
+		decimal? MaxSupply { get; }
+
+		/// <summary>
+		/// The price change last hour as a percentage.
+		/// </summary>
+		double? HourChange { get; }
+
+		/// <summary>
+		/// The price change last day as a percentage.
+		/// </summary>
+		double? DayChange { get; }
+
+		/// <summary>
+		/// The price change last week as a percentage.
+		/// </summary>
+		double? WeekChange { get; }
+
+		/// <summary>
+		/// The last time this coin info was updated.
+		/// </summary>
+		DateTime? LastUpdated { get; }
+	}
 }
