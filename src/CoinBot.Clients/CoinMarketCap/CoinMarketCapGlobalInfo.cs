@@ -1,7 +1,8 @@
 ﻿using System;
+using CoinBot.Core;
 using Newtonsoft.Json;
 
-namespace CoinBot.CoinSources.CoinMarketCap
+namespace CoinBot.Clients.CoinMarketCap
 {
 	/// <inheritdoc />
 	[JsonObject]
@@ -33,7 +34,7 @@ namespace CoinBot.CoinSources.CoinMarketCap
 
 		/// <inheritdoc />
 		[JsonProperty("last_updated")]
-		[JsonConverter(typeof(CoinMarketCapEpochConverter))]
+		[JsonConverter(typeof(UnixTimeConverter))]
 		public DateTime? LastUpdated { get; set; }
 	}
 }

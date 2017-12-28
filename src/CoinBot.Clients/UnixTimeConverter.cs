@@ -2,12 +2,12 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace CoinBot.CoinSources.CoinMarketCap
+namespace CoinBot.Clients
 {
 	/// <summary>
 	/// A custom <see cref="DateTimeConverterBase"/> implementation for unix timestamps.
 	/// </summary>
-	public class CoinMarketCapEpochConverter : DateTimeConverterBase
+	public class UnixTimeConverter : DateTimeConverterBase
 	{
 		/// <summary>
 		/// The <see cref="DateTime"/> to start with when adding seconds.

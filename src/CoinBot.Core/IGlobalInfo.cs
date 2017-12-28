@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CoinBot.CoinSources
+namespace CoinBot.Core
 {
 	/// <summary>
 	/// Global coin market information.

@@ -39,6 +39,7 @@ namespace CoinBot.Discord.Extensions
 					commandService.AddModuleAsync<GlobalCommands>();
 					commandService.AddModuleAsync<HelpCommands>();
 					commandService.AddModuleAsync<PriceCommands>();
+					commandService.AddModuleAsync<MarketsCommands>();
 					return commandService;
 				})
 				.AddSingleton<DiscordBot>();
