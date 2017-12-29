@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CoinBot.Clients.CoinMarketCap;
 using CoinBot.Core;
 using CoinBot.Core.Extensions;
+using CoinBot.Discord.Extensions;
 using Discord;
 using Discord.Commands;
 using Microsoft.Extensions.Logging;
@@ -68,31 +70,57 @@ namespace CoinBot.Discord.Commands
 
 					foreach (var group in grouped)
 					{
+						var exchangeName = group.Key;
 						const int maxResults = 3;
 						var totalResults = group.Count();
-						var exchangeName = group.Key;
+
 						var marketDetails = new StringBuilder();
-						foreach (var market in group.Take(maxResults))
-							marketDetails.AppendLine($"{market.BaseCurrrency.Symbol}/{market.MarketCurrency.Symbol}: {market.Last.AsPrice()} (24h Vol.: {market.Volume.AsVolume()})");
-						if (totalResults > maxResults)
+						if (secondaryCurrency == null && totalResults > maxResults)
 						{
 							var diff = totalResults - maxResults;
-							marketDetails.AppendLine($"Found {diff} more {primaryCurrency.Symbol} market(s) at {exchangeName}");
+							if (totalResults < 10)
+							{
+								WriteMarketSummaries(marketDetails, group.Take(maxResults));
+
+								marketDetails.AppendLine();
+								marketDetails.AppendLine($"Found {diff} more {primaryCurrency.Symbol} market(s) at {exchangeName}:");
+								marketDetails.AppendLine(string.Join(", ", group.Skip(maxResults).Select(m => $"{m.BaseCurrrency.Symbol}/{m.MarketCurrency.Symbol}")));
+							}
+							else
+							{
+								marketDetails.AppendLine($"`Found {diff} more {primaryCurrency.Symbol} market(s) at {exchangeName}.`");
+							}
+						}
+						else
+						{
+							WriteMarketSummaries(marketDetails, group);
 						}
 
-						builder.AddField(exchangeName, marketDetails);
+						builder.AddField($"{exchangeName}", marketDetails);
 					}
 
 					var lastUpdated = markets.Min(m => m.LastUpdated);
 					AddFooter(builder, lastUpdated);
 
-					await ReplyAsync(string.Empty, false, builder.Build());
+					var operationName = (secondaryCurrency != null)
+						? $"{primaryCurrency.Name}/{secondaryCurrency.Name}"
+						: primaryCurrency.Name;
+
+					await ReplyAsync($"Markets for `{operationName}`:", false, builder.Build());
 				}
 				catch (Exception e)
 				{
 					_logger.LogError(0, e, $"Something went wrong while processing the !markets command with input '{input}'");
 					await ReplyAsync("oops, something went wrong, sorry!");
 				}
+		}
+
+		private void WriteMarketSummaries(StringBuilder builder, IEnumerable<MarketSummaryDto> markets)
+		{
+			builder.Append("```");
+			foreach (var market in markets)
+				builder.AppendLine(market.GetSummary());
+			builder.Append("```");
 		}
 
 		private bool GetCurrencies(string input, out Currency primaryCurrency, out Currency secondaryCurrency)
