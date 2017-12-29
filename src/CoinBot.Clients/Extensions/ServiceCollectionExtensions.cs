@@ -1,4 +1,5 @@
-﻿using CoinBot.Clients.Bittrex;
+﻿using CoinBot.Clients.Binance;
+using CoinBot.Clients.Bittrex;
 using CoinBot.Clients.CoinMarketCap;
 using CoinBot.Clients.GateIo;
 using CoinBot.Clients.Gdax;
@@ -24,6 +25,7 @@ namespace CoinBot.Clients.Extensions
 		{
 			return services
 				.AddSingleton<ICoinClient, CoinMarketCapClient>()
+				.AddSingleton<IMarketClient, BinanceClient>()
 				.AddSingleton<IMarketClient, BittrexClient>()
 				.AddSingleton<IMarketClient, GdaxClient>()
 				.AddSingleton<IMarketClient, GateIoClient>()
