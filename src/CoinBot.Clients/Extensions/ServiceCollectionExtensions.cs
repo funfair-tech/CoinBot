@@ -4,6 +4,7 @@ using CoinBot.Clients.GateIo;
 using CoinBot.Clients.Gdax;
 using CoinBot.Clients.Kraken;
 using CoinBot.Clients.Liqui;
+using CoinBot.Clients.Poloniex;
 using CoinBot.Core;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -27,7 +28,8 @@ namespace CoinBot.Clients.Extensions
 				.AddSingleton<IMarketClient, GdaxClient>()
 				.AddSingleton<IMarketClient, GateIoClient>()
 				.AddSingleton<IMarketClient, KrakenClient>()
-				.AddSingleton<IMarketClient, LiquiClient>();
+				.AddSingleton<IMarketClient, LiquiClient>()
+				.AddSingleton<IMarketClient, PoloniexClient>();
 		}
 	}
 }
