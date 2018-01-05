@@ -24,4 +24,9 @@
     <ProjectReference Include="..\CoinBot.Core\CoinBot.Core.csproj" />
     <ProjectReference Include="..\CoinBot.Discord\CoinBot.Discord.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
