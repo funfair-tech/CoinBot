@@ -1,4 +1,4 @@
-﻿namespace CoinBotCore
+﻿namespace CoinBot
 {
 	internal static class Program
 	{

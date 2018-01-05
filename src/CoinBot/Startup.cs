@@ -1,8 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using CoinBot.CoinSources;
-using CoinBot.CoinSources.Extensions;
+using CoinBot.Clients.Extensions;
+using CoinBot.Core;
+using CoinBot.Core.Extensions;
 using CoinBot.Discord;
 using CoinBot.Discord.Extensions;
 using Discord;
@@ -12,7 +13,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Serilog;
 
-namespace CoinBotCore
+namespace CoinBot
 {
 	internal sealed class Startup
 	{
@@ -61,7 +62,9 @@ namespace CoinBotCore
 					var loggerFactory = new LoggerFactory().AddSerilog();
 					return loggerFactory.CreateLogger(nameof(CoinBot));
 				})
-				.AddCoinSources()
+				.AddMemoryCache()
+				.AddClients()
+				.AddCore(_configuration)
 				.AddCoinBot(_configuration);
 		}
 
@@ -80,7 +83,8 @@ namespace CoinBotCore
 				exitSource.SetResult(true);
 			};
 
-			var coinSource = provider.GetRequiredService<ICoinSource>();
+			var coinManager = provider.GetRequiredService<CurrencyManager>();
+			var marketManager = provider.GetRequiredService<MarketManager>();
 			var bot = provider.GetRequiredService<DiscordBot>();
 
 			// Initialize the bot
@@ -89,14 +93,16 @@ namespace CoinBotCore
 
 			// Start the bot & coinSource
 			await bot.StartAsync();
-			coinSource.Start();
+			coinManager.Start();
+			marketManager.Start();
 
 			// Keep the application alive until the exitSource task is completed.
 			await exitSource.Task;
 
 			// Stop the bot & coinSource
 			await bot.LogoutAsync();
-			coinSource.Stop();
+			coinManager.Stop();
+			marketManager.Stop();
 		}
 	}
 }

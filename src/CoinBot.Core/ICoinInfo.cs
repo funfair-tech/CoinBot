@@ -1,16 +1,21 @@
 ﻿using System;
 
-namespace CoinBot.CoinSources
+namespace CoinBot.Core
 {
 	/// <summary>
-	/// Coin information.
+	/// TODO
 	/// </summary>
-	public interface ICoin
+	public interface ICoinInfo
 	{
 		/// <summary>
-		/// The identifier.
+		/// The coin identifier.
 		/// </summary>
 		string Id { get; }
+
+		/// <summary>
+		/// The coin image.
+		/// </summary>
+		string ImageUrl { get; }
 
 		/// <summary>
 		/// The coin name.
@@ -23,7 +28,7 @@ namespace CoinBot.CoinSources
 		string Symbol { get; }
 
 		/// <summary>
-		/// The position of a cryptocurrency.
+		/// The position of a Currency.
 		/// </summary>
 		int? Rank { get; }
 
@@ -52,20 +57,20 @@ namespace CoinBot.CoinSources
 		/// </summary>
 		double? MarketCap { get; }
 
-		/// <summary>
-		/// Available supply is the best approximation of the number of coins that are circulating in the market and in the general public's hands.
-		/// </summary>
-		decimal? AvailableSupply { get; }
+		///// <summary>
+		///// Available supply is the best approximation of the number of coins that are circulating in the market and in the general public's hands.
+		///// </summary>
+		//decimal? AvailableSupply { get; }
 
-		/// <summary>
-		/// Total supply is the total amount of coins in existence right now (minus any coins that have been verifiably burned).
-		/// </summary>
-		decimal? TotalSupply { get; }
+		///// <summary>
+		///// Total supply is the total amount of coins in existence right now (minus any coins that have been verifiably burned).
+		///// </summary>
+		//decimal? TotalSupply { get; }
 
-		/// <summary>
-		/// Max supply the best approximation of the maximum amount of coins that will ever exist in the lifetime of the cryptocurrency.
-		/// </summary>
-		decimal? MaxSupply { get; }
+		///// <summary>
+		///// Max supply the best approximation of the maximum amount of coins that will ever exist in the lifetime of the Currency.
+		///// </summary>
+		//decimal? MaxSupply { get; }
 
 		/// <summary>
 		/// The price change last hour as a percentage.

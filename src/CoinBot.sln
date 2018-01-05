@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.16
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoinBot.Discord", "CoinBot.Discord\CoinBot.Discord.csproj", "{3E19CF74-9579-4D3B-B8C5-4DD3ED95330B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoinBot.CoinSources", "CoinBot.CoinSources\CoinBot.CoinSources.csproj", "{8318AC2B-103A-4F0B-9E6D-B09FD4273AEF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoinBot.Clients", "CoinBot.Clients\CoinBot.Clients.csproj", "{8318AC2B-103A-4F0B-9E6D-B09FD4273AEF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinBot", "CoinBot\CoinBot.csproj", "{7B29E344-333E-4648-988D-8316EE8E980F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoinBot", "CoinBot\CoinBot.csproj", "{7B29E344-333E-4648-988D-8316EE8E980F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinBot.Core", "CoinBot.Core\CoinBot.Core.csproj", "{6DEC910A-A6A5-4C6F-B285-FBDEF398FA2C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,8 +29,15 @@ Global
 		{7B29E344-333E-4648-988D-8316EE8E980F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B29E344-333E-4648-988D-8316EE8E980F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7B29E344-333E-4648-988D-8316EE8E980F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6DEC910A-A6A5-4C6F-B285-FBDEF398FA2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DEC910A-A6A5-4C6F-B285-FBDEF398FA2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6DEC910A-A6A5-4C6F-B285-FBDEF398FA2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DEC910A-A6A5-4C6F-B285-FBDEF398FA2C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {07F8F766-D8DE-40A9-8D76-76D9B040EC13}
 	EndGlobalSection
 EndGlobal

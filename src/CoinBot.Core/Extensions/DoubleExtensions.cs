@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace CoinBot.Discord.Extensions
+namespace CoinBot.Core.Extensions
 {
 	/// <summary>
 	/// <see cref="double"/> extension methods.
@@ -23,7 +23,7 @@ namespace CoinBot.Discord.Extensions
 		/// <param name="d">The value to format.</param>
 		/// <param name="precision">The precision to use.</param>
 		/// <returns></returns>
-		public static string AsUsdCurrency(this double? d, int? precision = null) => d?.ToString($"c{precision}", UsdCulture) ?? UnknownResponse;
+		public static string AsUsdPrice(this double? d, int? precision = null) => d?.ToString($"c{precision}", UsdCulture) ?? UnknownResponse;
 
 		/// <summary>
 		/// Formats the <paramref name="d"/> as a percentage.
