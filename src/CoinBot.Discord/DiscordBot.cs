@@ -1,137 +1,138 @@
-﻿using Discord;
+﻿using System;
+using System.Threading.Tasks;
+using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Reflection;
-using System.Threading.Tasks;
 
 namespace CoinBot.Discord
 {
-    public class DiscordBot
-    {
-        private readonly DiscordBotToken _botToken;
-        private readonly DiscordSocketClient _client;
-        private readonly CommandService _commands;
-        private readonly IServiceProvider _serviceProvider;
-        private readonly ILogger _logger;
+	public class DiscordBot : DiscordSocketClient
+	{
+		/// <summary>
+		/// The General channel name.
+		/// </summary>
+		private const string GeneralChannelName = "general";
 
-        public DiscordBot(DiscordBotToken botToken, IServiceProvider serviceProvider, ILogger logger)
-        {
-            this._botToken = botToken;
-            this._client = new DiscordSocketClient();
-            this._commands = new CommandService(new CommandServiceConfig()
-            {
-                DefaultRunMode = RunMode.Async,
-                LogLevel = LogSeverity.Debug
-            });
+		/// <summary>
+		/// The <see cref="IServiceProvider"/>.
+		/// </summary>
+		private readonly IServiceProvider _serviceProvider;
 
-            this._logger = logger;
-            this._serviceProvider = serviceProvider;
+		/// <summary>
+		/// The <see cref="ILogger"/>.
+		/// </summary>
+		private readonly ILogger _logger;
 
-            this._client.MessageReceived += this.HandleCommand;
+		/// <summary>
+		/// The <see cref="CommandService"/>.
+		/// </summary>
+		private readonly CommandService _commands;
 
-            this._client.Log += this.Log;
-            this._commands.Log += this.Log;
-        }
+		/// <inheritdoc />
+		/// <summary>
+		/// Constructs the <see cref="DiscordBot" />.
+		/// </summary>
+		/// <param name="serviceProvider">The <see cref="IServiceProvider"/>.</param>
+		/// <param name="commandService">The <see cref="CommandService"/>.</param>
+		public DiscordBot(IServiceProvider serviceProvider, CommandService commandService)
+		{
+			_serviceProvider = serviceProvider;
+			_logger = _serviceProvider.GetRequiredService<ILogger>();
+			Log += HandleLog;
 
-        private async Task Log(LogMessage arg)
-        {
-            switch (arg.Severity)
-            {
-                case LogSeverity.Debug:
-                    {
-                        this._logger.LogDebug(arg.Message);
-                        break;
-                    }
+			_commands = commandService;
+			_commands.Log += HandleLog;
+			MessageReceived += HandleCommand;
+		}
 
-                case LogSeverity.Verbose:
-                    {
-                        this._logger.LogInformation(arg.Message);
-                        break;
-                    }
+		/// <summary>
+		/// Handles the <paramref name="logParam"/>.
+		/// </summary>
+		/// <param name="logParam">The <see cref="LogMessage"/>.</param>
+		/// <returns></returns>
+		private async Task HandleLog(LogMessage logParam)
+		{
+			switch (logParam.Severity)
+			{
+				case LogSeverity.Debug:
+				{
+					_logger.LogDebug(logParam.Message);
+					break;
+				}
 
-                case LogSeverity.Info:
-                    {
-                        this._logger.LogInformation(arg.Message);
-                        break;
-                    }
+				case LogSeverity.Verbose:
+				{
+					_logger.LogInformation(logParam.Message);
+					break;
+				}
 
-                case LogSeverity.Warning:
-                    {
-                        this._logger.LogWarning(arg.Message);
-                        break;
-                    }
+				case LogSeverity.Info:
+				{
+					_logger.LogInformation(logParam.Message);
+					break;
+				}
 
-                case LogSeverity.Error:
-                    {
-                        if (arg.Exception != null)
-                        {
-                            this._logger.LogError(new EventId(arg.Exception.HResult), arg.Message, arg.Exception);
-                        }
-                        else
-                        {
-                            this._logger.LogError(arg.Message);
-                        }
-                        break;
-                    }
+				case LogSeverity.Warning:
+				{
+					_logger.LogWarning(logParam.Message);
+					break;
+				}
 
-                case LogSeverity.Critical:
-                    {
-                        this._logger.LogCritical(arg.Message);
-                        break;
-                    }
-            }
+				case LogSeverity.Error:
+				{
+					if (logParam.Exception != null)
+					{
+						_logger.LogError(new EventId(logParam.Exception.HResult), logParam.Message, logParam.Exception);
+					}
+					else
+					{
+						_logger.LogError(logParam.Message);
+					}
+					break;
+				}
 
-            await Task.CompletedTask;
-        }
+				case LogSeverity.Critical:
+				{
+					_logger.LogCritical(logParam.Message);
+					break;
+				}
+			}
 
-        public async Task Start()
-        {
-            // Discover all of the commands in this assembly and load them.
-            await this._commands.AddModulesAsync(typeof(DiscordBot).GetTypeInfo().Assembly);
+			await Task.CompletedTask;
+		}
 
-            // login
-            await this._client.LoginAsync(TokenType.Bot, this._botToken.Token);
+		/// <summary>
+		/// Handles the <paramref name="messageParam"/>.
+		/// </summary>
+		/// <param name="messageParam">The <see cref="SocketMessage"/>.</param>
+		/// <returns></returns>
+		private async Task HandleCommand(SocketMessage messageParam)
+		{
+			if (!(messageParam is SocketUserMessage message))
+				return;
 
-            // and start
-            await this._client.StartAsync();
-        }
+			// don't respond to messages in general, access to all other channels can be controlled with
+			// permissions on discord
+			if (message.Channel.Name.Equals(GeneralChannelName, StringComparison.OrdinalIgnoreCase))
+				return;
 
-        public async Task Stop()
-        {
-            // and logout
-            await this._client.LogoutAsync();
-        }
+			// Create a number to track where the prefix ends and the command begins
+			var argPos = 0;
 
-        public async Task HandleCommand(SocketMessage messageParam)
-        {
-            SocketUserMessage message = messageParam as SocketUserMessage;
-            if (message == null) return;
+			// Determine if the message is a command, based on if it starts with '!' or a mention prefix
+			if (!(message.HasCharPrefix('!', ref argPos) || message.HasMentionPrefix(CurrentUser, ref argPos)))
+				return;
 
-            // don't respond to messages in general, access to all other channels can be controlled with
-            // permissions on discord
-            if (string.Compare(message.Channel.Name, "general", StringComparison.OrdinalIgnoreCase) == 0)
-            {
-                return;
-            }
+			// Create a Command Context
+			var context = new CommandContext(this, message);
 
-            // Create a number to track where the prefix ends and the command begins
-            int argPos = 0;
-
-            // Determine if the message is a command, based on if it starts with '!' or a mention prefix
-            if (!(message.HasCharPrefix('!', ref argPos) || message.HasMentionPrefix(this._client.CurrentUser, ref argPos))) return;
-
-            // Create a Command Context
-            CommandContext context = new CommandContext(this._client, message);
-
-            // Execute the command. (result does not indicate a return value, 
-            // rather an object stating if the command executed successfully)
-            var result = await this._commands.ExecuteAsync(context, argPos, this._serviceProvider);
-            if (!result.IsSuccess && result.Error != CommandError.UnknownCommand)
-            {
-                await context.Channel.SendMessageAsync(result.ErrorReason);
-            }
-        }
-    }
+			// Execute the command. (result does not indicate a return value, 
+			// rather an object stating if the command executed successfully)
+			var result = await _commands.ExecuteAsync(context, argPos, _serviceProvider);
+			if (!result.IsSuccess && result.Error != CommandError.UnknownCommand)
+				await context.Channel.SendMessageAsync(result.ErrorReason);
+		}
+	}
 }
