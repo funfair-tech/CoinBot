@@ -27,17 +27,17 @@ namespace CoinBot.Discord.Commands
                 IGlobalInfo globalInfo = this._coinSource.GetGlobalInfo();
 
                 EmbedBuilder builder = new EmbedBuilder();
-                builder.WithTitle($"Global Cryptocurrency Information");
+                builder.WithTitle("Global Cryptocurrency Information");
                 builder.Color = Color.DarkPurple;
                 AddAuthor(builder);
 
-                StringBuilder descriptionBuilder = new StringBuilder();
-                descriptionBuilder.AppendLine($"Market cap ${globalInfo.MarketCap.FormatCurrencyValue()}");
-                descriptionBuilder.AppendLine($"24 hour volume: ${globalInfo.Volume.FormatCurrencyValue()}");
-                descriptionBuilder.AppendLine($"BTC dominance: {globalInfo.BTCDominance}%");
-                descriptionBuilder.AppendLine($"Currencies: {globalInfo.Currencies.FormatNumber()}");
-                descriptionBuilder.AppendLine($"Assets: {globalInfo.Assets.FormatNumber()}");
-                descriptionBuilder.AppendLine($"Markets: {globalInfo.Markets.FormatNumber()}");
+                var descriptionBuilder = new StringBuilder();
+                descriptionBuilder.AppendLine($"Market cap {globalInfo.MarketCap.AsUsdCurrency()}");
+                descriptionBuilder.AppendLine($"24 hour volume: {globalInfo.Volume.AsUsdCurrency()}");
+                descriptionBuilder.AppendLine($"BTC dominance: {globalInfo.BtcDominance.AsPercentage()}");
+                descriptionBuilder.AppendLine($"Currencies: {globalInfo.Currencies}");
+                descriptionBuilder.AppendLine($"Assets: {globalInfo.Assets}");
+                descriptionBuilder.AppendLine($"Markets: {globalInfo.Markets}");
                 builder.WithDescription(descriptionBuilder.ToString());
                 
                 AddFooter(builder, globalInfo.LastUpdated);

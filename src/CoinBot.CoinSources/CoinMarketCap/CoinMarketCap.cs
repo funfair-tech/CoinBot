@@ -1,12 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Runtime.Serialization.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace CoinBot.CoinSources.CoinMarketCap
 {
@@ -17,8 +16,7 @@ namespace CoinBot.CoinSources.CoinMarketCap
         private TimeSpan _tickInterval;
         private readonly ILogger _logger;
         private readonly HttpClient _httpClient;
-        private readonly DataContractJsonSerializer _serializer;
-        private readonly DataContractJsonSerializer _globalSerializer;
+        private readonly JsonSerializerSettings _serializerSettings;
         private List<ICoin> _coins;
         private IGlobalInfo _globalInfo;
         private readonly ReaderWriterLockSlim _readerWriterLock;
@@ -28,10 +26,17 @@ namespace CoinBot.CoinSources.CoinMarketCap
             this._logger = logger;
             this._httpClient = new HttpClient();
             this._coins = new List<ICoin>();
-            this._serializer = new DataContractJsonSerializer(typeof(List<CoinMarketCapCoin>));
-            this._globalSerializer = new DataContractJsonSerializer(typeof(CoinMarketCapGlobalInfo));
             this._tickInterval = TimeSpan.FromSeconds(10);
             this._readerWriterLock = new ReaderWriterLockSlim();
+            _serializerSettings = new JsonSerializerSettings
+            {
+                Error = (sender, args) =>
+                {
+                    var eventId = new EventId(args.ErrorContext.Error.HResult);
+                    var ex = args.ErrorContext.Error.GetBaseException();
+                    _logger.LogError(eventId, ex, ex.Message);
+                }
+            };
         }
 
         public IGlobalInfo GetGlobalInfo()
@@ -75,7 +80,7 @@ namespace CoinBot.CoinSources.CoinMarketCap
            this._readerWriterLock.EnterReadLock();
            try
            {
-               return this._coins.Where(x => x.Rank <= 100).OrderByDescending(x => Convert.ToDouble(x.DayChange)).ToList();
+               return this._coins.Where(x => x.Rank <= 100).OrderByDescending(x => x.DayChange).ToList();
            } 
            finally 
            {
@@ -86,8 +91,8 @@ namespace CoinBot.CoinSources.CoinMarketCap
         private async Task UpdateCoins()
         {
             // get the list of coin info from coinmarketcap
-            Task<Stream> streamTask = _httpClient.GetStreamAsync("https://api.coinmarketcap.com/v1/ticker/?convert=ETH&limit=1000");
-            List<CoinMarketCapCoin> coinMarketCapCoins = _serializer.ReadObject(await streamTask) as List<CoinMarketCapCoin>;
+            var streamTask = _httpClient.GetStringAsync("https://api.coinmarketcap.com/v1/ticker/?convert=ETH&limit=1000");
+            var coinMarketCapCoins = JsonConvert.DeserializeObject<List<CoinMarketCapCoin>>(await streamTask, _serializerSettings);
 
             this._readerWriterLock.EnterWriteLock();
             try
@@ -104,8 +109,8 @@ namespace CoinBot.CoinSources.CoinMarketCap
         private async Task UpdateGlobalInfo()
         {
             // update the global info from coinmarketcap
-            Task<Stream> streamTask = _httpClient.GetStreamAsync("https://api.coinmarketcap.com/v1/global/");
-            CoinMarketCapGlobalInfo coinMarketCapGlobalInfo = _globalSerializer.ReadObject(await streamTask) as CoinMarketCapGlobalInfo;
+            var streamTask = _httpClient.GetStringAsync("https://api.coinmarketcap.com/v1/global/");
+            var coinMarketCapGlobalInfo = JsonConvert.DeserializeObject<CoinMarketCapGlobalInfo>(await streamTask, _serializerSettings);
 
             this._readerWriterLock.EnterWriteLock();
             try
