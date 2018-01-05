@@ -49,20 +49,19 @@ namespace CoinBot.Clients.Liqui
 
 		public LiquiClient(ILogger logger, CurrencyManager currencyManager)
 		{
-			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
-			_currencyManager = currencyManager ?? throw new ArgumentNullException(nameof(currencyManager));
-			_httpClient = new HttpClient
+			this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
+			this._currencyManager = currencyManager ?? throw new ArgumentNullException(nameof(currencyManager));
+			this._httpClient = new HttpClient
 			{
-				BaseAddress = _endpoint
+				BaseAddress = this._endpoint
 			};
 
-			_serializerSettings = new JsonSerializerSettings
+			this._serializerSettings = new JsonSerializerSettings
 			{
 				Error = (sender, args) =>
 				{
-					var eventId = new EventId(args.ErrorContext.Error.HResult);
-					var ex = args.ErrorContext.Error.GetBaseException();
-					_logger.LogError(eventId, ex, ex.Message);
+					Exception ex = args.ErrorContext.Error.GetBaseException();
+					this._logger.LogError(new EventId(args.ErrorContext.Error.HResult), ex, ex.Message);
 				}
 			};
 		}
@@ -72,15 +71,18 @@ namespace CoinBot.Clients.Liqui
 		{
 			try
 			{
-				var pairs = await GetPairs();
-				var tickers = new List<LiquiTicker>();
-				foreach(var pair in pairs)
-					tickers.Add(await GetTicker(pair));
-				
-				return tickers.Select(m => new MarketSummaryDto
+				List<string> pairs = await this.GetPairs();
+				List<LiquiTicker> tickers = new List<LiquiTicker>();
+
+			    foreach (string pair in pairs)
+			    {
+			        tickers.Add(await this.GetTicker(pair));
+			    }
+
+			    return tickers.Select(m => new MarketSummaryDto
 				{
-					BaseCurrrency = _currencyManager.Get(m.Pair.Substring(0, m.Pair.IndexOf(PairSeparator))),
-					MarketCurrency = _currencyManager.Get(m.Pair.Substring(m.Pair.IndexOf(PairSeparator) + 1)),
+					BaseCurrrency = this._currencyManager.Get(m.Pair.Substring(0, m.Pair.IndexOf(PairSeparator))),
+					MarketCurrency = this._currencyManager.Get(m.Pair.Substring(m.Pair.IndexOf(PairSeparator) + 1)),
 					Market = "Liqui",
 					Volume = m.Vol,
 					LastUpdated = m.Updated,
@@ -89,8 +91,7 @@ namespace CoinBot.Clients.Liqui
 			}
 			catch (Exception e)
 			{
-				var eventId = new EventId(e.HResult);
-				_logger.LogError(eventId, e, e.Message);
+				this._logger.LogError(new EventId(e.HResult), e, e.Message);
 				throw;
 			}
 		}
@@ -101,11 +102,11 @@ namespace CoinBot.Clients.Liqui
 		/// <returns></returns>
 		private async Task<List<string>> GetPairs()
 		{
-			using (var response = await _httpClient.GetAsync(new Uri("info", UriKind.Relative)))
+			using (HttpResponseMessage response = await this._httpClient.GetAsync(new Uri("info", UriKind.Relative)))
 			{
-				var json = await response.Content.ReadAsStringAsync();
-				var jResponse = JObject.Parse(json);
-				var pairs = jResponse.GetValue("pairs").Children().Cast<JProperty>().Select(property => property.Name).ToList();
+				string json = await response.Content.ReadAsStringAsync();
+				JObject jResponse = JObject.Parse(json);
+				List<string> pairs = jResponse.GetValue("pairs").Children().Cast<JProperty>().Select(property => property.Name).ToList();
 				return pairs;
 			}
 		}
@@ -116,11 +117,11 @@ namespace CoinBot.Clients.Liqui
 		/// <returns></returns>
 		private async Task<LiquiTicker> GetTicker(string pair)
 		{
-			using (var response = await _httpClient.GetAsync(new Uri($"ticker/{pair}", UriKind.Relative)))
+			using (HttpResponseMessage response = await this._httpClient.GetAsync(new Uri($"ticker/{pair}", UriKind.Relative)))
 			{
-				var json = await response.Content.ReadAsStringAsync();
-				var jObject = JObject.Parse(json);
-				var ticker = JsonConvert.DeserializeObject<LiquiTicker>(jObject.GetValue(pair).ToString(), _serializerSettings);
+				string json = await response.Content.ReadAsStringAsync();
+				JObject jObject = JObject.Parse(json);
+				LiquiTicker ticker = JsonConvert.DeserializeObject<LiquiTicker>(jObject.GetValue(pair).ToString(), this._serializerSettings);
 				ticker.Pair = pair;
 				return ticker;
 			}

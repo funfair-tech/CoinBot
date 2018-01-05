@@ -1,5 +1,4 @@
 ﻿using System;
-using CoinBot.Clients.CoinMarketCap;
 using CoinBot.Core;
 using Newtonsoft.Json;
 

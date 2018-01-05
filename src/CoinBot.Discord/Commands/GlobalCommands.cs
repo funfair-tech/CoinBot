@@ -22,7 +22,7 @@ namespace CoinBot.Discord.Commands
         [Command("global"), Summary("get global crypto market information")]
         public async Task Global()
         {
-            using (Context.Channel.EnterTypingState())
+            using (this.Context.Channel.EnterTypingState())
             {
                 IGlobalInfo globalInfo = this._currencyManager.GetGlobalInfo();
 
@@ -31,7 +31,7 @@ namespace CoinBot.Discord.Commands
                 builder.Color = Color.DarkPurple;
                 AddAuthor(builder);
 
-                var descriptionBuilder = new StringBuilder();
+                StringBuilder descriptionBuilder = new StringBuilder();
                 descriptionBuilder.AppendLine($"Market cap {globalInfo.MarketCap.AsUsdPrice()}");
                 descriptionBuilder.AppendLine($"24 hour volume: {globalInfo.Volume.AsUsdPrice()}");
                 descriptionBuilder.AppendLine($"BTC dominance: {globalInfo.BtcDominance.AsPercentage()}");
@@ -42,7 +42,7 @@ namespace CoinBot.Discord.Commands
                 
                 AddFooter(builder, globalInfo.LastUpdated);
 
-                await ReplyAsync(string.Empty, false, builder.Build());
+                await this.ReplyAsync(string.Empty, false, builder.Build());
             }
         }
     }

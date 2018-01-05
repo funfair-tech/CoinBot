@@ -43,20 +43,19 @@ namespace CoinBot.Clients.Bittrex
 
 		public BittrexClient(ILogger logger, CurrencyManager currencyManager)
 		{
-			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
-			_currencyManager = currencyManager ?? throw new ArgumentNullException(nameof(currencyManager));
-			_httpClient = new HttpClient
+			this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
+		    this._currencyManager = currencyManager ?? throw new ArgumentNullException(nameof(currencyManager));
+		    this._httpClient = new HttpClient
 			{
-				BaseAddress = _endpoint
+				BaseAddress = this._endpoint
 			};
 
-			_serializerSettings = new JsonSerializerSettings
+		    this._serializerSettings = new JsonSerializerSettings
 			{
 				Error = (sender, args) =>
 				{
-					var eventId = new EventId(args.ErrorContext.Error.HResult);
-					var ex = args.ErrorContext.Error.GetBaseException();
-					_logger.LogError(eventId, ex, ex.Message);
+					Exception ex = args.ErrorContext.Error.GetBaseException();
+					this._logger.LogError(new EventId(args.ErrorContext.Error.HResult), ex, ex.Message);
 				}
 			};
 		}
@@ -66,11 +65,11 @@ namespace CoinBot.Clients.Bittrex
 		{
 			try
 			{
-				var summaries = await GetMarketSummaries();
+				List<BittrexMarketSummaryDto> summaries = await this.GetMarketSummaries();
 				return summaries.Select(m => new MarketSummaryDto
 				{
-					BaseCurrrency = _currencyManager.Get(m.MarketName.Substring(0, m.MarketName.IndexOf('-'))),
-					MarketCurrency = _currencyManager.Get(m.MarketName.Substring(m.MarketName.IndexOf('-') + 1)),
+					BaseCurrrency = this._currencyManager.Get(m.MarketName.Substring(0, m.MarketName.IndexOf('-'))),
+					MarketCurrency = this._currencyManager.Get(m.MarketName.Substring(m.MarketName.IndexOf('-') + 1)),
 					Market = "Bittrex",
 					Volume = m.BaseVolume,
 					Last = m.Last,
@@ -79,8 +78,7 @@ namespace CoinBot.Clients.Bittrex
 			}
 			catch (Exception e)
 			{
-				var eventId = new EventId(e.HResult);
-				_logger.LogError(eventId, e, e.Message);
+				this._logger.LogError(new EventId(e.HResult), e, e.Message);
 				throw;
 			}
 		}
@@ -91,9 +89,9 @@ namespace CoinBot.Clients.Bittrex
 		/// <returns></returns>
 		private async Task<List<BittrexMarketSummaryDto>> GetMarketSummaries()
 		{
-			using (var response = await _httpClient.GetAsync(new Uri("getmarketsummaries", UriKind.Relative)))
+			using (HttpResponseMessage response = await this._httpClient.GetAsync(new Uri("getmarketsummaries", UriKind.Relative)))
 			{
-				var summaries = JsonConvert.DeserializeObject<BittrexMarketSummariesDto>(await response.Content.ReadAsStringAsync(), _serializerSettings);
+				BittrexMarketSummariesDto summaries = JsonConvert.DeserializeObject<BittrexMarketSummariesDto>(await response.Content.ReadAsStringAsync(), this._serializerSettings);
 				return summaries.Result;
 			}
 		}

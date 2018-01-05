@@ -33,7 +33,7 @@ namespace CoinBot.Core
 		/// <summary>
 		/// The <see cref="ReaderWriterLockSlim"/>.
 		/// </summary>
-		private readonly ReaderWriterLockSlim _lock;
+		//private readonly ReaderWriterLockSlim _lock;
 
 		/// <summary>
 		/// The <see cref="Currency"/> list.
@@ -47,34 +47,34 @@ namespace CoinBot.Core
 
 		public CurrencyManager(ILogger logger, IEnumerable<ICoinClient> coinClients)
 		{
-			_coinClients = coinClients;
-			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
-			_tickInterval = TimeSpan.FromSeconds(10);
-			_lock = new ReaderWriterLockSlim();
+		    this._coinClients = coinClients;
+		    this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
+		    this._tickInterval = TimeSpan.FromSeconds(10);
+		    //this._lock = new ReaderWriterLockSlim();
 		}
 
 		private async Task Tick()
 		{
 			try
 			{
-				await Task.WhenAll(UpdateCoins(), UpdateGlobalInfo());
+				await Task.WhenAll(this.UpdateCoins(), this.UpdateGlobalInfo());
 			}
 			catch (Exception e)
 			{
-				_logger.LogError(new EventId(e.HResult), e, e.Message);
+			    this._logger.LogError(new EventId(e.HResult), e, e.Message);
 			}
 			finally
 			{
-				// and reset the timer
-				_timer.Change(_tickInterval, TimeSpan.Zero);
+                // and reset the timer
+			    this._timer.Change(this._tickInterval, TimeSpan.Zero);
 			}
 		}
 
 		public void Start()
 		{
-			// start a timer to fire the tickFunction
-			_timer = new Timer(
-				async (state) => await Tick(),
+            // start a timer to fire the tickFunction
+		    this._timer = new Timer(
+				async (state) => await this.Tick(),
 				null,
 				TimeSpan.FromSeconds(0),
 				Timeout.InfiniteTimeSpan);
@@ -82,67 +82,67 @@ namespace CoinBot.Core
 
 		public void Stop()
 		{
-			// stop the timer
-			_timer.Dispose();
-			_timer = null;
+            // stop the timer
+		    this._timer.Dispose();
+		    this._timer = null;
 		}
 
 		public IGlobalInfo GetGlobalInfo()
 		{
-			return _globalInfo;
+			return this._globalInfo;
 		}
 
-		public Currency Get(string nameOrSymbol) => GetCoinBySymbol(nameOrSymbol) ?? GetCoinByName(nameOrSymbol);
+		public Currency Get(string nameOrSymbol) => this.GetCoinBySymbol(nameOrSymbol) ?? this.GetCoinByName(nameOrSymbol);
 
 		private Currency GetCoinBySymbol(string symbol)
 		{
-			_lock.EnterReadLock();
+		    //this._lock.EnterReadLock();
 			try
 			{
-				return _coinInfoCollection.FirstOrDefault(c => string.Compare(c.Symbol, symbol, StringComparison.OrdinalIgnoreCase) == 0);
+				return this._coinInfoCollection.FirstOrDefault(c => string.Compare(c.Symbol, symbol, StringComparison.OrdinalIgnoreCase) == 0);
 			}
 			finally
 			{
-				_lock.ExitReadLock();
+			  //  this._lock.ExitReadLock();
 			}
 		}
 
 		private Currency GetCoinByName(string name)
 		{
-			_lock.EnterReadLock();
+		    //this._lock.EnterReadLock();
 			try
 			{
-				return _coinInfoCollection.FirstOrDefault(c => string.Compare(c.Name, name, StringComparison.OrdinalIgnoreCase) == 0);
+				return this._coinInfoCollection.FirstOrDefault(c => string.Compare(c.Name, name, StringComparison.OrdinalIgnoreCase) == 0);
 			}
 			finally
 			{
-				_lock.ExitReadLock();
+			    //this._lock.ExitReadLock();
 			}
 		}
 
 		public IEnumerable<Currency> Get(Func<Currency, bool> predicate)
 		{
-			_lock.EnterReadLock();
+		    //this._lock.EnterReadLock();
 			try
 			{
-				return _coinInfoCollection.Where(predicate);
+				return this._coinInfoCollection.Where(predicate);
 			}
 			finally
 			{
-				_lock.ExitReadLock();
+			    //this._lock.ExitReadLock();
 			}
 		}
 
 		private Task UpdateCoins()
 		{
-			var client = _coinClients.First();
+			ICoinClient client = this._coinClients.First();
 
-			_lock.EnterWriteLock();
+		    //this._lock.EnterWriteLock();
 			try
 			{
-				var coinInfos = client.GetCoinInfo().Result.ToList();
+				List<ICoinInfo> coinInfos = client.GetCoinInfo().Result.ToList();
 
-				var currencies = new List<Currency>();
+				List<Currency> currencies = new List<Currency>();
 				currencies.AddRange(new[]
 				{
 					new Currency
@@ -159,7 +159,7 @@ namespace CoinBot.Core
 
 				currencies.AddRange(coinInfos.Select(cryptoInfo =>
 				{
-					var currency = new Currency
+					Currency currency = new Currency
 					{
 						Symbol = cryptoInfo.Symbol,
 						Name = cryptoInfo.Name,
@@ -169,29 +169,29 @@ namespace CoinBot.Core
 					return currency;
 				}));
 
-				_coinInfoCollection = new ReadOnlyCollection<Currency>(currencies);
+			    this._coinInfoCollection = new ReadOnlyCollection<Currency>(currencies);
 
 				return Task.CompletedTask;
 			}
 			finally
 			{
-				_lock.ExitWriteLock();
+			    //this._lock.ExitWriteLock();
 			}
 		}
 
 		private Task UpdateGlobalInfo()
 		{
-			var client = _coinClients.First();
+			ICoinClient client = this._coinClients.First();
 
-			_lock.EnterWriteLock();
+		    //this._lock.EnterWriteLock();
 			try
 			{
-				_globalInfo = client.GetGlobalInfo().Result;
+			    this._globalInfo = client.GetGlobalInfo().Result;
 				return Task.CompletedTask;
 			}
 			finally
 			{
-				_lock.ExitWriteLock();
+			    //this._lock.ExitWriteLock();
 			}
 		}
 	}

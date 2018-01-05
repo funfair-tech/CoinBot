@@ -44,20 +44,19 @@ namespace CoinBot.Clients.Poloniex
 
 		public PoloniexClient(ILogger logger, CurrencyManager currencyManager)
 		{
-			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
-			_currencyManager = currencyManager ?? throw new ArgumentNullException(nameof(currencyManager));
-			_httpClient = new HttpClient
+			this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
+		    this._currencyManager = currencyManager ?? throw new ArgumentNullException(nameof(currencyManager));
+		    this._httpClient = new HttpClient
 			{
-				BaseAddress = _endpoint
+				BaseAddress = this._endpoint
 			};
 
-			_serializerSettings = new JsonSerializerSettings
+		    this._serializerSettings = new JsonSerializerSettings
 			{
 				Error = (sender, args) =>
 				{
-					var eventId = new EventId(args.ErrorContext.Error.HResult);
-					var ex = args.ErrorContext.Error.GetBaseException();
-					_logger.LogError(eventId, ex, ex.Message);
+					Exception ex = args.ErrorContext.Error.GetBaseException();
+					this._logger.LogError(new EventId(args.ErrorContext.Error.HResult), ex, ex.Message);
 				}
 			};
 		}
@@ -67,11 +66,11 @@ namespace CoinBot.Clients.Poloniex
 		{
 			try
 			{
-				var tickers = await GetTickers();
+				List<PoloniexTicker> tickers = await this.GetTickers();
 				return tickers.Select(t => new MarketSummaryDto
 				{
-					BaseCurrrency = _currencyManager.Get(t.Pair.Substring(0, t.Pair.IndexOf('_'))),
-					MarketCurrency = _currencyManager.Get(t.Pair.Substring(t.Pair.IndexOf('_') + 1)),
+					BaseCurrrency = this._currencyManager.Get(t.Pair.Substring(0, t.Pair.IndexOf('_'))),
+					MarketCurrency = this._currencyManager.Get(t.Pair.Substring(t.Pair.IndexOf('_') + 1)),
 					Market = "Poloniex",
 					Volume = t.BaseVolume,
 					Last = t.Last,
@@ -79,8 +78,7 @@ namespace CoinBot.Clients.Poloniex
 			}
 			catch (Exception e)
 			{
-				var eventId = new EventId(e.HResult);
-				_logger.LogError(eventId, e, e.Message);
+				this._logger.LogError(new EventId(e.HResult), e, e.Message);
 				throw;
 			}
 		}
@@ -91,15 +89,15 @@ namespace CoinBot.Clients.Poloniex
 		/// <returns></returns>
 		private async Task<List<PoloniexTicker>> GetTickers()
 		{
-			using (var response = await _httpClient.GetAsync(new Uri("public?command=returnTicker", UriKind.Relative)))
+			using (HttpResponseMessage response = await this._httpClient.GetAsync(new Uri("public?command=returnTicker", UriKind.Relative)))
 			{
-				var json = await response.Content.ReadAsStringAsync();
-				var jResponse = JObject.Parse(json);
-				var tickers = new List<PoloniexTicker>();
-				foreach (var jToken in jResponse)
+				string json = await response.Content.ReadAsStringAsync();
+				JObject jResponse = JObject.Parse(json);
+				List<PoloniexTicker> tickers = new List<PoloniexTicker>();
+				foreach (KeyValuePair<string, JToken> jToken in jResponse)
 				{
-					var obj = JObject.Parse(jToken.Value.ToString());
-					var ticker = JsonConvert.DeserializeObject<PoloniexTicker>(obj.ToString(), _serializerSettings);
+					JObject obj = JObject.Parse(jToken.Value.ToString());
+					PoloniexTicker ticker = JsonConvert.DeserializeObject<PoloniexTicker>(obj.ToString(), this._serializerSettings);
 					ticker.Pair = jToken.Key;
 					tickers.Add(ticker);
 				}

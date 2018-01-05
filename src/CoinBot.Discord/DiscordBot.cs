@@ -38,13 +38,13 @@ namespace CoinBot.Discord
 		/// <param name="commandService">The <see cref="CommandService"/>.</param>
 		public DiscordBot(IServiceProvider serviceProvider, CommandService commandService)
 		{
-			_serviceProvider = serviceProvider;
-			_logger = _serviceProvider.GetRequiredService<ILogger>();
-			Log += HandleLog;
+			this._serviceProvider = serviceProvider;
+		    this._logger = this._serviceProvider.GetRequiredService<ILogger>();
+		    this.Log += this.HandleLog;
 
-			_commands = commandService;
-			_commands.Log += HandleLog;
-			MessageReceived += HandleCommand;
+		    this._commands = commandService;
+		    this._commands.Log += this.HandleLog;
+		    this.MessageReceived += this.HandleCommand;
 		}
 
 		/// <summary>
@@ -58,25 +58,25 @@ namespace CoinBot.Discord
 			{
 				case LogSeverity.Debug:
 				{
-					_logger.LogDebug(logParam.Message);
+				    this._logger.LogDebug(logParam.Message);
 					break;
 				}
 
 				case LogSeverity.Verbose:
 				{
-					_logger.LogInformation(logParam.Message);
+				    this._logger.LogInformation(logParam.Message);
 					break;
 				}
 
 				case LogSeverity.Info:
 				{
-					_logger.LogInformation(logParam.Message);
+				    this._logger.LogInformation(logParam.Message);
 					break;
 				}
 
 				case LogSeverity.Warning:
 				{
-					_logger.LogWarning(logParam.Message);
+				    this._logger.LogWarning(logParam.Message);
 					break;
 				}
 
@@ -84,18 +84,18 @@ namespace CoinBot.Discord
 				{
 					if (logParam.Exception != null)
 					{
-						_logger.LogError(new EventId(logParam.Exception.HResult), logParam.Message, logParam.Exception);
+					    this._logger.LogError(new EventId(logParam.Exception.HResult), logParam.Message, logParam.Exception);
 					}
 					else
 					{
-						_logger.LogError(logParam.Message);
+					    this._logger.LogError(logParam.Message);
 					}
 					break;
 				}
 
 				case LogSeverity.Critical:
 				{
-					_logger.LogCritical(logParam.Message);
+				    this._logger.LogCritical(logParam.Message);
 					break;
 				}
 			}
@@ -119,20 +119,23 @@ namespace CoinBot.Discord
 				return;
 
 			// Create a number to track where the prefix ends and the command begins
-			var argPos = 0;
+			int argPos = 0;
 
 			// Determine if the message is a command, based on if it starts with '!' or a mention prefix
-			if (!(message.HasCharPrefix('!', ref argPos) || message.HasMentionPrefix(CurrentUser, ref argPos)))
+			if (!(message.HasCharPrefix('!', ref argPos) || message.HasMentionPrefix(this.CurrentUser, ref argPos)))
 				return;
 
 			// Create a Command Context
-			var context = new CommandContext(this, message);
+			CommandContext context = new CommandContext(this, message);
 
 			// Execute the command. (result does not indicate a return value, 
 			// rather an object stating if the command executed successfully)
-			var result = await _commands.ExecuteAsync(context, argPos, _serviceProvider);
-			if (!result.IsSuccess && result.Error != CommandError.UnknownCommand)
-				await context.Channel.SendMessageAsync(result.ErrorReason);
+			IResult result = await this._commands.ExecuteAsync(context, argPos, this._serviceProvider);
+
+		    if (!result.IsSuccess && result.Error != CommandError.UnknownCommand)
+		    {
+		        await context.Channel.SendMessageAsync(result.ErrorReason);
+		    }
 		}
 	}
 }

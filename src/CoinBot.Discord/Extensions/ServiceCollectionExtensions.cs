@@ -28,7 +28,7 @@ namespace CoinBot.Discord.Extensions
 				.Configure<DiscordBotSettings>(configuration.GetSection(DiscordBotSettingsSection))
 				.AddSingleton(ctx =>
 				{
-					var commandService = new CommandService(new CommandServiceConfig
+					CommandService commandService = new CommandService(new CommandServiceConfig
 					{
 						DefaultRunMode = RunMode.Async,
 						LogLevel = LogSeverity.Debug

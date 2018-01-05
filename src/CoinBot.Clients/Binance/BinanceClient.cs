@@ -44,20 +44,19 @@ namespace CoinBot.Clients.Binance
 
 		public BinanceClient(ILogger logger, CurrencyManager currencyManager)
 		{
-			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
-			_currencyManager = currencyManager ?? throw new ArgumentNullException(nameof(currencyManager));
-			_httpClient = new HttpClient
+			this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
+		    this._currencyManager = currencyManager ?? throw new ArgumentNullException(nameof(currencyManager));
+		    this._httpClient = new HttpClient
 			{
-				BaseAddress = _endpoint
+				BaseAddress = this._endpoint
 			};
 
-			_serializerSettings = new JsonSerializerSettings
+		    this._serializerSettings = new JsonSerializerSettings
 			{
 				Error = (sender, args) =>
 				{
-					var eventId = new EventId(args.ErrorContext.Error.HResult);
-					var ex = args.ErrorContext.Error.GetBaseException();
-					_logger.LogError(eventId, ex, ex.Message);
+					Exception ex = args.ErrorContext.Error.GetBaseException();
+					this._logger.LogError(new EventId(args.ErrorContext.Error.HResult), ex, ex.Message);
 				}
 			};
 		}
@@ -67,11 +66,11 @@ namespace CoinBot.Clients.Binance
 		{
 			try
 			{
-				var products = await GetProducts();
+				List<BinanceProduct> products = await this.GetProducts();
 				return products.Select(p => new MarketSummaryDto
 				{
-					BaseCurrrency = _currencyManager.Get(p.BaseAsset),
-					MarketCurrency = _currencyManager.Get(p.QuoteAsset),
+					BaseCurrrency = this._currencyManager.Get(p.BaseAsset),
+					MarketCurrency = this._currencyManager.Get(p.QuoteAsset),
 					Market = "Binance",
 					Volume = p.Volume,
 					Last = p.PrevClose,
@@ -79,8 +78,8 @@ namespace CoinBot.Clients.Binance
 			}
 			catch (Exception e)
 			{
-				var eventId = new EventId(e.HResult);
-				_logger.LogError(eventId, e, e.Message);
+				EventId eventId = new EventId(e.HResult);
+				this._logger.LogError(eventId, e, e.Message);
 				throw;
 			}
 		}
@@ -91,11 +90,11 @@ namespace CoinBot.Clients.Binance
 		/// <returns></returns>
 		private async Task<List<BinanceProduct>> GetProducts()
 		{
-			using (var response = await _httpClient.GetAsync(new Uri("product", UriKind.Relative)))
+			using (HttpResponseMessage response = await this._httpClient.GetAsync(new Uri("product", UriKind.Relative)))
 			{
-				var json = await response.Content.ReadAsStringAsync();
-				var jObject = JObject.Parse(json);
-				var products = JsonConvert.DeserializeObject<List<BinanceProduct>>(jObject["data"].ToString(), _serializerSettings);
+				string json = await response.Content.ReadAsStringAsync();
+				JObject jObject = JObject.Parse(json);
+				List<BinanceProduct> products = JsonConvert.DeserializeObject<List<BinanceProduct>>(jObject["data"].ToString(), this._serializerSettings);
 				return products;
 			}
 		}

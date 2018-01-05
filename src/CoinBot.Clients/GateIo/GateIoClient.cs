@@ -46,20 +46,19 @@ namespace CoinBot.Clients.GateIo
 
 		public GateIoClient(ILogger logger, CurrencyManager currencyManager)
 		{
-			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
-			_currencyManager = currencyManager ?? throw new ArgumentNullException(nameof(currencyManager));
-			_httpClient = new HttpClient
+			this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
+			this._currencyManager = currencyManager ?? throw new ArgumentNullException(nameof(currencyManager));
+			this._httpClient = new HttpClient
 			{
-				BaseAddress = _endpoint
+				BaseAddress = this._endpoint
 			};
 
-			_serializerSettings = new JsonSerializerSettings
+			this._serializerSettings = new JsonSerializerSettings
 			{
 				Error = (sender, args) =>
 				{
-					var eventId = new EventId(args.ErrorContext.Error.HResult);
-					var ex = args.ErrorContext.Error.GetBaseException();
-					_logger.LogError(eventId, ex, ex.Message);
+					Exception ex = args.ErrorContext.Error.GetBaseException();
+					this._logger.LogError(new EventId(args.ErrorContext.Error.HResult), ex, ex.Message);
 				}
 			};
 		}
@@ -69,11 +68,11 @@ namespace CoinBot.Clients.GateIo
 		{
 			try
 			{
-				var tickers = await GetTickers();
+				List<GateIoTicker> tickers = await this.GetTickers();
 				return tickers.Select(m => new MarketSummaryDto
 				{
-					BaseCurrrency = _currencyManager.Get(m.Pair.Substring(0, m.Pair.IndexOf(PairSeparator))),
-					MarketCurrency = _currencyManager.Get(m.Pair.Substring(m.Pair.IndexOf(PairSeparator) + 1)),
+					BaseCurrrency = this._currencyManager.Get(m.Pair.Substring(0, m.Pair.IndexOf(PairSeparator))),
+					MarketCurrency = this._currencyManager.Get(m.Pair.Substring(m.Pair.IndexOf(PairSeparator) + 1)),
 					Market = "Gate.io",
 					Volume = m.BaseVolume,
 					Last = m.Last
@@ -81,8 +80,7 @@ namespace CoinBot.Clients.GateIo
 			}
 			catch (Exception e)
 			{
-				var eventId = new EventId(e.HResult);
-				_logger.LogError(eventId, e, e.Message);
+				this._logger.LogError(new EventId(e.HResult), e, e.Message);
 				throw;
 			}
 		}
@@ -93,15 +91,16 @@ namespace CoinBot.Clients.GateIo
 		/// <returns></returns>
 		private async Task<List<GateIoTicker>> GetTickers()
 		{
-			using (var response = await _httpClient.GetAsync(new Uri("tickers", UriKind.Relative)))
+			using (HttpResponseMessage response = await this._httpClient.GetAsync(new Uri("tickers", UriKind.Relative)))
 			{
-				var json = await response.Content.ReadAsStringAsync();
-				var jResponse = JObject.Parse(json);
-				var tickers = new List<GateIoTicker>();
-				foreach (var jToken in jResponse)
+				string json = await response.Content.ReadAsStringAsync();
+				JObject jResponse = JObject.Parse(json);
+				List<GateIoTicker> tickers = new List<GateIoTicker>();
+
+				foreach (KeyValuePair<string, JToken> jToken in jResponse)
 				{
-					var obj = JObject.Parse(jToken.Value.ToString());
-					var ticker = JsonConvert.DeserializeObject<GateIoTicker>(obj.ToString(), _serializerSettings);
+					JObject obj = JObject.Parse(jToken.Value.ToString());
+					GateIoTicker ticker = JsonConvert.DeserializeObject<GateIoTicker>(obj.ToString(), this._serializerSettings);
 					ticker.Pair = jToken.Key;
 					tickers.Add(ticker);
 				}

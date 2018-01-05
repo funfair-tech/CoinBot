@@ -32,19 +32,18 @@ namespace CoinBot.Clients.CoinMarketCap
 
 		public CoinMarketCapClient(ILogger logger)
 		{
-			_logger = logger;
-			_httpClient = new HttpClient
+			this._logger = logger;
+		    this._httpClient = new HttpClient
 			{
-				BaseAddress = _endpoint
+				BaseAddress = this._endpoint
 			};
 
-			_serializerSettings = new JsonSerializerSettings
+		    this._serializerSettings = new JsonSerializerSettings
 			{
 				Error = (sender, args) =>
 				{
-					var eventId = new EventId(args.ErrorContext.Error.HResult);
-					var ex = args.ErrorContext.Error.GetBaseException();
-					_logger.LogError(eventId, ex, ex.Message);
+					Exception ex = args.ErrorContext.Error.GetBaseException();
+					this._logger.LogError(new EventId(args.ErrorContext.Error.HResult), ex, ex.Message);
 				}
 			};
 		}
@@ -58,16 +57,14 @@ namespace CoinBot.Clients.CoinMarketCap
 		{
 			try
 			{
-				using (var response = await _httpClient.GetAsync(new Uri("ticker/?convert=ETH&limit=1000", UriKind.Relative)))
+				using (HttpResponseMessage response = await this._httpClient.GetAsync(new Uri("ticker/?convert=ETH&limit=1000", UriKind.Relative)))
 				{
-					var coins = JsonConvert.DeserializeObject<List<CoinMarketCapCoin>>(await response.Content.ReadAsStringAsync(), _serializerSettings);
-					return coins;
+					return JsonConvert.DeserializeObject<List<CoinMarketCapCoin>>(await response.Content.ReadAsStringAsync(), this._serializerSettings);
 				}
 			}
 			catch (Exception e)
 			{
-				var eventId = new EventId(e.HResult);
-				_logger.LogError(eventId, e, e.Message);
+				this._logger.LogError(new EventId(e.HResult), e, e.Message);
 				throw;
 			}
 		}
@@ -81,16 +78,14 @@ namespace CoinBot.Clients.CoinMarketCap
 		{
 			try
 			{
-				using (var response = await _httpClient.GetAsync(new Uri("global/", UriKind.Relative)))
+				using (HttpResponseMessage response = await this._httpClient.GetAsync(new Uri("global/", UriKind.Relative)))
 				{
-					var globalInfo = JsonConvert.DeserializeObject<CoinMarketCapGlobalInfo>(await response.Content.ReadAsStringAsync(), _serializerSettings);
-					return globalInfo;
+					return JsonConvert.DeserializeObject<CoinMarketCapGlobalInfo>(await response.Content.ReadAsStringAsync(), this._serializerSettings);
 				}
 			}
 			catch (Exception e)
 			{
-				var eventId = new EventId(e.HResult);
-				_logger.LogError(eventId, e, e.Message);
+				this._logger.LogError(new EventId(e.HResult), e, e.Message);
 				throw;
 			}
 		}

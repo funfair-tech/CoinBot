@@ -30,16 +30,16 @@ namespace CoinBot.Core
 
 		public Currency()
 		{
-			_details = new List<ICoinInfo>();
+		    this._details = new List<ICoinInfo>();
 		}
 		public void AddDetails(ICoinInfo details)
 		{
-			_details.Add(details);
+		    this._details.Add(details);
 		}
 
 		public T Getdetails<T>()
 		{
-			return _details.OfType<T>().FirstOrDefault();
+			return this._details.OfType<T>().FirstOrDefault();
 		}
 	}
 }

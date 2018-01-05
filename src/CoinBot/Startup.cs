@@ -28,16 +28,17 @@ namespace CoinBot
 		internal Startup()
 		{
 			// Load the application configuration
-			_configuration = new ConfigurationBuilder()
+			this._configuration = new ConfigurationBuilder()
 				.SetBasePath(Directory.GetCurrentDirectory())
-				.AddJsonFile("appsettings.json", optional: true)
-				.AddEnvironmentVariables()
+				.AddJsonFile("appsettings.json", true)
+                .AddJsonFile("appsettings-local.json", true)
+                .AddEnvironmentVariables()
 				.Build();
 
 			// Build the service provider
-			var services = new ServiceCollection();
-			ConfigureServices(services);
-			var provider = services.BuildServiceProvider();
+			ServiceCollection services = new ServiceCollection();
+		    this.ConfigureServices(services);
+			ServiceProvider provider = services.BuildServiceProvider();
 
 			// Run the application
 			Run(provider).GetAwaiter().GetResult();
@@ -59,13 +60,13 @@ namespace CoinBot
 				.AddSingleton(provider =>
 				{
 					// set up an ILogger
-					var loggerFactory = new LoggerFactory().AddSerilog();
+					ILoggerFactory loggerFactory = new LoggerFactory().AddSerilog();
 					return loggerFactory.CreateLogger(nameof(CoinBot));
 				})
 				.AddMemoryCache()
 				.AddClients()
-				.AddCore(_configuration)
-				.AddCoinBot(_configuration);
+				.AddCore(this._configuration)
+				.AddCoinBot(this._configuration);
 		}
 
 		/// <summary>
@@ -76,19 +77,19 @@ namespace CoinBot
 		private static async Task Run(IServiceProvider provider)
 		{
 			//set up a task completion source so we can quit on CTRL+C
-			var exitSource = new TaskCompletionSource<bool>();
+			TaskCompletionSource<bool> exitSource = new TaskCompletionSource<bool>();
 			Console.CancelKeyPress += (sender, eventArgs) =>
 			{
 				eventArgs.Cancel = true;
 				exitSource.SetResult(true);
 			};
 
-			var coinManager = provider.GetRequiredService<CurrencyManager>();
-			var marketManager = provider.GetRequiredService<MarketManager>();
-			var bot = provider.GetRequiredService<DiscordBot>();
+			CurrencyManager coinManager = provider.GetRequiredService<CurrencyManager>();
+			MarketManager marketManager = provider.GetRequiredService<MarketManager>();
+			DiscordBot bot = provider.GetRequiredService<DiscordBot>();
 
 			// Initialize the bot
-			var botConfig = provider.GetRequiredService<IOptions<DiscordBotSettings>>().Value;
+			DiscordBotSettings botConfig = provider.GetRequiredService<IOptions<DiscordBotSettings>>().Value;
 			await bot.LoginAsync(TokenType.Bot, botConfig.Token);
 
 			// Start the bot & coinSource

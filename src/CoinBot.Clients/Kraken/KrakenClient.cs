@@ -44,20 +44,20 @@ namespace CoinBot.Clients.Kraken
 
 		public KrakenClient(ILogger logger, CurrencyManager currencyManager)
 		{
-			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
-			_currencyManager = currencyManager ?? throw new ArgumentNullException(nameof(currencyManager));
-			_httpClient = new HttpClient
+			this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
+		    this._currencyManager = currencyManager ?? throw new ArgumentNullException(nameof(currencyManager));
+		    this._httpClient = new HttpClient
 			{
-				BaseAddress = _endpoint
+				BaseAddress = this._endpoint
 			};
 
-			_serializerSettings = new JsonSerializerSettings
+		    this._serializerSettings = new JsonSerializerSettings
 			{
 				Error = (sender, args) =>
 				{
-					var eventId = new EventId(args.ErrorContext.Error.HResult);
-					var ex = args.ErrorContext.Error.GetBaseException();
-					_logger.LogError(eventId, ex, ex.Message);
+					EventId eventId = new EventId(args.ErrorContext.Error.HResult);
+					Exception ex = args.ErrorContext.Error.GetBaseException();
+				    this._logger.LogError(eventId, ex, ex.Message);
 				}
 			};
 		}
@@ -67,22 +67,22 @@ namespace CoinBot.Clients.Kraken
 		{
 			try
 			{
-				var assets = await GetAssets();
-				var pairs = await GetPairs();
-				var tickers = new List<KrakenTicker>();
-				foreach (var pair in pairs)
+				List<KrakenAsset> assets = await this.GetAssets();
+				List<KrakenPair> pairs = await this.GetPairs();
+				List<KrakenTicker> tickers = new List<KrakenTicker>();
+				foreach (KrakenPair pair in pairs)
 				{
 					// todo: can't get kraken details on these markets
 					if (pair.PairId.EndsWith(".d"))
 						continue;
 
-					tickers.Add(await GetTicker(pair));
+					tickers.Add(await this.GetTicker(pair));
 				}
 				
 				return tickers.Select(m =>
 				{
-					var baseCurrency = assets.Find(a => a.Id.Equals(m.BaseCurrency)).Altname;
-					var quoteCurrency = assets.Find(a => a.Id.Equals(m.QuoteCurrency)).Altname;
+					string baseCurrency = assets.Find(a => a.Id.Equals(m.BaseCurrency)).Altname;
+					string quoteCurrency = assets.Find(a => a.Id.Equals(m.QuoteCurrency)).Altname;
 
 					// Workaround for kraken
 					if (baseCurrency.Equals("xbt", StringComparison.OrdinalIgnoreCase))
@@ -92,8 +92,8 @@ namespace CoinBot.Clients.Kraken
 
 					return new MarketSummaryDto
 					{
-						BaseCurrrency = _currencyManager.Get(baseCurrency),
-						MarketCurrency = _currencyManager.Get(quoteCurrency),
+						BaseCurrrency = this._currencyManager.Get(baseCurrency),
+						MarketCurrency = this._currencyManager.Get(quoteCurrency),
 						Market = "Kraken",
 						Volume = m.Volume[1],
 						Last = m.Last[0]
@@ -102,8 +102,7 @@ namespace CoinBot.Clients.Kraken
 			}
 			catch (Exception e)
 			{
-				var eventId = new EventId(e.HResult);
-				_logger.LogError(eventId, e, e.Message);
+				this._logger.LogError(new EventId(e.HResult), e, e.Message);
 				throw;
 			}
 		}
@@ -114,13 +113,13 @@ namespace CoinBot.Clients.Kraken
 		/// <returns></returns>
 		private async Task<List<KrakenAsset>> GetAssets()
 		{
-			using (var response = await _httpClient.GetAsync(new Uri("Assets", UriKind.Relative)))
+			using (HttpResponseMessage response = await this._httpClient.GetAsync(new Uri("Assets", UriKind.Relative)))
 			{
-				var json = await response.Content.ReadAsStringAsync();
-				var jObject = JObject.Parse(json);
-				var assets = jObject.GetValue("result").Children().Cast<JProperty>().Select(property =>
+				string json = await response.Content.ReadAsStringAsync();
+				JObject jObject = JObject.Parse(json);
+				List<KrakenAsset> assets = jObject.GetValue("result").Children().Cast<JProperty>().Select(property =>
 				{
-					var asset = JsonConvert.DeserializeObject<KrakenAsset>(property.Value.ToString(), _serializerSettings);
+					KrakenAsset asset = JsonConvert.DeserializeObject<KrakenAsset>(property.Value.ToString(), this._serializerSettings);
 					asset.Id = property.Name;
 					return asset;
 				}).ToList();
@@ -134,13 +133,13 @@ namespace CoinBot.Clients.Kraken
 		/// <returns></returns>
 		private async Task<List<KrakenPair>> GetPairs()
 		{
-			using (var response = await _httpClient.GetAsync(new Uri("AssetPairs", UriKind.Relative)))
+			using (HttpResponseMessage response = await this._httpClient.GetAsync(new Uri("AssetPairs", UriKind.Relative)))
 			{
-				var json = await response.Content.ReadAsStringAsync();
-				var jResponse = JObject.Parse(json);
-				var pairs = jResponse.GetValue("result").Children().Cast<JProperty>().Select(property =>
+				string json = await response.Content.ReadAsStringAsync();
+				JObject jResponse = JObject.Parse(json);
+				List<KrakenPair> pairs = jResponse.GetValue("result").Children().Cast<JProperty>().Select(property =>
 				{
-					var pair = JsonConvert.DeserializeObject<KrakenPair>(property.Value.ToString());
+					KrakenPair pair = JsonConvert.DeserializeObject<KrakenPair>(property.Value.ToString());
 					pair.PairId = property.Name;
 					return pair;
 				}).ToList();
@@ -154,11 +153,11 @@ namespace CoinBot.Clients.Kraken
 		/// <returns></returns>
 		private async Task<KrakenTicker> GetTicker(KrakenPair pair)
 		{
-			using (var response = await _httpClient.GetAsync(new Uri($"Ticker?pair={pair.PairId}", UriKind.Relative)))
+			using (HttpResponseMessage response = await this._httpClient.GetAsync(new Uri($"Ticker?pair={pair.PairId}", UriKind.Relative)))
 			{
-				var json = await response.Content.ReadAsStringAsync();
-				var jObject = JObject.Parse(json);
-				var ticker = JsonConvert.DeserializeObject<KrakenTicker>(jObject["result"][pair.PairId].ToString(), _serializerSettings);
+				string json = await response.Content.ReadAsStringAsync();
+				JObject jObject = JObject.Parse(json);
+				KrakenTicker ticker = JsonConvert.DeserializeObject<KrakenTicker>(jObject["result"][pair.PairId].ToString(), this._serializerSettings);
 				ticker.BaseCurrency = pair.BaseCurrency;
 				ticker.QuoteCurrency = pair.QuoteCurrency;
 				return ticker;

@@ -23,14 +23,14 @@ namespace CoinBot.Discord.Commands
             AddFooter(builder);
 
             StringBuilder stringBuilder = new StringBuilder();
-            foreach (CommandInfo command in _commandService.Commands)
+            foreach (CommandInfo command in this._commandService.Commands)
             {
                 stringBuilder.AppendLine($"!{command.Name} - {command.Summary}");
             }
 
             builder.WithDescription(stringBuilder.ToString());
 
-            await ReplyAsync(string.Empty, false, builder);
+            await this.ReplyAsync(string.Empty, false, builder);
         }
     }
 }

@@ -39,7 +39,7 @@ namespace CoinBot.Clients
 			if (reader.Value == null)
 				return null;
 
-			var value = reader.Value;
+            object value = reader.Value;
 
 			long seconds = 0;
 

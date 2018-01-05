@@ -40,22 +40,21 @@ namespace CoinBot.Clients.Gdax
 
 		public GdaxClient(ILogger logger, CurrencyManager currencyManager)
 		{
-			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
-			_currencyManager = currencyManager ?? throw new ArgumentNullException(nameof(currencyManager));
+			this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
+		    this._currencyManager = currencyManager ?? throw new ArgumentNullException(nameof(currencyManager));
 
-			_httpClient = new HttpClient
+		    this._httpClient = new HttpClient
 			{
-				BaseAddress = _endpoint
+				BaseAddress = this._endpoint
 			};
-			_httpClient.DefaultRequestHeaders.Add("User-Agent", "CoinBot");
+		    this._httpClient.DefaultRequestHeaders.Add("User-Agent", "CoinBot");
 
-			_serializerSettings = new JsonSerializerSettings
+		    this._serializerSettings = new JsonSerializerSettings
 			{
 				Error = (sender, args) =>
 				{
-					var eventId = new EventId(args.ErrorContext.Error.HResult);
-					var ex = args.ErrorContext.Error.GetBaseException();
-					_logger.LogError(eventId, ex, ex.Message);
+					Exception ex = args.ErrorContext.Error.GetBaseException();
+					this._logger.LogError(new EventId(args.ErrorContext.Error.HResult), ex, ex.Message);
 				}
 			};
 		}
@@ -65,15 +64,18 @@ namespace CoinBot.Clients.Gdax
 		{
 			try
 			{
-				var products = await GetProducts();
-				var tickers = new List<GdaxTicker>();
-				foreach (var product in products)
-					tickers.Add(await GetTicker(product.Id));
+				List<GdaxProduct> products = await this.GetProducts();
+				List<GdaxTicker> tickers = new List<GdaxTicker>();
 
-				return tickers.Select(t => new MarketSummaryDto
+			    foreach (GdaxProduct product in products)
+			    {
+			        tickers.Add(await this.GetTicker(product.Id));
+			    }
+
+			    return tickers.Select(t => new MarketSummaryDto
 				{
-					BaseCurrrency = _currencyManager.Get(t.ProductId.Substring(0, t.ProductId.IndexOf('-'))),
-					MarketCurrency = _currencyManager.Get(t.ProductId.Substring(t.ProductId.IndexOf('-') + 1)),
+					BaseCurrrency = this._currencyManager.Get(t.ProductId.Substring(0, t.ProductId.IndexOf('-'))),
+					MarketCurrency = this._currencyManager.Get(t.ProductId.Substring(t.ProductId.IndexOf('-') + 1)),
 					Market = "GDAX",
 					Volume = t.Volume,
 					Last = t.Price,
@@ -82,8 +84,7 @@ namespace CoinBot.Clients.Gdax
 			}
 			catch (Exception e)
 			{
-				var eventId = new EventId(e.HResult);
-				_logger.LogError(eventId, e, e.Message);
+				this._logger.LogError(new EventId(e.HResult), e, e.Message);
 				throw;
 			}
 		}
@@ -94,9 +95,9 @@ namespace CoinBot.Clients.Gdax
 		/// <returns></returns>
 		private async Task<GdaxTicker> GetTicker(string productId)
 		{
-			using (var response = await _httpClient.GetAsync(new Uri($"products/{productId}/ticker", UriKind.Relative)))
+			using (HttpResponseMessage response = await this._httpClient.GetAsync(new Uri($"products/{productId}/ticker", UriKind.Relative)))
 			{
-				var ticker = JsonConvert.DeserializeObject<GdaxTicker>(await response.Content.ReadAsStringAsync(), _serializerSettings);
+				GdaxTicker ticker = JsonConvert.DeserializeObject<GdaxTicker>(await response.Content.ReadAsStringAsync(), this._serializerSettings);
 				ticker.ProductId = productId;
 				return ticker;
 			}
@@ -108,11 +109,9 @@ namespace CoinBot.Clients.Gdax
 		/// <returns></returns>
 		private async Task<List<GdaxProduct>> GetProducts()
 		{
-			using (var response = await _httpClient.GetAsync(new Uri("products/", UriKind.Relative)))
+			using (HttpResponseMessage response = await this._httpClient.GetAsync(new Uri("products/", UriKind.Relative)))
 			{
-				var json = await response.Content.ReadAsStringAsync();
-				var products = JsonConvert.DeserializeObject<List<GdaxProduct>>(json, _serializerSettings);
-				return products;
+				return JsonConvert.DeserializeObject<List<GdaxProduct>>(await response.Content.ReadAsStringAsync(), this._serializerSettings);
 			}
 		}
 	}

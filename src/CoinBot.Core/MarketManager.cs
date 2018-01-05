@@ -36,10 +36,10 @@ namespace CoinBot.Core
 
 		public MarketManager(IOptions<MarketManagerSettings> settings, IEnumerable<IMarketClient> clients, ILogger logger)
 		{
-			_clients = clients.ToList() ?? throw new ArgumentNullException(nameof(clients));
-			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
-			_tickInterval = TimeSpan.FromMinutes(settings.Value.RefreshInterval);
-			_exchanges = new ReadOnlyDictionary<string, Exchange>(_clients.ToDictionary(client => client.Name, client => new Exchange
+			this._clients = clients.ToList() ?? throw new ArgumentNullException(nameof(clients));
+		    this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
+		    this._tickInterval = TimeSpan.FromMinutes(settings.Value.RefreshInterval);
+		    this._exchanges = new ReadOnlyDictionary<string, Exchange>(this._clients.ToDictionary(client => client.Name, client => new Exchange
 			{
 				Lock = new ReaderWriterLockSlim()
 			}));
@@ -47,16 +47,16 @@ namespace CoinBot.Core
 
 		public IEnumerable<MarketSummaryDto> Get(Currency currency)
 		{
-			var results = new List<MarketSummaryDto>();
-			foreach (var row in _exchanges)
+			List<MarketSummaryDto> results = new List<MarketSummaryDto>();
+			foreach (KeyValuePair<string, Exchange> row in this._exchanges)
 			{
-				var name = row.Key;
-				var exchange = row.Value;
+				string name = row.Key;
+				Exchange exchange = row.Value;
 
 				// Enter read lock with a timeout of 3 seconds to continue to the next exchange.
 				if (!exchange.Lock.TryEnterReadLock(TimeSpan.FromSeconds(3)))
 				{
-					_logger.LogWarning(0, $"The '{name}' exchange was locked for more than 3 seconds.");
+				    this._logger.LogWarning(0, $"The '{name}' exchange was locked for more than 3 seconds.");
 					continue;
 				}
 
@@ -65,7 +65,7 @@ namespace CoinBot.Core
 					if (exchange.Markets == null)
 						continue;
 
-					var markets = exchange.Markets.Where(m =>
+					IEnumerable<MarketSummaryDto> markets = exchange.Markets.Where(m =>
 					{
 						// TODO FIX EMPTY CURRENCIES
 						if (m.BaseCurrrency == null || m.MarketCurrency == null)
@@ -89,16 +89,16 @@ namespace CoinBot.Core
 
 		public IEnumerable<MarketSummaryDto> GetPair(Currency currency1, Currency currency2)
 		{
-			var results = new List<MarketSummaryDto>();
-			foreach (var row in _exchanges)
+			List<MarketSummaryDto> results = new List<MarketSummaryDto>();
+			foreach (KeyValuePair<string, Exchange> row in this._exchanges)
 			{
-				var name = row.Key;
-				var exchange = row.Value;
+				string name = row.Key;
+				Exchange exchange = row.Value;
 
 				// Enter read lock with a timeout of 3 seconds to continue to the next exchange.
 				if (!exchange.Lock.TryEnterReadLock(TimeSpan.FromSeconds(3)))
 				{
-					_logger.LogWarning(0, $"The '{name}' exchange was locked for more than 3 seconds.");
+				    this._logger.LogWarning(0, $"The '{name}' exchange was locked for more than 3 seconds.");
 					continue;
 				}
 
@@ -107,7 +107,7 @@ namespace CoinBot.Core
 					if (exchange.Markets == null)
 						continue;
 					
-					var markets = exchange.Markets.Where(m =>
+					IEnumerable<MarketSummaryDto> markets = exchange.Markets.Where(m =>
 					{
 						// TODO FIX EMPTY CURRENCIES
 						if (m.BaseCurrrency == null || m.MarketCurrency == null)
@@ -134,8 +134,8 @@ namespace CoinBot.Core
 		public void Start()
 		{
 			// start a timer to fire the tickFunction
-			_timer = new Timer(
-				async state => await Tick(),
+		    this._timer = new Timer(
+				async state => await this.Tick(),
 				null,
 				TimeSpan.FromSeconds(0),
 				Timeout.InfiniteTimeSpan);
@@ -144,24 +144,24 @@ namespace CoinBot.Core
 		public void Stop()
 		{
 			// stop the timer
-			_timer.Dispose();
-			_timer = null;
+		    this._timer.Dispose();
+		    this._timer = null;
 		}
 
 		private Task Tick()
 		{
 			try
 			{
-				Update();
+			    this.Update();
 			}
 			catch (Exception e)
 			{
-				_logger.LogError(new EventId(e.HResult), e, e.Message);
+			    this._logger.LogError(new EventId(e.HResult), e, e.Message);
 			}
 			finally
 			{
-				// and reset the timer
-				_timer.Change(_tickInterval, TimeSpan.Zero);
+                // and reset the timer
+			    this._timer.Change(this._tickInterval, TimeSpan.Zero);
 			}
 			return Task.CompletedTask;
 		}
@@ -172,12 +172,12 @@ namespace CoinBot.Core
 		/// <returns></returns>
 		private void Update()
 		{
-			Parallel.ForEach(_clients, client =>
+			Parallel.ForEach(this._clients, client =>
 			{
-				if (_exchanges.TryGetValue(client.Name, out var exchange))
+				if (this._exchanges.TryGetValue(client.Name, out Exchange exchange))
 				{
-					_logger.LogInformation($"Start updating exchange '{client.Name}'.");
-					var watch = new Stopwatch();
+				    this._logger.LogInformation($"Start updating exchange '{client.Name}'.");
+					Stopwatch watch = new Stopwatch();
 					watch.Start();
 
 					IReadOnlyCollection<MarketSummaryDto> markets;
@@ -187,7 +187,7 @@ namespace CoinBot.Core
 					}
 					catch (Exception e)
 					{
-						_logger.LogError(0, e, $"An error occurred while fetching results from the exchange '{client.Name}'.");
+					    this._logger.LogError(0, e, $"An error occurred while fetching results from the exchange '{client.Name}'.");
 						exchange.Lock.EnterWriteLock();
 						try
 						{
@@ -207,7 +207,7 @@ namespace CoinBot.Core
 					{
 						exchange.Markets = markets;
 						watch.Stop();
-						_logger.LogInformation($"Finished updating exchange '{client.Name}' in {watch.ElapsedMilliseconds}ms.");
+					    this._logger.LogInformation($"Finished updating exchange '{client.Name}' in {watch.ElapsedMilliseconds}ms.");
 					}
 					finally
 					{
@@ -215,7 +215,7 @@ namespace CoinBot.Core
 					}
 				}
 				else
-					_logger.LogWarning(0, $"Couldn't find exchange {client.Name}.");
+				    this._logger.LogWarning(0, $"Couldn't find exchange {client.Name}.");
 			});
 		}
 

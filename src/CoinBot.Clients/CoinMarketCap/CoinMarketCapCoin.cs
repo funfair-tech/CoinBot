@@ -10,9 +10,9 @@ namespace CoinBot.Clients.CoinMarketCap
 		[JsonProperty("id")]
 		public string Id { get; set; }
 
-		public string ImageUrl => $"https://files.coinmarketcap.com/static/img/coins/64x64/{Id}.png";
+		public string ImageUrl => $"https://files.coinmarketcap.com/static/img/coins/64x64/{this.Id}.png";
 
-		public string Url => $"https://coinmarketcap.com/currencies/{Id}";
+		public string Url => $"https://coinmarketcap.com/currencies/{this.Id}";
 
 		[JsonProperty("name")]
 		public string Name { get; set; }
