@@ -47,10 +47,10 @@ namespace CoinBot.Core
 
 		public CurrencyManager(ILogger logger, IEnumerable<ICoinClient> coinClients)
 		{
-		    this._coinClients = coinClients;
-		    this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
-		    this._tickInterval = TimeSpan.FromSeconds(10);
-		    this._lock = new ReaderWriterLockSlim();
+			this._coinClients = coinClients;
+			this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
+			this._tickInterval = TimeSpan.FromSeconds(10);
+			this._lock = new ReaderWriterLockSlim();
 		}
 
 		private async Task Tick()
@@ -61,19 +61,19 @@ namespace CoinBot.Core
 			}
 			catch (Exception e)
 			{
-			    this._logger.LogError(new EventId(e.HResult), e, e.Message);
+				this._logger.LogError(new EventId(e.HResult), e, e.Message);
 			}
 			finally
 			{
-                // and reset the timer
-			    this._timer.Change(this._tickInterval, TimeSpan.Zero);
+				// and reset the timer
+				this._timer.Change(this._tickInterval, TimeSpan.Zero);
 			}
 		}
 
 		public void Start()
 		{
-            // start a timer to fire the tickFunction
-		    this._timer = new Timer(
+			// start a timer to fire the tickFunction
+			this._timer = new Timer(
 				async (state) => await this.Tick(),
 				null,
 				TimeSpan.FromSeconds(0),
@@ -82,9 +82,9 @@ namespace CoinBot.Core
 
 		public void Stop()
 		{
-            // stop the timer
-		    this._timer.Dispose();
-		    this._timer = null;
+			// stop the timer
+			this._timer.Dispose();
+			this._timer = null;
 		}
 
 		public IGlobalInfo GetGlobalInfo()
@@ -116,7 +116,7 @@ namespace CoinBot.Core
 			}
 			finally
 			{
-					this._lock.ExitReadLock();
+				this._lock.ExitReadLock();
 			}
 		}
 
@@ -165,7 +165,8 @@ namespace CoinBot.Core
 			}));
 
 			this._lock.EnterWriteLock();
-			try {
+			try
+			{
 				this._coinInfoCollection = new ReadOnlyCollection<Currency>(currencies);
 				return Task.CompletedTask;
 			}
