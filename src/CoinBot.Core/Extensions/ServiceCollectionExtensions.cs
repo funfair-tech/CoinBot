@@ -24,7 +24,8 @@ namespace CoinBot.Core.Extensions
 			return services
 				.Configure<MarketManagerSettings>(configuration.GetSection(MarketManagerSettingsSection))
 				.AddSingleton<CurrencyManager>()
-				.AddSingleton<MarketManager>();
+				.AddSingleton<MarketManager>()
+				.AddSingleton<EventManager>();
 		}
 	}
 }

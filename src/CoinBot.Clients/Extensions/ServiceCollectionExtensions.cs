@@ -1,5 +1,6 @@
 ﻿using CoinBot.Clients.Binance;
 using CoinBot.Clients.Bittrex;
+using CoinBot.Clients.CoinMarketCal;
 using CoinBot.Clients.CoinMarketCap;
 using CoinBot.Clients.GateIo;
 using CoinBot.Clients.Gdax;
@@ -31,7 +32,8 @@ namespace CoinBot.Clients.Extensions
 				.AddSingleton<IMarketClient, GateIoClient>()
 				.AddSingleton<IMarketClient, KrakenClient>()
 				.AddSingleton<IMarketClient, LiquiClient>()
-				.AddSingleton<IMarketClient, PoloniexClient>();
+				.AddSingleton<IMarketClient, PoloniexClient>()
+				.AddSingleton<IEventClient, CoinMarketCalClient>();
 		}
 	}
 }

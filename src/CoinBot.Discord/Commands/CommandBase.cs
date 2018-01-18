@@ -23,7 +23,7 @@ namespace CoinBot.Discord.Commands
 				builder.Timestamp = dateTime;
 				builder.Footer = new EmbedFooterBuilder
 				{
-					Text = "Prices updated"
+					Text = "Updated"
 				};
 			}
 		}
