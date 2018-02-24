@@ -45,8 +45,8 @@ namespace CoinBot.Discord.Commands
 						if (e.ProofImage != null)
 							eventDetails.AppendLine(this.GetEventFooter(e));
 						eventDetails.AppendLine($"```{e.Description}```");
-						string title = e.IsDeadline
-							? $"(deadline) {e.Date:dddd dd MMMM} - {e.Title}"
+						string title = e.CanOccurBefore
+							? $"(can occur before) {e.Date:dddd dd MMMM} - {e.Title}"
 							: $"{e.Date:dddd dd MMMM} - {e.Title}";
 						
 						builder.AddField(title, eventDetails);

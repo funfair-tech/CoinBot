@@ -27,7 +27,7 @@ namespace CoinBot.Core
 		/// <summary>
 		/// If true, the <see cref="Date"/> is a deadline.
 		/// </summary>
-		public bool IsDeadline { get; set; } = false;
+		public bool CanOccurBefore { get; set; } = false;
 
 		/// <summary>
 		/// The proof link.

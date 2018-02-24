@@ -13,12 +13,6 @@ namespace CoinBot.Clients.CoinMarketCal
 		[JsonProperty("title", Required = Required.Always)]
 		public string Title { get; set; }
 
-		[JsonProperty("coin_name", Required = Required.Always)]
-		public string CoinName { get; set; }
-
-		[JsonProperty("coin_symbol", Required = Required.Always)]
-		public string CoinSymbol { get; set; }
-
 		[JsonProperty("date_event", Required = Required.Always)]
 		public DateTime DateEvent { get; set; }
 
@@ -46,19 +40,7 @@ namespace CoinBot.Clients.CoinMarketCal
 		[JsonProperty("percentage", Required = Required.Always)]
 		public int Percentage { get; set; }
 
-		[JsonProperty("categories", Required = Required.Always)]
-		public List<string> Categories { get; set; }
-
-		[JsonProperty("tip_symbol", Required = Required.Default)]
-		public string TipSymbol { get; set; }
-
-		[JsonProperty("tip_adress", Required = Required.Default)]
-		public string TipAdress { get; set; }
-
-		[JsonProperty("twitter_account", Required = Required.Default)]
-		public string TwitterAccount { get; set; }
-
-		[JsonProperty("event_is_deadline", Required = Required.Always)]
-		public bool EventIsDeadline { get; set; }
+		[JsonProperty("can_occur_before", Required = Required.Always)]
+		public bool CanOccurBefore { get; set; }
 	}
 }

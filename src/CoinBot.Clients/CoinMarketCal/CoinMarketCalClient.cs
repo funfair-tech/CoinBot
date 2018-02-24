@@ -88,11 +88,11 @@ namespace CoinBot.Clients.CoinMarketCal
 					{
 						Title = e.Title,
 						Description = e.Description,
-						Currency = this._currencyManager.Get(e.CoinSymbol),
+						Currency = currency,
 						Date = e.DateEvent,
 						ProofSource = e.Source != null ? new Uri(e.Source) : null,
 						ProofImage = e.Proof != null ? new Uri(e.Proof) : null,
-						IsDeadline = e.EventIsDeadline,
+						CanOccurBefore = e.CanOccurBefore,
 						Reliability = e.Percentage
 					}).ToList();
 
