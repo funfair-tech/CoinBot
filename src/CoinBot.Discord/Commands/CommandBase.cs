@@ -12,8 +12,8 @@ namespace CoinBot.Discord.Commands
 			{
 				Name = "FunFair CoinBot - right click above to block",
 				Url = "https://funfair.io",
-				IconUrl = "https://files.coinmarketcap.com/static/img/coins/32x32/funfair.png"
-			});
+				IconUrl = "https://s2.coinmarketcap.com/static/img/coins/32x32/1757.png"
+            });
 		}
 
 		protected static void AddFooter(EmbedBuilder builder, DateTime? dateTime = null)
