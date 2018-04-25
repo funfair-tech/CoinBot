@@ -9,18 +9,24 @@ Discord Cryptocurrency Bot
 
 3. Application configuration settings:
   * `DiscordBot:Token` [Required] Must be configured with the Discord Bot User Token.
+  * `CoinMarketCal:ClientId` [Required] Must be configured with the [CoinMarketCal](https://api.coinmarketcal.com/developer/register) Client Id.
+  * `CoinMarketCal:ClientSecret` [Required] Must be configured with the [CoinMarketCal](https://api.coinmarketcal.com/developer/register) Client Secret.
   * `MarketManager:RefreshInterval` [Optional] The exchange refresh interval in minutes. Default is `2` minutes.
 
 
 4. Choose how you want to configure the application:
   * Create a file named `appsettings.json` inside the `CoinBot` project and add the following contents: 
- ```json0
+ ```json
 {
   "DiscordBot": {
     "Token": "[Discord Bot User Token goes here]"
   },
   "MarketManager": {
     "RefreshInterval": 2
+  },
+  "CoinMarketCal": {
+    "ClientId": "[CoinMarketCal Client ID goes here]",
+    "ClientSecret": "[CoinMarketCal Client Secret goes here]"
   }
 }
 ```

@@ -9,6 +9,11 @@ namespace CoinBot.Core.Extensions
 	public static class ServiceCollectionExtensions
 	{
 		/// <summary>
+		/// The <see cref="IConfiguration"/> section key of the <see cref="CoinMarketCalSettings"/>.
+		/// </summary>
+		private const string CoinMarketCalSettingsSection = "CoinMarketCal";
+
+		/// <summary>
 		/// The <see cref="IConfiguration"/> section key of the <see cref="MarketManagerSettings"/>.
 		/// </summary>
 		private const string MarketManagerSettingsSection = "MarketManager";
@@ -23,6 +28,7 @@ namespace CoinBot.Core.Extensions
 		{
 			return services
 				.Configure<MarketManagerSettings>(configuration.GetSection(MarketManagerSettingsSection))
+				.Configure<CoinMarketCalSettings>(configuration.GetSection(CoinMarketCalSettingsSection))
 				.AddSingleton<CurrencyManager>()
 				.AddSingleton<MarketManager>()
 				.AddSingleton<EventManager>();
