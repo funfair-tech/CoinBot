@@ -1,0 +1,27 @@
+name: Auto PR Creation
+on:
+  push:
+    branches-ignore:
+    - master
+    - "release/*"
+    - "hotfix/*"
+    - "feature/*"
+    
+jobs:
+  pull-request:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: pull-request
+      uses: repo-sync/pull-request@v2
+      with:
+        source_branch: ""                     # If blank, default: triggered branch
+        destination_branch: "master"          # If blank, default: master
+        pr_assignee: "${{ github.actor }}"    # Comma-separated list (no spaces)
+        pr_label: "auto-pr"                   # Comma-separated list (no spaces)
+        pr_draft: true                        # Creates pull request as draft
+        #pr_title: "${{ github.ref }}"
+        #pr_body: ":crown: *An automated PR* Bring in .github/PULL_REQUEST_TEMPLATE.md"  # Full markdown support, requires pr_title to be set
+        #pr_reviewer: "wei,worker"             # Comma-separated list (no spaces)
+        #pr_milestone: "Milestone 1"           # Milestone name
+        github_token: ${{ secrets.GITHUB_TOKEN }}
