@@ -61,12 +61,12 @@ namespace CoinBot.Clients.Gdax
         {
             try
             {
-                List<GdaxProduct> products = await this.GetProducts();
+                List<GdaxProduct> products = await this.GetProductsAsync();
                 List<GdaxTicker> tickers = new List<GdaxTicker>();
 
                 foreach (GdaxProduct product in products)
                 {
-                    tickers.Add(await this.GetTicker(product.Id));
+                    tickers.Add(await this.GetTickerAsync(product.Id));
                 }
 
                 return tickers.Select(selector: t => new MarketSummaryDto
@@ -92,7 +92,7 @@ namespace CoinBot.Clients.Gdax
         ///     Get the products.
         /// </summary>
         /// <returns></returns>
-        private async Task<GdaxTicker> GetTicker(string productId)
+        private async Task<GdaxTicker> GetTickerAsync(string productId)
         {
             using (HttpResponseMessage response = await this._httpClient.GetAsync(new Uri($"products/{productId}/ticker", UriKind.Relative)))
             {
@@ -107,7 +107,7 @@ namespace CoinBot.Clients.Gdax
         ///     Get the products.
         /// </summary>
         /// <returns></returns>
-        private async Task<List<GdaxProduct>> GetProducts()
+        private async Task<List<GdaxProduct>> GetProductsAsync()
         {
             using (HttpResponseMessage response = await this._httpClient.GetAsync(new Uri(uriString: "products/", UriKind.Relative)))
             {

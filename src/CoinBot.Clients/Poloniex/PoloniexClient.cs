@@ -63,7 +63,7 @@ namespace CoinBot.Clients.Poloniex
         {
             try
             {
-                List<PoloniexTicker> tickers = await this.GetTickers();
+                List<PoloniexTicker> tickers = await this.GetTickersAsync();
 
                 return tickers.Select(selector: t => new MarketSummaryDto
                                                      {
@@ -87,7 +87,7 @@ namespace CoinBot.Clients.Poloniex
         ///     Get the market summaries.
         /// </summary>
         /// <returns></returns>
-        private async Task<List<PoloniexTicker>> GetTickers()
+        private async Task<List<PoloniexTicker>> GetTickersAsync()
         {
             using (HttpResponseMessage response = await this._httpClient.GetAsync(new Uri(uriString: "public?command=returnTicker", UriKind.Relative)))
             {

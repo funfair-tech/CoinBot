@@ -68,12 +68,12 @@ namespace CoinBot.Clients.Liqui
         {
             try
             {
-                List<string> pairs = await this.GetPairs();
+                List<string> pairs = await this.GetPairsAsync();
                 List<LiquiTicker> tickers = new List<LiquiTicker>();
 
                 foreach (string pair in pairs)
                 {
-                    tickers.Add(await this.GetTicker(pair));
+                    tickers.Add(await this.GetTickerAsync(pair));
                 }
 
                 return tickers.Select(selector: m => new MarketSummaryDto
@@ -99,7 +99,7 @@ namespace CoinBot.Clients.Liqui
         ///     Get the market summaries.
         /// </summary>
         /// <returns></returns>
-        private async Task<List<string>> GetPairs()
+        private async Task<List<string>> GetPairsAsync()
         {
             using (HttpResponseMessage response = await this._httpClient.GetAsync(new Uri(uriString: "info", UriKind.Relative)))
             {
@@ -119,7 +119,7 @@ namespace CoinBot.Clients.Liqui
         ///     Get the ticker.
         /// </summary>
         /// <returns></returns>
-        private async Task<LiquiTicker> GetTicker(string pair)
+        private async Task<LiquiTicker> GetTickerAsync(string pair)
         {
             using (HttpResponseMessage response = await this._httpClient.GetAsync(new Uri($"ticker/{pair}", UriKind.Relative)))
             {

@@ -63,7 +63,7 @@ namespace CoinBot.Clients.Binance
         {
             try
             {
-                List<BinanceProduct> products = await this.GetProducts();
+                List<BinanceProduct> products = await this.GetProductsAsync();
 
                 return products.Select(selector: p => new MarketSummaryDto
                                                       {
@@ -88,7 +88,7 @@ namespace CoinBot.Clients.Binance
         ///     Get the market summaries.
         /// </summary>
         /// <returns></returns>
-        private async Task<List<BinanceProduct>> GetProducts()
+        private async Task<List<BinanceProduct>> GetProductsAsync()
         {
             using (HttpResponseMessage response = await this._httpClient.GetAsync(new Uri(uriString: "product", UriKind.Relative)))
             {
