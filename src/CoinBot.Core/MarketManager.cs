@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -12,6 +13,8 @@ namespace CoinBot.Core
 {
     public class MarketManager
     {
+        private readonly BufferBlock<Func<Task>> _bufferBlock;
+
         /// <summary>
         ///     The <see cref="IMarketClient" />s.
         /// </summary>
@@ -41,6 +44,20 @@ namespace CoinBot.Core
             this._tickInterval = TimeSpan.FromMinutes(settings.Value.RefreshInterval);
             this._exchanges = new ReadOnlyDictionary<string, Exchange>(
                 this._clients.ToDictionary(keySelector: client => client.Name, elementSelector: client => new Exchange {Lock = new ReaderWriterLockSlim()}));
+            this._bufferBlock = CreateBufferBlock();
+        }
+
+        private static BufferBlock<Func<Task>> CreateBufferBlock()
+        {
+            BufferBlock<Func<Task>> bufferBlock = new BufferBlock<Func<Task>>();
+
+            // link the buffer block to an action block to process the actions submitted to the buffer.
+            // restrict the number of parallel tasks executing to 1, and only allow 1 messages per task to prevent
+            // tasks submitted here from consuming all the available CPU time.
+            bufferBlock.LinkTo(new ActionBlock<Func<Task>>(action: action => action(),
+                                                           new ExecutionDataflowBlockOptions {MaxDegreeOfParallelism = 1, MaxMessagesPerTask = 1, BoundedCapacity = 1}));
+
+            return bufferBlock;
         }
 
         public IEnumerable<MarketSummaryDto> Get(Currency currency)
@@ -157,7 +174,7 @@ namespace CoinBot.Core
         public void Start()
         {
             // start a timer to fire the tickFunction
-            this._timer = new Timer(callback: async state => await this.TickAsync(), state: null, TimeSpan.FromSeconds(value: 0), Timeout.InfiniteTimeSpan);
+            this._timer = new Timer(this.QueueTick, state: null, TimeSpan.FromSeconds(value: 0), Timeout.InfiniteTimeSpan);
         }
 
         public void Stop()
@@ -165,6 +182,11 @@ namespace CoinBot.Core
             // stop the timer
             this._timer.Dispose();
             this._timer = null;
+        }
+
+        private void QueueTick(object state)
+        {
+            this._bufferBlock.Post(this.TickAsync);
         }
 
         private async Task TickAsync()
@@ -245,7 +267,7 @@ namespace CoinBot.Core
             }
         }
 
-        private class Exchange
+        private sealed class Exchange
         {
             public ReaderWriterLockSlim Lock;
             public IReadOnlyCollection<MarketSummaryDto> Markets;
