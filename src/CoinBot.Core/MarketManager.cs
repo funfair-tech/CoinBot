@@ -167,11 +167,11 @@ namespace CoinBot.Core
             this._timer = null;
         }
 
-        private Task TickAsync()
+        private async Task TickAsync()
         {
             try
             {
-                this.Update();
+                await this.UpdateAsync();
             }
             catch (Exception e)
             {
@@ -182,69 +182,67 @@ namespace CoinBot.Core
                 // and reset the timer
                 this._timer.Change(this._tickInterval, TimeSpan.Zero);
             }
-
-            return Task.CompletedTask;
         }
 
         /// <summary>
         ///     Updates the markets.
         /// </summary>
         /// <returns></returns>
-        private void Update()
+        private Task UpdateAsync()
         {
-            Parallel.ForEach(this._clients,
-                             body: client =>
-                                   {
-                                       if (this._exchanges.TryGetValue(client.Name, out Exchange exchange))
-                                       {
-                                           this._logger.LogInformation($"Start updating exchange '{client.Name}'.");
-                                           Stopwatch watch = new Stopwatch();
-                                           watch.Start();
+            return Task.WhenAll(this._clients.Select(this.UpdateOneClientAsync));
+        }
 
-                                           IReadOnlyCollection<MarketSummaryDto> markets;
+        private async Task UpdateOneClientAsync(IMarketClient client)
+        {
+            if (this._exchanges.TryGetValue(client.Name, out Exchange exchange))
+            {
+                this._logger.LogInformation($"Start updating exchange '{client.Name}'.");
+                Stopwatch watch = new Stopwatch();
+                watch.Start();
 
-                                           try
-                                           {
-                                               markets = client.GetAsync()
-                                                               .Result;
-                                           }
-                                           catch (Exception e)
-                                           {
-                                               this._logger.LogError(eventId: 0, e, $"An error occurred while fetching results from the exchange '{client.Name}'.");
-                                               exchange.Lock.EnterWriteLock();
+                IReadOnlyCollection<MarketSummaryDto> markets;
 
-                                               try
-                                               {
-                                                   // Remove out-of-date market summaries
-                                                   exchange.Markets = null;
-                                               }
-                                               finally
-                                               {
-                                                   exchange.Lock.ExitWriteLock();
-                                               }
+                try
+                {
+                    markets = await client.GetAsync();
+                }
+                catch (Exception e)
+                {
+                    this._logger.LogError(eventId: 0, e, $"An error occurred while fetching results from the exchange '{client.Name}'.");
+                    exchange.Lock.EnterWriteLock();
 
-                                               return;
-                                           }
+                    try
+                    {
+                        // Remove out-of-date market summaries
+                        exchange.Markets = null;
+                    }
+                    finally
+                    {
+                        exchange.Lock.ExitWriteLock();
+                    }
 
-                                           // Update market summaries
-                                           exchange.Lock.EnterWriteLock();
+                    return;
+                }
 
-                                           try
-                                           {
-                                               exchange.Markets = markets;
-                                               watch.Stop();
-                                               this._logger.LogInformation($"Finished updating exchange '{client.Name}' in {watch.ElapsedMilliseconds}ms.");
-                                           }
-                                           finally
-                                           {
-                                               exchange.Lock.ExitWriteLock();
-                                           }
-                                       }
-                                       else
-                                       {
-                                           this._logger.LogWarning(eventId: 0, $"Couldn't find exchange {client.Name}.");
-                                       }
-                                   });
+                // Update market summaries
+                exchange.Lock.EnterWriteLock();
+
+                try
+                {
+                    exchange.Markets = markets;
+                    watch.Stop();
+                    this._logger.LogInformation($"Finished updating exchange '{client.Name}' in {watch.ElapsedMilliseconds}ms.");
+                }
+                finally
+                {
+                    exchange.Lock.ExitWriteLock();
+                }
+            }
+            else
+            {
+                this._logger.LogWarning(eventId: 0, $"Couldn't find exchange {client.Name}.");
+            }
         }
 
         private class Exchange
