@@ -3,14 +3,14 @@ using System.Threading.Tasks;
 
 namespace CoinBot.Core
 {
-	public interface IMarketClient
-	{
-		string Name { get; }
+    public interface IMarketClient
+    {
+        string Name { get; }
 
-		/// <summary>
-		/// TODO
-		/// </summary>
-		/// <returns></returns>
-		Task<IReadOnlyCollection<MarketSummaryDto>> Get();
-	}
+        /// <summary>
+        ///     Gets the market summaries
+        /// </summary>
+        /// <returns></returns>
+        Task<IReadOnlyCollection<MarketSummaryDto>> GetAsync();
+    }
 }
