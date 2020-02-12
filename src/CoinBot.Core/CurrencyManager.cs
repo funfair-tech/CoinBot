@@ -28,7 +28,7 @@ namespace CoinBot.Core
         /// <summary>
         ///     The <see cref="Currency" /> list.
         /// </summary>
-        private IReadOnlyCollection<Currency> _coinInfoCollection = new Currency[0];
+        private IReadOnlyCollection<Currency> _coinInfoCollection = Array.Empty<Currency>();
 
         /// <summary>
         ///     The <see cref="IGlobalInfo" />.
@@ -47,11 +47,11 @@ namespace CoinBot.Core
             this._tickInterval = TimeSpan.FromSeconds(value: 10);
         }
 
-        private async Task Tick()
+        private async Task TickAsync()
         {
             try
             {
-                await Task.WhenAll(this.UpdateCoins(), this.UpdateGlobalInfo());
+                await Task.WhenAll(this.UpdateCoinsAsync(), this.UpdateGlobalInfoAsync());
             }
             catch (Exception e)
             {
@@ -67,7 +67,7 @@ namespace CoinBot.Core
         public void Start()
         {
             // start a timer to fire the tickFunction
-            this._timer = new Timer(callback: async state => await this.Tick(), state: null, TimeSpan.FromSeconds(value: 0), Timeout.InfiniteTimeSpan);
+            this._timer = new Timer(callback: async state => await this.TickAsync(), state: null, TimeSpan.FromSeconds(value: 0), Timeout.InfiniteTimeSpan);
         }
 
         public void Stop()
@@ -105,13 +105,12 @@ namespace CoinBot.Core
             return this._coinInfoCollection.Where(predicate);
         }
 
-        private Task UpdateCoins()
+        private async Task UpdateCoinsAsync()
         {
             ICoinClient client = this._coinClients.First();
 
             //this._lock.EnterWriteLock();
-            List<ICoinInfo> coinInfos = client.GetCoinInfo()
-                                              .Result.ToList();
+            List<ICoinInfo> coinInfos = (await client.GetCoinInfoAsync()).ToList();
 
             List<Currency> currencies = new List<Currency>();
             currencies.AddRange(new[] {new Currency {Symbol = "EUR", Name = "Euro"}, new Currency {Symbol = "USD", Name = "United States dollar"}});
@@ -128,19 +127,13 @@ namespace CoinBot.Core
                                                            }));
 
             this._coinInfoCollection = new ReadOnlyCollection<Currency>(currencies);
-
-            return Task.CompletedTask;
         }
 
-        private Task UpdateGlobalInfo()
+        private async Task UpdateGlobalInfoAsync()
         {
             ICoinClient client = this._coinClients.First();
 
-            //this._lock.EnterWriteLock();
-            this._globalInfo = client.GetGlobalInfo()
-                                     .Result;
-
-            return Task.CompletedTask;
+            this._globalInfo = await client.GetGlobalInfoAsync();
         }
     }
 }
