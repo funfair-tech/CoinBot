@@ -65,7 +65,7 @@ namespace CoinBot.Clients.GateIo
         {
             try
             {
-                List<GateIoTicker> tickers = await this.GetTickers();
+                List<GateIoTicker> tickers = await this.GetTickersAsync();
 
                 return tickers.Select(selector: m => new MarketSummaryDto
                                                      {
@@ -89,7 +89,7 @@ namespace CoinBot.Clients.GateIo
         ///     Get the market summaries.
         /// </summary>
         /// <returns></returns>
-        private async Task<List<GateIoTicker>> GetTickers()
+        private async Task<List<GateIoTicker>> GetTickersAsync()
         {
             using (HttpResponseMessage response = await this._httpClient.GetAsync(new Uri(uriString: "tickers", UriKind.Relative)))
             {

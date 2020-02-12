@@ -64,8 +64,8 @@ namespace CoinBot.Clients.Kraken
         {
             try
             {
-                List<KrakenAsset> assets = await this.GetAssets();
-                List<KrakenPair> pairs = await this.GetPairs();
+                List<KrakenAsset> assets = await this.GetAssetsAsync();
+                List<KrakenPair> pairs = await this.GetPairsAsync();
                 List<KrakenTicker> tickers = new List<KrakenTicker>();
 
                 foreach (KrakenPair pair in pairs)
@@ -76,14 +76,14 @@ namespace CoinBot.Clients.Kraken
                         continue;
                     }
 
-                    tickers.Add(await this.GetTicker(pair));
+                    tickers.Add(await this.GetTickerAsync(pair));
                 }
 
                 return tickers.Select(selector: m =>
                                                 {
-                                                    string baseCurrency = assets.Find(match: a => a.Id.Equals(m.BaseCurrency))
+                                                    string baseCurrency = assets.Find(match: a => StringComparer.InvariantCultureIgnoreCase.Equals(a.Id, m.BaseCurrency))
                                                                                 .Altname;
-                                                    string quoteCurrency = assets.Find(match: a => a.Id.Equals(m.QuoteCurrency))
+                                                    string quoteCurrency = assets.Find(match: a => StringComparer.InvariantCultureIgnoreCase.Equals(a.Id, m.QuoteCurrency))
                                                                                  .Altname;
 
                                                     // Workaround for kraken
@@ -120,7 +120,7 @@ namespace CoinBot.Clients.Kraken
         ///     Get the ticker.
         /// </summary>
         /// <returns></returns>
-        private async Task<List<KrakenAsset>> GetAssets()
+        private async Task<List<KrakenAsset>> GetAssetsAsync()
         {
             using (HttpResponseMessage response = await this._httpClient.GetAsync(new Uri(uriString: "Assets", UriKind.Relative)))
             {
@@ -147,7 +147,7 @@ namespace CoinBot.Clients.Kraken
         ///     Get the market summaries.
         /// </summary>
         /// <returns></returns>
-        private async Task<List<KrakenPair>> GetPairs()
+        private async Task<List<KrakenPair>> GetPairsAsync()
         {
             using (HttpResponseMessage response = await this._httpClient.GetAsync(new Uri(uriString: "AssetPairs", UriKind.Relative)))
             {
@@ -173,7 +173,7 @@ namespace CoinBot.Clients.Kraken
         ///     Get the ticker.
         /// </summary>
         /// <returns></returns>
-        private async Task<KrakenTicker> GetTicker(KrakenPair pair)
+        private async Task<KrakenTicker> GetTickerAsync(KrakenPair pair)
         {
             using (HttpResponseMessage response = await this._httpClient.GetAsync(new Uri($"Ticker?pair={pair.PairId}", UriKind.Relative)))
             {
