@@ -72,7 +72,7 @@ namespace CoinBot.Clients.CoinMarketCap
         ///     update the global info from coinmarketcap
         /// </summary>
         /// <returns></returns>
-        public async Task<IGlobalInfo> GetGlobalInfo()
+        public async Task<IGlobalInfo> GetGlobalInfoAsync()
         {
             try
             {

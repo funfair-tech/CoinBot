@@ -4,12 +4,15 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
 using Microsoft.Extensions.Logging;
 
 namespace CoinBot.Core
 {
     public class CurrencyManager
     {
+        private readonly BufferBlock<Func<Task>> _bufferBlock;
+
         /// <summary>
         ///     The <see cref="ICoinClient" />s.
         /// </summary>
@@ -45,6 +48,20 @@ namespace CoinBot.Core
             this._coinClients = coinClients;
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this._tickInterval = TimeSpan.FromSeconds(value: 10);
+            this._bufferBlock = CreateBufferBlock();
+        }
+
+        private static BufferBlock<Func<Task>> CreateBufferBlock()
+        {
+            BufferBlock<Func<Task>> bufferBlock = new BufferBlock<Func<Task>>();
+
+            // link the buffer block to an action block to process the actions submitted to the buffer.
+            // restrict the number of parallel tasks executing to 1, and only allow 1 messages per task to prevent
+            // tasks submitted here from consuming all the available CPU time.
+            bufferBlock.LinkTo(new ActionBlock<Func<Task>>(action: action => action(),
+                                                           new ExecutionDataflowBlockOptions {MaxDegreeOfParallelism = 1, MaxMessagesPerTask = 1, BoundedCapacity = 1}));
+
+            return bufferBlock;
         }
 
         private async Task TickAsync()
@@ -67,7 +84,12 @@ namespace CoinBot.Core
         public void Start()
         {
             // start a timer to fire the tickFunction
-            this._timer = new Timer(callback: async state => await this.TickAsync(), state: null, TimeSpan.FromSeconds(value: 0), Timeout.InfiniteTimeSpan);
+            this._timer = new Timer(this.QueueTick, state: null, TimeSpan.FromSeconds(value: 0), Timeout.InfiniteTimeSpan);
+        }
+
+        public void QueueTick(object state)
+        {
+            this._bufferBlock.Post(this.TickAsync);
         }
 
         public void Stop()
