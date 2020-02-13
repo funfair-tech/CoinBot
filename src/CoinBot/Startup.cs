@@ -33,23 +33,24 @@ namespace CoinBot
                                                             .AddJsonFile("appsettings-local.json", true)
                                                             .AddEnvironmentVariables()
                                                             .Build();
+        }
 
+        public async Task StartAsync()
+        {
             // Build the service provider
             ServiceCollection services = new ServiceCollection();
-            this.ConfigureServices(services);
+            await this.ConfigureServicesAsync(services);
             ServiceProvider provider = services.BuildServiceProvider();
 
             // Run the application
-            Run(provider)
-                .GetAwaiter()
-                .GetResult();
+            await RunAsync(provider);
         }
 
         /// <summary>
         /// Adds services to the <paramref name="services"/> container.
         /// </summary>
         /// <param name="services">The <see cref="IServiceCollection"/>.</param>
-        private void ConfigureServices(IServiceCollection services)
+        private Task ConfigureServicesAsync(IServiceCollection services)
         {
             Log.Logger = new LoggerConfiguration().Enrich.FromLogContext()
                                                   .WriteTo.Console()
@@ -65,8 +66,9 @@ namespace CoinBot
                                   })
                     .AddMemoryCache()
                     .AddClients()
-                    .AddCore(this._configuration)
-                    .AddCoinBotAsync(this._configuration);
+                    .AddCore(this._configuration);
+
+            return services.AddCoinBotAsync(this._configuration);
         }
 
         /// <summary>
@@ -74,7 +76,7 @@ namespace CoinBot
         /// </summary>
         /// <param name="provider">The <see cref="IServiceProvider"/>.</param>
         /// <returns></returns>
-        private static async Task Run(IServiceProvider provider)
+        private static async Task RunAsync(IServiceProvider provider)
         {
             //set up a task completion source so we can quit on CTRL+C
             TaskCompletionSource<bool> exitSource = new TaskCompletionSource<bool>();
