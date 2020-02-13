@@ -10,12 +10,12 @@ using Newtonsoft.Json.Linq;
 
 namespace CoinBot.Clients.Liqui
 {
-    public class LiquiClient : IMarketClient
+    public sealed class LiquiClient : IMarketClient
     {
         /// <summary>
         ///     The pair separator character.
         /// </summary>
-        private const char PairSeparator = '_';
+        private const char PAIR_SEPARATOR = '_';
 
         /// <summary>
         ///     The <see cref="CurrencyManager" />.
@@ -78,8 +78,8 @@ namespace CoinBot.Clients.Liqui
 
                 return tickers.Select(selector: m => new MarketSummaryDto
                                                      {
-                                                         BaseCurrrency = this._currencyManager.Get(m.Pair.Substring(startIndex: 0, m.Pair.IndexOf(PairSeparator))),
-                                                         MarketCurrency = this._currencyManager.Get(m.Pair.Substring(m.Pair.IndexOf(PairSeparator) + 1)),
+                                                         BaseCurrrency = this._currencyManager.Get(m.Pair.Substring(startIndex: 0, m.Pair.IndexOf(PAIR_SEPARATOR))),
+                                                         MarketCurrency = this._currencyManager.Get(m.Pair.Substring(m.Pair.IndexOf(PAIR_SEPARATOR) + 1)),
                                                          Market = "Liqui",
                                                          Volume = m.Vol,
                                                          LastUpdated = m.Updated,

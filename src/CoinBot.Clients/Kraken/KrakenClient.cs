@@ -10,7 +10,7 @@ using Newtonsoft.Json.Linq;
 
 namespace CoinBot.Clients.Kraken
 {
-    public class KrakenClient : IMarketClient
+    public sealed class KrakenClient : IMarketClient
     {
         /// <summary>
         ///     The <see cref="CurrencyManager" />.
@@ -71,7 +71,7 @@ namespace CoinBot.Clients.Kraken
                 foreach (KrakenPair pair in pairs)
                 {
                     // todo: can't get kraken details on these markets
-                    if (pair.PairId.EndsWith(value: ".d"))
+                    if (pair.PairId.EndsWith(value: ".d", StringComparison.Ordinal))
                     {
                         continue;
                     }

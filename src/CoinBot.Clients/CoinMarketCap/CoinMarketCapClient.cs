@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace CoinBot.Clients.CoinMarketCap
 {
-    public class CoinMarketCapClient : ICoinClient
+    public sealed class CoinMarketCapClient : ICoinClient
     {
         /// <summary>
         ///     The <see cref="Uri" /> of the CoinMarketCap endpoint.
