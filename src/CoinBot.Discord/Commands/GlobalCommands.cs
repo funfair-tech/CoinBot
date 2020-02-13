@@ -1,10 +1,10 @@
-﻿using Discord;
-using Discord.Commands;
-using Microsoft.Extensions.Logging;
-using System.Text;
+﻿using System.Text;
 using System.Threading.Tasks;
 using CoinBot.Core;
 using CoinBot.Core.Extensions;
+using Discord;
+using Discord.Commands;
+using Microsoft.Extensions.Logging;
 
 namespace CoinBot.Discord.Commands
 {
@@ -20,7 +20,7 @@ namespace CoinBot.Discord.Commands
         }
 
         [Command("global"), Summary("get global crypto market information")]
-        public async Task Global()
+        public async Task GlobalAsync()
         {
             using (this.Context.Channel.EnterTypingState())
             {
@@ -39,7 +39,7 @@ namespace CoinBot.Discord.Commands
                 descriptionBuilder.AppendLine($"Assets: {globalInfo.Assets}");
                 descriptionBuilder.AppendLine($"Markets: {globalInfo.Markets}");
                 builder.WithDescription(descriptionBuilder.ToString());
-                
+
                 AddFooter(builder, globalInfo.LastUpdated);
 
                 await this.ReplyAsync(string.Empty, false, builder.Build());

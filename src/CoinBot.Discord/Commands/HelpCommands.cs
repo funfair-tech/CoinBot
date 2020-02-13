@@ -1,7 +1,7 @@
-﻿using Discord;
-using Discord.Commands;
-using System.Text;
+﻿using System.Text;
 using System.Threading.Tasks;
+using Discord;
+using Discord.Commands;
 
 namespace CoinBot.Discord.Commands
 {
@@ -15,7 +15,7 @@ namespace CoinBot.Discord.Commands
         }
 
         [Command("help"), Summary("prints this help text, which you've already figured out")]
-        public async Task Help()
+        public Task HelpAsync()
         {
             EmbedBuilder builder = new EmbedBuilder();
             builder.WithTitle("Help");
@@ -23,6 +23,7 @@ namespace CoinBot.Discord.Commands
             AddFooter(builder);
 
             StringBuilder stringBuilder = new StringBuilder();
+
             foreach (CommandInfo command in this._commandService.Commands)
             {
                 stringBuilder.AppendLine($"!{command.Name} - {command.Summary}");
@@ -30,7 +31,7 @@ namespace CoinBot.Discord.Commands
 
             builder.WithDescription(stringBuilder.ToString());
 
-            await this.ReplyAsync(string.Empty, false, builder);
+            return this.ReplyAsync(string.Empty, false, builder);
         }
     }
 }

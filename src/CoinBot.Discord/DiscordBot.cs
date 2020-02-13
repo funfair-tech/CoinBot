@@ -40,11 +40,11 @@ namespace CoinBot.Discord
         {
             this._serviceProvider = serviceProvider;
             this._logger = this._serviceProvider.GetRequiredService<ILogger>();
-            this.Log += this.HandleLog;
+            this.Log += this.HandleLogAsync;
 
             this._commands = commandService;
-            this._commands.Log += this.HandleLog;
-            this.MessageReceived += this.HandleCommand;
+            this._commands.Log += this.HandleLogAsync;
+            this.MessageReceived += this.HandleCommandAsync;
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace CoinBot.Discord
         /// </summary>
         /// <param name="logParam">The <see cref="LogMessage"/>.</param>
         /// <returns></returns>
-        private async Task HandleLog(LogMessage logParam)
+        private Task HandleLogAsync(LogMessage logParam)
         {
             switch (logParam.Severity)
             {
@@ -106,7 +106,7 @@ namespace CoinBot.Discord
                 }
             }
 
-            await Task.CompletedTask;
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace CoinBot.Discord
         /// </summary>
         /// <param name="messageParam">The <see cref="SocketMessage"/>.</param>
         /// <returns></returns>
-        private async Task HandleCommand(SocketMessage messageParam)
+        private async Task HandleCommandAsync(SocketMessage messageParam)
         {
             if (!(messageParam is SocketUserMessage message)) return;
 
