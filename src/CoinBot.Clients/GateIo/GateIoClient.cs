@@ -10,9 +10,9 @@ using Newtonsoft.Json.Linq;
 
 namespace CoinBot.Clients.GateIo
 {
-    public class GateIoClient : IMarketClient
+    public sealed class GateIoClient : IMarketClient
     {
-        private const char PairSeparator = '_';
+        private const char PAIR_SEPARATOR = '_';
 
         /// <summary>
         ///     The <see cref="CurrencyManager" />.
@@ -69,8 +69,8 @@ namespace CoinBot.Clients.GateIo
 
                 return tickers.Select(selector: m => new MarketSummaryDto
                                                      {
-                                                         BaseCurrrency = this._currencyManager.Get(m.Pair.Substring(startIndex: 0, m.Pair.IndexOf(PairSeparator))),
-                                                         MarketCurrency = this._currencyManager.Get(m.Pair.Substring(m.Pair.IndexOf(PairSeparator) + 1)),
+                                                         BaseCurrrency = this._currencyManager.Get(m.Pair.Substring(startIndex: 0, m.Pair.IndexOf(PAIR_SEPARATOR))),
+                                                         MarketCurrency = this._currencyManager.Get(m.Pair.Substring(m.Pair.IndexOf(PAIR_SEPARATOR) + 1)),
                                                          Market = "Gate.io",
                                                          Volume = m.BaseVolume,
                                                          Last = m.Last

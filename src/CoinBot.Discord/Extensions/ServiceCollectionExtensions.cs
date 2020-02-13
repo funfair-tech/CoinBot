@@ -15,7 +15,7 @@ namespace CoinBot.Discord.Extensions
         /// <summary>
         /// The <see cref="IConfiguration"/> section key of the <see cref="DiscordBotSettings"/>.
         /// </summary>
-        private const string DiscordBotSettingsSection = "DiscordBot";
+        private const string DISCORD_BOT_SETTINGS_SECTION = "DiscordBot";
 
         /// <summary>
         /// Adds the CoinBot to the <paramref name="services"/>.
@@ -27,7 +27,7 @@ namespace CoinBot.Discord.Extensions
         {
             CommandService commands = await AddCommandsAsync();
 
-            return services.Configure<DiscordBotSettings>(configuration.GetSection(DiscordBotSettingsSection))
+            return services.Configure<DiscordBotSettings>(configuration.GetSection(DISCORD_BOT_SETTINGS_SECTION))
                            .AddSingleton(commands)
                            .AddSingleton<DiscordBot>();
         }
