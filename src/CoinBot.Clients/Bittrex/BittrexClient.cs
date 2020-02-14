@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using CoinBot.Core;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -96,6 +97,12 @@ namespace CoinBot.Clients.Bittrex
 
                 return summaries.Result;
             }
+        }
+
+        public static void Register(IServiceCollection services)
+        {
+            // TODO: Add Http Client Factory
+            services.AddSingleton<IMarketClient, BittrexClient>();
         }
     }
 }

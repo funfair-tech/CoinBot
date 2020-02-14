@@ -31,7 +31,7 @@ namespace CoinBot.Discord.Commands
 
             builder.WithDescription(stringBuilder.ToString());
 
-            return this.ReplyAsync(string.Empty, false, builder);
+            return this.ReplyAsync(string.Empty, false, builder.Build());
         }
     }
 }

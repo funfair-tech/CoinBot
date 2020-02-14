@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using CoinBot.Core;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -113,6 +114,12 @@ namespace CoinBot.Clients.Gdax
             {
                 return JsonConvert.DeserializeObject<List<GdaxProduct>>(await response.Content.ReadAsStringAsync(), this._serializerSettings);
             }
+        }
+
+        public static void Register(IServiceCollection services)
+        {
+            // TODO: Add HTTP Client Factory
+            services.AddSingleton<IMarketClient, GdaxClient>();
         }
     }
 }

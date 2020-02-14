@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using CoinBot.Core;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -107,6 +108,12 @@ namespace CoinBot.Clients.GateIo
 
                 return tickers;
             }
+        }
+
+        public static void Register(IServiceCollection services)
+        {
+            // TODO: Add HTTP Client factory.
+            services.AddSingleton<IMarketClient, GateIoClient>();
         }
     }
 }

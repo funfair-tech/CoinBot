@@ -48,8 +48,8 @@ namespace CoinBot.Discord.Commands
                             builder.WithDescription(details.GetDescription());
                             builder.WithUrl(details.Url);
                             if (currency.ImageUrl != null) builder.WithThumbnailUrl(currency.ImageUrl);
-                            builder.AddInlineField("Price", details.GetPrice());
-                            builder.AddInlineField("Change", details.GetChange());
+                            builder.AddField("Price", details.GetPrice());
+                            builder.AddField("Change", details.GetChange());
                             AddFooter(builder, details.LastUpdated);
                         }
 
