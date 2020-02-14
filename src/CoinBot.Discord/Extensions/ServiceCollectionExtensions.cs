@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using CoinBot.Discord.Commands;
 using Discord;
 using Discord.Commands;
@@ -25,23 +26,23 @@ namespace CoinBot.Discord.Extensions
         /// <returns></returns>
         public static async Task<IServiceCollection> AddCoinBotAsync(this IServiceCollection services, IConfiguration configuration)
         {
-            CommandService commands = await AddCommandsAsync();
+            CommandService commands = await AddCommandsAsync(services);
 
             return services.Configure<DiscordBotSettings>(configuration.GetSection(DISCORD_BOT_SETTINGS_SECTION))
                            .AddSingleton(commands)
                            .AddSingleton<DiscordBot>();
         }
 
-        private static async Task<CommandService> AddCommandsAsync()
+        private static async Task<CommandService> AddCommandsAsync(IServiceProvider serviceProvider)
         {
             CommandService commandService = new CommandService(new CommandServiceConfig {DefaultRunMode = RunMode.Async, LogLevel = LogSeverity.Debug});
 
             // Add the command modules
-            await commandService.AddModuleAsync<CoinCommands>();
-            await commandService.AddModuleAsync<GlobalCommands>();
-            await commandService.AddModuleAsync<HelpCommands>();
-            await commandService.AddModuleAsync<PriceCommands>();
-            await commandService.AddModuleAsync<MarketsCommands>();
+            await commandService.AddModuleAsync<CoinCommands>(serviceProvider);
+            await commandService.AddModuleAsync<GlobalCommands>(serviceProvider);
+            await commandService.AddModuleAsync<HelpCommands>(serviceProvider);
+            await commandService.AddModuleAsync<PriceCommands>(serviceProvider);
+            await commandService.AddModuleAsync<MarketsCommands>(serviceProvider);
 
             return commandService;
         }

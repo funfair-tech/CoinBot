@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using CoinBot.Core;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -132,6 +133,12 @@ namespace CoinBot.Clients.Liqui
 
                 return ticker;
             }
+        }
+
+        public static void Register(IServiceCollection services)
+        {
+            // TODO: Add Http Client Factory
+            services.AddSingleton<IMarketClient, LiquiClient>();
         }
     }
 }

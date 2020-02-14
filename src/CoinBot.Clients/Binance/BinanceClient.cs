@@ -3,29 +3,33 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using CoinBot.Clients.Extensions;
 using CoinBot.Core;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace CoinBot.Clients.Binance
 {
-    public class BinanceClient : IMarketClient
+    public sealed class BinanceClient : IMarketClient
     {
+        private const string HTTP_CLIENT_NAME = @"Binance";
+
+        /// <summary>
+        ///     The <see cref="Uri" /> of the CoinMarketCap endpoint.
+        /// </summary>
+        private static readonly Uri Endpoint = new Uri(uriString: "https://www.binance.com/exchange/public/", UriKind.Absolute);
+
         /// <summary>
         ///     The <see cref="CurrencyManager" />.
         /// </summary>
         private readonly CurrencyManager _currencyManager;
 
         /// <summary>
-        ///     The <see cref="Uri" /> of the CoinMarketCap endpoint.
+        /// Http Client Factory,.
         /// </summary>
-        private readonly Uri _endpoint = new Uri(uriString: "https://www.binance.com/exchange/public/", UriKind.Absolute);
-
-        /// <summary>
-        ///     The <see cref="HttpClient" />.
-        /// </summary>
-        private readonly HttpClient _httpClient;
+        private readonly IHttpClientFactory _httpClientFactory;
 
         /// <summary>
         ///     The <see cref="ILogger" />.
@@ -37,11 +41,13 @@ namespace CoinBot.Clients.Binance
         /// </summary>
         private readonly JsonSerializerSettings _serializerSettings;
 
-        public BinanceClient(ILogger logger, CurrencyManager currencyManager)
+        public BinanceClient(IHttpClientFactory httpClientFactory, ILogger<BinanceClient> logger, CurrencyManager currencyManager)
         {
+            this._httpClientFactory = httpClientFactory;
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this._currencyManager = currencyManager ?? throw new ArgumentNullException(nameof(currencyManager));
-            this._httpClient = new HttpClient {BaseAddress = this._endpoint};
+
+            //this._httpClient = new HttpClient {BaseAddress = this._endpoint};
 
             this._serializerSettings = new JsonSerializerSettings
                                        {
@@ -56,7 +62,7 @@ namespace CoinBot.Clients.Binance
         /// <summary>
         ///     The Exchange name.
         /// </summary>
-        public string Name => "Binance";
+        public string Name => @"Binance";
 
         /// <inheritdoc />
         public async Task<IReadOnlyCollection<MarketSummaryDto>> GetAsync()
@@ -84,21 +90,29 @@ namespace CoinBot.Clients.Binance
             }
         }
 
+        public static void Register(IServiceCollection services)
+        {
+            services.AddSingleton<IMarketClient, BinanceClient>();
+
+            services.AddHttpClientFactorySupport(HTTP_CLIENT_NAME, Endpoint);
+        }
+
         /// <summary>
         ///     Get the market summaries.
         /// </summary>
         /// <returns></returns>
         private async Task<List<BinanceProduct>> GetProductsAsync()
         {
-            using (HttpResponseMessage response = await this._httpClient.GetAsync(new Uri(uriString: "product", UriKind.Relative)))
+            HttpClient httpClient = this._httpClientFactory.CreateClient(HTTP_CLIENT_NAME);
+
+            using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "product", UriKind.Relative)))
             {
                 string json = await response.Content.ReadAsStringAsync();
                 JObject jObject = JObject.Parse(json);
-                List<BinanceProduct> products = JsonConvert.DeserializeObject<List<BinanceProduct>>(jObject[propertyName: "data"]
-                                                                                                        .ToString(),
-                                                                                                    this._serializerSettings);
 
-                return products;
+                return JsonConvert.DeserializeObject<List<BinanceProduct>>(jObject[propertyName: "data"]
+                                                                               .ToString(),
+                                                                           this._serializerSettings);
             }
         }
     }
