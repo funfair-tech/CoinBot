@@ -5,6 +5,9 @@
 "SQL":
     - db/**/*
     - tools/**/*.sql
+    
+"Solidity":
+    - *.sol
 
 "unit-tests":
     - src/*.Tests.*/**/*
