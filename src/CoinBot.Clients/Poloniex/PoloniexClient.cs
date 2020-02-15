@@ -59,7 +59,7 @@ namespace CoinBot.Clients.Poloniex
 
                 return tickers.Select(selector: t => new MarketSummaryDto
                                                      {
-                                                         BaseCurrrency = this._currencyManager.Get(t.Pair.Substring(startIndex: 0, t.Pair.IndexOf(value: '_'))),
+                                                         BaseCurrency = this._currencyManager.Get(t.Pair.Substring(startIndex: 0, t.Pair.IndexOf(value: '_'))),
                                                          MarketCurrency = this._currencyManager.Get(t.Pair.Substring(t.Pair.IndexOf(value: '_') + 1)),
                                                          Market = "Poloniex",
                                                          Volume = t.BaseVolume,

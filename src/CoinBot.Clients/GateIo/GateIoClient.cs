@@ -61,7 +61,7 @@ namespace CoinBot.Clients.GateIo
 
                 return tickers.Select(selector: m => new MarketSummaryDto
                                                      {
-                                                         BaseCurrrency = this._currencyManager.Get(m.Pair.Substring(startIndex: 0, m.Pair.IndexOf(PAIR_SEPARATOR))),
+                                                         BaseCurrency = this._currencyManager.Get(m.Pair.Substring(startIndex: 0, m.Pair.IndexOf(PAIR_SEPARATOR))),
                                                          MarketCurrency = this._currencyManager.Get(m.Pair.Substring(m.Pair.IndexOf(PAIR_SEPARATOR) + 1)),
                                                          Market = "Gate.io",
                                                          Volume = m.BaseVolume,

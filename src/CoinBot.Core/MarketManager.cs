@@ -59,12 +59,12 @@ namespace CoinBot.Core
                     IEnumerable<MarketSummaryDto> markets = exchange.Markets.Where(predicate: m =>
                                                                                               {
                                                                                                   // TODO FIX EMPTY CURRENCIES
-                                                                                                  if (m.BaseCurrrency == null || m.MarketCurrency == null)
+                                                                                                  if (m.BaseCurrency == null || m.MarketCurrency == null)
                                                                                                   {
                                                                                                       return false;
                                                                                                   }
 
-                                                                                                  if (m.BaseCurrrency?.Symbol.Equals(currency.Symbol,
+                                                                                                  if (m.BaseCurrency?.Symbol.Equals(currency.Symbol,
                                                                                                                                      StringComparison.OrdinalIgnoreCase) != false ||
                                                                                                       m.MarketCurrency?.Symbol.Equals(currency.Symbol,
                                                                                                                                       StringComparison.OrdinalIgnoreCase) != false)
@@ -112,17 +112,17 @@ namespace CoinBot.Core
                     IEnumerable<MarketSummaryDto> markets = exchange.Markets.Where(predicate: m =>
                                                                                               {
                                                                                                   // TODO FIX EMPTY CURRENCIES
-                                                                                                  if (m.BaseCurrrency == null || m.MarketCurrency == null)
+                                                                                                  if (m.BaseCurrency == null || m.MarketCurrency == null)
                                                                                                   {
                                                                                                       return false;
                                                                                                   }
 
-                                                                                                  if (m.BaseCurrrency?.Symbol.Equals(currency1.Symbol,
+                                                                                                  if (m.BaseCurrency?.Symbol.Equals(currency1.Symbol,
                                                                                                                                      StringComparison.OrdinalIgnoreCase) != false &&
                                                                                                       m.MarketCurrency?.Symbol.Equals(currency2.Symbol,
                                                                                                                                       StringComparison.OrdinalIgnoreCase) !=
                                                                                                       false ||
-                                                                                                      m.BaseCurrrency?.Symbol.Equals(currency2.Symbol,
+                                                                                                      m.BaseCurrency?.Symbol.Equals(currency2.Symbol,
                                                                                                                                      StringComparison.OrdinalIgnoreCase) != false &&
                                                                                                       m.MarketCurrency?.Symbol.Equals(currency1.Symbol,
                                                                                                                                       StringComparison.OrdinalIgnoreCase) != false)

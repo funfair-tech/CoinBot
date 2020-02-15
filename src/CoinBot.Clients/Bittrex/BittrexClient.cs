@@ -58,7 +58,7 @@ namespace CoinBot.Clients.Bittrex
 
                 return summaries.Select(selector: m => new MarketSummaryDto
                                                        {
-                                                           BaseCurrrency = this._currencyManager.Get(m.MarketName.Substring(startIndex: 0, m.MarketName.IndexOf(value: '-'))),
+                                                           BaseCurrency = this._currencyManager.Get(m.MarketName.Substring(startIndex: 0, m.MarketName.IndexOf(value: '-'))),
                                                            MarketCurrency = this._currencyManager.Get(m.MarketName.Substring(m.MarketName.IndexOf(value: '-') + 1)),
                                                            Market = "Bittrex",
                                                            Volume = m.BaseVolume,

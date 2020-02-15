@@ -4,16 +4,32 @@ namespace CoinBot.Core
 {
 	public sealed class MarketSummaryDto
 	{
-		public Currency BaseCurrrency { get; set; }
+        public MarketSummaryDto(
+            string market,
+            Currency baseCurrency,
+            Currency marketCurrency,
+            decimal? volume,
+            decimal? last,
+            DateTime lastUpdated)
+        {
+            this.BaseCurrency = baseCurrency;
+            this.MarketCurrency = marketCurrency;
+            this.Market = market;
+            this.Volume = volume;
+            this.Last = last;
+            this.LastUpdated = lastUpdated;
+        }
 
-		public Currency MarketCurrency { get; set; }
+		public Currency BaseCurrency { get;  }
 
-		public string Market { get; set; }
+		public Currency MarketCurrency { get;  }
 
-		public decimal? Volume { get; set; }
+		public string Market { get;  }
 
-		public decimal? Last { get; set; }
+		public decimal? Volume { get;  }
 
-		public DateTime? LastUpdated { get; set; }
+		public decimal? Last { get;  }
+
+		public DateTime LastUpdated { get;  }
 	}
 }

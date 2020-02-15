@@ -98,7 +98,7 @@ namespace CoinBot.Discord.Commands
                                 marketDetails.AppendLine($"Found {diff} more {primaryCurrency.Symbol} market(s) at {exchangeName}:");
                                 marketDetails.AppendLine(string.Join(", ",
                                                                      group.Skip(maxResults)
-                                                                          .Select(m => $"{m.BaseCurrrency.Symbol}/{m.MarketCurrency.Symbol}")));
+                                                                          .Select(m => $"{m.BaseCurrency.Symbol}/{m.MarketCurrency.Symbol}")));
                             }
                             else
                             {

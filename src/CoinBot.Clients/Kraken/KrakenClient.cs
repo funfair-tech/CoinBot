@@ -68,33 +68,7 @@ namespace CoinBot.Clients.Kraken
                 KrakenTicker[] tickers = await Task.WhenAll(pairs.Where(IsValid)
                                                                  .Select(this.GetTickerAsync));
 
-                return tickers.Select(selector: m =>
-                                                {
-                                                    string baseCurrency = assets.Find(match: a => StringComparer.InvariantCultureIgnoreCase.Equals(a.Id, m.BaseCurrency))
-                                                                                .Altname;
-                                                    string quoteCurrency = assets.Find(match: a => StringComparer.InvariantCultureIgnoreCase.Equals(a.Id, m.QuoteCurrency))
-                                                                                 .Altname;
-
-                                                    // Workaround for kraken
-                                                    if (baseCurrency.Equals(value: "xbt", StringComparison.OrdinalIgnoreCase))
-                                                    {
-                                                        baseCurrency = "btc";
-                                                    }
-
-                                                    if (quoteCurrency.Equals(value: "xbt", StringComparison.OrdinalIgnoreCase))
-                                                    {
-                                                        quoteCurrency = "btc";
-                                                    }
-
-                                                    return new MarketSummaryDto
-                                                           {
-                                                               BaseCurrrency = this._currencyManager.Get(baseCurrency),
-                                                               MarketCurrency = this._currencyManager.Get(quoteCurrency),
-                                                               Market = "Kraken",
-                                                               Volume = m.Volume[1],
-                                                               Last = m.Last[0]
-                                                           };
-                                                })
+                return tickers.Select(selector: m => this.CreateMarketSummaryDto(assets, m))
                               .ToList();
             }
             catch (Exception e)
@@ -103,6 +77,32 @@ namespace CoinBot.Clients.Kraken
 
                 throw;
             }
+        }
+
+        private MarketSummaryDto CreateMarketSummaryDto(List<KrakenAsset> assets, KrakenTicker ticker)
+        {
+            string baseCurrency = assets.Find(match: a => StringComparer.InvariantCultureIgnoreCase.Equals(a.Id, ticker.BaseCurrency))
+                                        .Altname;
+            string quoteCurrency = assets.Find(match: a => StringComparer.InvariantCultureIgnoreCase.Equals(a.Id, ticker.QuoteCurrency))
+                                         .Altname;
+
+            // Workaround for kraken
+            if (baseCurrency.Equals(value: "xbt", StringComparison.OrdinalIgnoreCase))
+            {
+                baseCurrency = "btc";
+            }
+
+            if (quoteCurrency.Equals(value: "xbt", StringComparison.OrdinalIgnoreCase))
+            {
+                quoteCurrency = "btc";
+            }
+
+            return new MarketSummaryDto(market: "Kraken",
+                                        baseCurrency: this._currencyManager.Get(baseCurrency),
+                                        marketCurrency: this._currencyManager.Get(quoteCurrency),
+                                        volume: ticker.Volume[1],
+                                        last: ticker.Last[0],
+                                        lastUpdated: DateTime.UtcNow);
         }
 
         /// <summary>
