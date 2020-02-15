@@ -60,47 +60,63 @@ namespace CoinBot.Clients.Liqui
         {
             try
             {
-                List<string> pairs = await this.GetPairsAsync();
+                IReadOnlyList<string> pairs = await this.GetPairsAsync();
 
                 LiquiTicker[] tickers = await Task.WhenAll(pairs.Select(this.GetTickerAsync));
 
-                return tickers.Select(selector: m => new MarketSummaryDto
-                                                     {
-                                                         BaseCurrrency = this._currencyManager.Get(m.Pair.Substring(startIndex: 0, m.Pair.IndexOf(PAIR_SEPARATOR))),
-                                                         MarketCurrency = this._currencyManager.Get(m.Pair.Substring(m.Pair.IndexOf(PAIR_SEPARATOR) + 1)),
-                                                         Market = "Liqui",
-                                                         Volume = m.Vol,
-                                                         LastUpdated = m.Updated,
-                                                         Last = m.Last
-                                                     })
+                return tickers.Select(this.CreateMarketSummaryDto)
                               .ToList();
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                this.Logger.LogError(new EventId(e.HResult), e, e.Message);
+                this.Logger.LogError(new EventId(exception.HResult), exception, exception.Message);
 
                 throw;
             }
+        }
+
+        private MarketSummaryDto CreateMarketSummaryDto(LiquiTicker m)
+        {
+            return new MarketSummaryDto
+                   {
+                       BaseCurrrency = this._currencyManager.Get(m.Pair.Substring(startIndex: 0, m.Pair.IndexOf(PAIR_SEPARATOR))),
+                       MarketCurrency = this._currencyManager.Get(m.Pair.Substring(m.Pair.IndexOf(PAIR_SEPARATOR) + 1)),
+                       Market = "Liqui",
+                       Volume = m.Vol,
+                       LastUpdated = m.Updated,
+                       Last = m.Last
+                   };
         }
 
         /// <summary>
         ///     Get the market summaries.
         /// </summary>
         /// <returns></returns>
-        private async Task<List<string>> GetPairsAsync()
+        private async Task<IReadOnlyList<string>> GetPairsAsync()
         {
-            HttpClient httpClient = this.CreateHttpClient();
-
-            using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "info", UriKind.Relative)))
+            try
             {
-                string json = await response.Content.ReadAsStringAsync();
-                JObject jResponse = JObject.Parse(json);
+                HttpClient httpClient = this.CreateHttpClient();
 
-                return jResponse.GetValue(propertyName: "pairs")
-                                .Children()
-                                .Cast<JProperty>()
-                                .Select(selector: property => property.Name)
-                                .ToList();
+                using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "info", UriKind.Relative)))
+                {
+                    response.EnsureSuccessStatusCode();
+
+                    string json = await response.Content.ReadAsStringAsync();
+                    JObject jResponse = JObject.Parse(json);
+
+                    return jResponse.GetValue(propertyName: "pairs")
+                                    .Children()
+                                    .Cast<JProperty>()
+                                    .Select(selector: property => property.Name)
+                                    .ToList();
+                }
+            }
+            catch (Exception exception)
+            {
+                this.Logger.LogError(new EventId(exception.HResult), exception, exception.Message);
+
+                return Array.Empty<string>();
             }
         }
 
