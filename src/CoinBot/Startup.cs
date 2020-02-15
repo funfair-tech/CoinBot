@@ -18,63 +18,62 @@ namespace CoinBot
     internal sealed class Startup
     {
         /// <summary>
-        /// The <see cref="IConfigurationRoot"/>.
+        ///     The <see cref="IConfigurationRoot" />.
         /// </summary>
         private readonly IConfigurationRoot _configuration;
 
         /// <summary>
-        /// Constructs a <see cref="Startup"/>.
+        ///     Constructs a <see cref="Startup" />.
         /// </summary>
         internal Startup()
         {
             // Load the application configuration
             this._configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
-                                                            .AddJsonFile("appsettings.json", true)
-                                                            .AddJsonFile("appsettings-local.json", true)
+                                                            .AddJsonFile(path: "appsettings.json", optional: true)
+                                                            .AddJsonFile(path: "appsettings-local.json", optional: true)
                                                             .AddEnvironmentVariables()
                                                             .Build();
         }
 
-        public async Task StartAsync()
+        public Task StartAsync()
         {
             // Build the service provider
             ServiceCollection services = new ServiceCollection();
-            await this.ConfigureServicesAsync(services);
+            this.ConfigureServices(services);
             ServiceProvider provider = services.BuildServiceProvider();
 
             // Run the application
-            await RunAsync(provider);
+            return RunAsync(provider);
         }
 
         /// <summary>
-        /// Adds services to the <paramref name="services"/> container.
+        ///     Adds services to the <paramref name="services" /> container.
         /// </summary>
-        /// <param name="services">The <see cref="IServiceCollection"/>.</param>
-        private Task ConfigureServicesAsync(IServiceCollection services)
+        /// <param name="services">The <see cref="IServiceCollection" />.</param>
+        private void ConfigureServices(IServiceCollection services)
         {
             Log.Logger = new LoggerConfiguration().Enrich.FromLogContext()
                                                   .WriteTo.Console()
                                                   .CreateLogger();
 
             services.AddOptions()
-                    .AddSingleton(provider =>
-                                  {
-                                      // set up an ILogger
-                                      ILoggerFactory loggerFactory = new LoggerFactory().AddSerilog();
+                    .AddSingleton(implementationFactory: provider =>
+                                                         {
+                                                             // set up an ILogger
+                                                             ILoggerFactory loggerFactory = new LoggerFactory().AddSerilog();
 
-                                      return loggerFactory.CreateLogger(nameof(CoinBot));
-                                  })
+                                                             return loggerFactory.CreateLogger(nameof(CoinBot));
+                                                         })
                     .AddMemoryCache()
                     .AddClients()
-                    .AddCore(this._configuration);
-
-            return services.AddCoinBotAsync(this._configuration);
+                    .AddCore(this._configuration)
+                    .AddCoinBot(this._configuration);
         }
 
         /// <summary>
-        /// Starts the <see cref="CoinBot"/>.
+        ///     Starts the <see cref="CoinBot" />.
         /// </summary>
-        /// <param name="provider">The <see cref="IServiceProvider"/>.</param>
+        /// <param name="provider">The <see cref="IServiceProvider" />.</param>
         /// <returns></returns>
         private static async Task RunAsync(IServiceProvider provider)
         {
@@ -83,8 +82,9 @@ namespace CoinBot
             Console.CancelKeyPress += (sender, eventArgs) =>
                                       {
                                           eventArgs.Cancel = true;
-                                          exitSource.SetResult(true);
+                                          exitSource.SetResult(result: true);
                                       };
+            await provider.AddCommandsAsync();
 
             CurrencyManager coinManager = provider.GetRequiredService<CurrencyManager>();
             MarketManager marketManager = provider.GetRequiredService<MarketManager>();
