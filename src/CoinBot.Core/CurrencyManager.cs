@@ -2,31 +2,17 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
 using Microsoft.Extensions.Logging;
 
 namespace CoinBot.Core
 {
-    public sealed class CurrencyManager
+    public sealed class CurrencyManager : TickingService
     {
-        private readonly BufferBlock<Func<Task>> _bufferBlock;
-
         /// <summary>
         ///     The <see cref="ICoinClient" />s.
         /// </summary>
-        private readonly IEnumerable<ICoinClient> _coinClients;
-
-        /// <summary>
-        ///     The <see cref="ILogger" />.
-        /// </summary>
-        private readonly ILogger _logger;
-
-        /// <summary>
-        ///     The <see cref="TimeSpan" />.
-        /// </summary>
-        private readonly TimeSpan _tickInterval;
+        private readonly IReadOnlyList<ICoinClient> _coinClients;
 
         /// <summary>
         ///     The <see cref="Currency" /> list.
@@ -39,37 +25,17 @@ namespace CoinBot.Core
         private IGlobalInfo? _globalInfo;
 
         /// <summary>
-        ///     The <see cref="Timer" />.
-        /// </summary>
-        private Timer? _timer;
-
-        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="logger">Logging</param>
         /// <param name="coinClients">Clients</param>
         public CurrencyManager(ILogger<CurrencyManager> logger, IEnumerable<ICoinClient> coinClients)
+            : base(TimeSpan.FromSeconds(value: 10), logger)
         {
-            this._coinClients = coinClients;
-            this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            this._tickInterval = TimeSpan.FromSeconds(value: 10);
-            this._bufferBlock = CreateBufferBlock();
+            this._coinClients = coinClients.ToArray();
         }
 
-        private static BufferBlock<Func<Task>> CreateBufferBlock()
-        {
-            BufferBlock<Func<Task>> bufferBlock = new BufferBlock<Func<Task>>();
-
-            // link the buffer block to an action block to process the actions submitted to the buffer.
-            // restrict the number of parallel tasks executing to 1, and only allow 1 messages per task to prevent
-            // tasks submitted here from consuming all the available CPU time.
-            bufferBlock.LinkTo(new ActionBlock<Func<Task>>(action: action => action(),
-                                                           new ExecutionDataflowBlockOptions {MaxDegreeOfParallelism = 1, MaxMessagesPerTask = 1, BoundedCapacity = 1}));
-
-            return bufferBlock;
-        }
-
-        private async Task TickAsync()
+        protected override async Task TickAsync()
         {
             try
             {
@@ -77,31 +43,8 @@ namespace CoinBot.Core
             }
             catch (Exception e)
             {
-                this._logger.LogError(new EventId(e.HResult), e, e.Message);
+                this.Logger.LogError(new EventId(e.HResult), e, e.Message);
             }
-            finally
-            {
-                // and reset the timer
-                this._timer?.Change(this._tickInterval, TimeSpan.Zero);
-            }
-        }
-
-        public void Start()
-        {
-            // start a timer to fire the tickFunction
-            this._timer = new Timer(this.QueueTick, state: null, TimeSpan.FromSeconds(value: 0), Timeout.InfiniteTimeSpan);
-        }
-
-        public void QueueTick(object state)
-        {
-            this._bufferBlock.Post(this.TickAsync);
-        }
-
-        public void Stop()
-        {
-            // stop the timer
-            this._timer?.Dispose();
-            this._timer = null;
         }
 
         public IGlobalInfo? GetGlobalInfo()

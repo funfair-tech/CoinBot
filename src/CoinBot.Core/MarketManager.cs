@@ -5,16 +5,13 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace CoinBot.Core
 {
-    public class MarketManager
+    public sealed class MarketManager : TickingService
     {
-        private readonly BufferBlock<Func<Task>> _bufferBlock;
-
         /// <summary>
         ///     The <see cref="IMarketClient" />s.
         /// </summary>
@@ -23,41 +20,17 @@ namespace CoinBot.Core
         private readonly IReadOnlyDictionary<string, Exchange> _exchanges;
 
         /// <summary>
-        ///     The <see cref="ILogger" />.
+        /// Constructor.
         /// </summary>
-        private readonly ILogger _logger;
-
-        /// <summary>
-        ///     The tick interval <see cref="TimeSpan" />.
-        /// </summary>
-        private readonly TimeSpan _tickInterval;
-
-        /// <summary>
-        ///     The <see cref="Timer" />.
-        /// </summary>
-        private Timer _timer;
-
-        public MarketManager(IOptions<MarketManagerSettings> settings, IEnumerable<IMarketClient> clients, ILogger logger)
+        /// <param name="settings">Settings.</param>
+        /// <param name="clients">Market Clients.</param>
+        /// <param name="logger">Logging</param>
+        public MarketManager(IOptions<MarketManagerSettings> settings, IEnumerable<IMarketClient> clients, ILogger<MarketManager> logger)
+            : base(TimeSpan.FromMinutes(settings.Value.RefreshInterval), logger)
         {
-            this._clients = clients.ToList() ?? throw new ArgumentNullException(nameof(clients));
-            this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            this._tickInterval = TimeSpan.FromMinutes(settings.Value.RefreshInterval);
+            this._clients = clients?.ToList() ?? throw new ArgumentNullException(nameof(clients));
             this._exchanges = new ReadOnlyDictionary<string, Exchange>(
                 this._clients.ToDictionary(keySelector: client => client.Name, elementSelector: client => new Exchange {Lock = new ReaderWriterLockSlim()}));
-            this._bufferBlock = CreateBufferBlock();
-        }
-
-        private static BufferBlock<Func<Task>> CreateBufferBlock()
-        {
-            BufferBlock<Func<Task>> bufferBlock = new BufferBlock<Func<Task>>();
-
-            // link the buffer block to an action block to process the actions submitted to the buffer.
-            // restrict the number of parallel tasks executing to 1, and only allow 1 messages per task to prevent
-            // tasks submitted here from consuming all the available CPU time.
-            bufferBlock.LinkTo(new ActionBlock<Func<Task>>(action: action => action(),
-                                                           new ExecutionDataflowBlockOptions {MaxDegreeOfParallelism = 1, MaxMessagesPerTask = 1, BoundedCapacity = 1}));
-
-            return bufferBlock;
         }
 
         public IEnumerable<MarketSummaryDto> Get(Currency currency)
@@ -72,7 +45,7 @@ namespace CoinBot.Core
                 // Enter read lock with a timeout of 3 seconds to continue to the next exchange.
                 if (!exchange.Lock.TryEnterReadLock(TimeSpan.FromSeconds(value: 3)))
                 {
-                    this._logger.LogWarning(eventId: 0, $"The '{name}' exchange was locked for more than 3 seconds.");
+                    this.Logger.LogWarning(eventId: 0, $"The '{name}' exchange was locked for more than 3 seconds.");
 
                     continue;
                 }
@@ -125,7 +98,7 @@ namespace CoinBot.Core
                 // Enter read lock with a timeout of 3 seconds to continue to the next exchange.
                 if (!exchange.Lock.TryEnterReadLock(TimeSpan.FromSeconds(value: 3)))
                 {
-                    this._logger.LogWarning(eventId: 0, $"The '{name}' exchange was locked for more than 3 seconds.");
+                    this.Logger.LogWarning(eventId: 0, $"The '{name}' exchange was locked for more than 3 seconds.");
 
                     continue;
                 }
@@ -171,25 +144,7 @@ namespace CoinBot.Core
             return results;
         }
 
-        public void Start()
-        {
-            // start a timer to fire the tickFunction
-            this._timer = new Timer(this.QueueTick, state: null, TimeSpan.FromSeconds(value: 0), Timeout.InfiniteTimeSpan);
-        }
-
-        public void Stop()
-        {
-            // stop the timer
-            this._timer.Dispose();
-            this._timer = null;
-        }
-
-        private void QueueTick(object state)
-        {
-            this._bufferBlock.Post(this.TickAsync);
-        }
-
-        private async Task TickAsync()
+        protected override async Task TickAsync()
         {
             try
             {
@@ -197,12 +152,7 @@ namespace CoinBot.Core
             }
             catch (Exception e)
             {
-                this._logger.LogError(new EventId(e.HResult), e, e.Message);
-            }
-            finally
-            {
-                // and reset the timer
-                this._timer.Change(this._tickInterval, TimeSpan.Zero);
+                this.Logger.LogError(new EventId(e.HResult), e, e.Message);
             }
         }
 
@@ -219,7 +169,7 @@ namespace CoinBot.Core
         {
             if (this._exchanges.TryGetValue(client.Name, out Exchange exchange))
             {
-                this._logger.LogInformation($"Start updating exchange '{client.Name}'.");
+                this.Logger.LogInformation($"Start updating exchange '{client.Name}'.");
                 Stopwatch watch = new Stopwatch();
                 watch.Start();
 
@@ -231,7 +181,7 @@ namespace CoinBot.Core
                 }
                 catch (Exception e)
                 {
-                    this._logger.LogError(eventId: 0, e, $"An error occurred while fetching results from the exchange '{client.Name}'.");
+                    this.Logger.LogError(eventId: 0, e, $"An error occurred while fetching results from the exchange '{client.Name}'.");
                     exchange.Lock.EnterWriteLock();
 
                     try
@@ -254,7 +204,7 @@ namespace CoinBot.Core
                 {
                     exchange.Markets = markets;
                     watch.Stop();
-                    this._logger.LogInformation($"Finished updating exchange '{client.Name}' in {watch.ElapsedMilliseconds}ms.");
+                    this.Logger.LogInformation($"Finished updating exchange '{client.Name}' in {watch.ElapsedMilliseconds}ms.");
                 }
                 finally
                 {
@@ -263,7 +213,7 @@ namespace CoinBot.Core
             }
             else
             {
-                this._logger.LogWarning(eventId: 0, $"Couldn't find exchange {client.Name}.");
+                this.Logger.LogWarning(eventId: 0, $"Couldn't find exchange {client.Name}.");
             }
         }
 
