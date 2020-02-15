@@ -29,8 +29,7 @@ namespace CoinBot.Core
             : base(TimeSpan.FromMinutes(settings.Value.RefreshInterval), logger)
         {
             this._clients = clients?.ToList() ?? throw new ArgumentNullException(nameof(clients));
-            this._exchanges = new ReadOnlyDictionary<string, Exchange>(
-                this._clients.ToDictionary(keySelector: client => client.Name, elementSelector: client => new Exchange {Lock = new ReaderWriterLockSlim()}));
+            this._exchanges = new ReadOnlyDictionary<string, Exchange>(this._clients.ToDictionary(keySelector: client => client.Name, elementSelector: client => new Exchange()));
         }
 
         public IEnumerable<MarketSummaryDto> Get(Currency currency)
@@ -187,7 +186,7 @@ namespace CoinBot.Core
                     try
                     {
                         // Remove out-of-date market summaries
-                        exchange.Markets = null;
+                        exchange.Markets = Array.Empty<MarketSummaryDto>();
                     }
                     finally
                     {
@@ -219,8 +218,15 @@ namespace CoinBot.Core
 
         private sealed class Exchange
         {
-            public ReaderWriterLockSlim Lock;
-            public IReadOnlyCollection<MarketSummaryDto> Markets;
+            public Exchange()
+            {
+                this.Lock = new ReaderWriterLockSlim();
+                this.Markets = Array.Empty<MarketSummaryDto>();
+            }
+
+            public ReaderWriterLockSlim Lock { get; }
+
+            public IReadOnlyCollection<MarketSummaryDto> Markets { get; set; }
         }
     }
 }
