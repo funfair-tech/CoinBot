@@ -18,7 +18,7 @@ namespace CoinBot.Clients.Bittrex
         /// <summary>
         ///     The <see cref="Uri" /> of the CoinMarketCap endpoint.
         /// </summary>
-        private readonly static Uri Endpoint = new Uri(uriString: "https://bittrex.com/api/v1.1/public/", UriKind.Absolute);
+        private static readonly Uri Endpoint = new Uri(uriString: "https://bittrex.com/api/v1.1/public/", UriKind.Absolute);
 
         /// <summary>
         ///     The <see cref="CurrencyManager" />.
