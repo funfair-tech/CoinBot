@@ -85,6 +85,8 @@ namespace CoinBot.Clients.Bittrex
 
             using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "getmarketsummaries", UriKind.Relative)))
             {
+                response.EnsureSuccessStatusCode();
+
                 BittrexMarketSummariesDto summaries =
                     JsonConvert.DeserializeObject<BittrexMarketSummariesDto>(await response.Content.ReadAsStringAsync(), this._serializerSettings);
 

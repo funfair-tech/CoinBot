@@ -115,6 +115,8 @@ namespace CoinBot.Clients.Kraken
 
             using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "Assets", UriKind.Relative)))
             {
+                response.EnsureSuccessStatusCode();
+
                 string json = await response.Content.ReadAsStringAsync();
                 JObject jObject = JObject.Parse(json);
                 List<KrakenAsset> assets = jObject.GetValue(propertyName: "result")
@@ -144,6 +146,8 @@ namespace CoinBot.Clients.Kraken
 
             using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "AssetPairs", UriKind.Relative)))
             {
+                response.EnsureSuccessStatusCode();
+
                 string json = await response.Content.ReadAsStringAsync();
                 JObject jResponse = JObject.Parse(json);
                 List<KrakenPair> pairs = jResponse.GetValue(propertyName: "result")
@@ -172,6 +176,8 @@ namespace CoinBot.Clients.Kraken
 
             using (HttpResponseMessage response = await httpClient.GetAsync(new Uri($"Ticker?pair={pair.PairId}", UriKind.Relative)))
             {
+                response.EnsureSuccessStatusCode();
+
                 string json = await response.Content.ReadAsStringAsync();
                 JObject jObject = JObject.Parse(json);
                 KrakenTicker ticker = JsonConvert.DeserializeObject<KrakenTicker>(jObject[propertyName: "result"][pair.PairId]

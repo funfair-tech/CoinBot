@@ -130,6 +130,8 @@ namespace CoinBot.Clients.Liqui
 
             using (HttpResponseMessage response = await httpClient.GetAsync(new Uri($"ticker/{pair}", UriKind.Relative)))
             {
+                response.EnsureSuccessStatusCode();
+
                 string json = await response.Content.ReadAsStringAsync();
                 JObject jObject = JObject.Parse(json);
                 LiquiTicker ticker = JsonConvert.DeserializeObject<LiquiTicker>(jObject.GetValue(pair)
