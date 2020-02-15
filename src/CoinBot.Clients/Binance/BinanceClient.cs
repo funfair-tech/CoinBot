@@ -7,7 +7,6 @@ using CoinBot.Core;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace CoinBot.Clients.Binance
 {
@@ -55,15 +54,15 @@ namespace CoinBot.Clients.Binance
         {
             try
             {
-                List<BinanceProduct> products = await this.GetProductsAsync();
+                IReadOnlyList<BinanceProduct> products = await this.GetProductsAsync();
 
                 return products.Select(selector: this.CreateMarketSummaryDto)
                                .ToList();
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                EventId eventId = new EventId(e.HResult);
-                this.Logger.LogError(eventId, e, e.Message);
+                EventId eventId = new EventId(exception.HResult);
+                this.Logger.LogError(eventId, exception, exception.Message);
 
                 throw;
             }
@@ -90,7 +89,7 @@ namespace CoinBot.Clients.Binance
         ///     Get the market summaries.
         /// </summary>
         /// <returns></returns>
-        private async Task<List<BinanceProduct>> GetProductsAsync()
+        private async Task<IReadOnlyList<BinanceProduct>> GetProductsAsync()
         {
             HttpClient httpClient = this.CreateHttpClient();
 
@@ -99,12 +98,28 @@ namespace CoinBot.Clients.Binance
                 response.EnsureSuccessStatusCode();
 
                 string json = await response.Content.ReadAsStringAsync();
-                JObject jObject = JObject.Parse(json);
+
+                Wrapper? packet = JsonConvert.DeserializeObject<Wrapper>(json, this._serializerSettings);
+
+                return ((IReadOnlyList<BinanceProduct>?) packet?.Data) ?? Array.Empty<BinanceProduct>();
+
+                // WAS:
+#if OLD
+                       JObject jObject = JObject.Parse(json);
 
                 return JsonConvert.DeserializeObject<List<BinanceProduct>>(jObject[propertyName: "data"]
                                                                                .ToString(),
                                                                            this._serializerSettings);
+#endif
             }
+        }
+
+        private sealed class Wrapper
+        {
+            [JsonProperty("data")]
+
+            // ReSharper disable once RedundantDefaultMemberInitializer
+            public List<BinanceProduct> Data { get; set; } = default!;
         }
     }
 }
