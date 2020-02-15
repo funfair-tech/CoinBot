@@ -59,7 +59,7 @@ namespace CoinBot.Clients.Binance
 
                 return products.Select(selector: p => new MarketSummaryDto
                                                       {
-                                                          BaseCurrrency = this._currencyManager.Get(p.BaseAsset),
+                                                          BaseCurrency = this._currencyManager.Get(p.BaseAsset),
                                                           MarketCurrency = this._currencyManager.Get(p.QuoteAsset),
                                                           Market = "Binance",
                                                           Volume = p.Volume,

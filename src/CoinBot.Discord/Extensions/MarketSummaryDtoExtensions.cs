@@ -8,6 +8,6 @@ namespace CoinBot.Discord.Extensions
 	/// </summary>
 	public static class MarketSummaryDtoExtensions
 	{
-		public static string GetSummary(this MarketSummaryDto market) => $"{market.BaseCurrrency.Symbol}/{market.MarketCurrency.Symbol}: {market.Last.AsPrice()} (Vol.: {market.Volume.AsVolume()})";
+		public static string GetSummary(this MarketSummaryDto market) => $"{market.BaseCurrency.Symbol}/{market.MarketCurrency.Symbol}: {market.Last.AsPrice()} (Vol.: {market.Volume.AsVolume()})";
 	}
 }

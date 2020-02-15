@@ -77,15 +77,18 @@ namespace CoinBot.Clients.Liqui
 
         private MarketSummaryDto CreateMarketSummaryDto(LiquiTicker m)
         {
-            return new MarketSummaryDto
-                   {
-                       BaseCurrrency = this._currencyManager.Get(m.Pair.Substring(startIndex: 0, m.Pair.IndexOf(PAIR_SEPARATOR))),
-                       MarketCurrency = this._currencyManager.Get(m.Pair.Substring(m.Pair.IndexOf(PAIR_SEPARATOR) + 1)),
-                       Market = "Liqui",
-                       Volume = m.Vol,
-                       LastUpdated = m.Updated,
-                       Last = m.Last
-                   };
+            var baseCurrrency = this._currencyManager.Get(m.Pair.Substring(startIndex: 0, m.Pair.IndexOf(PAIR_SEPARATOR)));
+            var marketCurrency = this._currencyManager.Get(m.Pair.Substring(m.Pair.IndexOf(PAIR_SEPARATOR) + 1));
+
+
+            return new MarketSummaryDto(
+                       baseCurrency: baseCurrrency,
+                       marketCurrency: marketCurrency,
+                       market: "Liqui",
+                       volume: m.Vol,
+                       lastUpdated: m.Updated.GetValueOrDefault(),
+                       last: m.Last
+                   );
         }
 
         /// <summary>

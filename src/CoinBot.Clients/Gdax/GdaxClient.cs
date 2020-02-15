@@ -56,7 +56,7 @@ namespace CoinBot.Clients.Gdax
 
                 return tickers.Select(selector: t => new MarketSummaryDto
                                                      {
-                                                         BaseCurrrency = this._currencyManager.Get(t.ProductId.Substring(startIndex: 0, t.ProductId.IndexOf(value: '-'))),
+                                                         BaseCurrency = this._currencyManager.Get(t.ProductId.Substring(startIndex: 0, t.ProductId.IndexOf(value: '-'))),
                                                          MarketCurrency = this._currencyManager.Get(t.ProductId.Substring(t.ProductId.IndexOf(value: '-') + 1)),
                                                          Market = "GDAX",
                                                          Volume = t.Volume,
