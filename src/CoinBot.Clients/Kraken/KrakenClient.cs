@@ -62,12 +62,7 @@ namespace CoinBot.Clients.Kraken
                 static bool IsValid(KrakenPair pair)
                 {
                     // todo: can't get kraken details on these markets
-                    if (pair.PairId.EndsWith(value: ".d", StringComparison.Ordinal))
-                    {
-                        return false;
-                    }
-
-                    return true;
+                    return !pair.PairId.EndsWith(value: ".d", StringComparison.Ordinal);
                 }
 
                 KrakenTicker[] tickers = await Task.WhenAll(pairs.Where(IsValid)
