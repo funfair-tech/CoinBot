@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using CoinBot.Clients.Extensions;
 using CoinBot.Core;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -11,7 +10,7 @@ using Newtonsoft.Json;
 
 namespace CoinBot.Clients.Bittrex
 {
-    public class BittrexClient : IMarketClient
+    public sealed class BittrexClient : CoinClientBase, IMarketClient
     {
         private const string HTTP_CLIENT_NAME = @"Bittrex";
 
@@ -26,34 +25,21 @@ namespace CoinBot.Clients.Bittrex
         private readonly CurrencyManager _currencyManager;
 
         /// <summary>
-        ///     The http client factory
-        /// </summary>
-        private readonly IHttpClientFactory _httpClientFactory;
-
-        /// <summary>
-        ///     The <see cref="ILogger" />.
-        /// </summary>
-        private readonly ILogger _logger;
-
-        /// <summary>
         ///     The <see cref="JsonSerializerSettings" />.
         /// </summary>
         private readonly JsonSerializerSettings _serializerSettings;
 
         public BittrexClient(IHttpClientFactory httpClientFactory, ILogger<BittrexClient> logger, CurrencyManager currencyManager)
+            : base(httpClientFactory, HTTP_CLIENT_NAME, logger)
         {
-            this._httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
-            this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this._currencyManager = currencyManager ?? throw new ArgumentNullException(nameof(currencyManager));
-
-            //this._httpClient = new HttpClient {BaseAddress = this._endpoint};
 
             this._serializerSettings = new JsonSerializerSettings
                                        {
                                            Error = (sender, args) =>
                                                    {
                                                        Exception ex = args.ErrorContext.Error.GetBaseException();
-                                                       this._logger.LogError(new EventId(args.ErrorContext.Error.HResult), ex, ex.Message);
+                                                       this.Logger.LogError(new EventId(args.ErrorContext.Error.HResult), ex, ex.Message);
                                                    }
                                        };
         }
@@ -83,7 +69,7 @@ namespace CoinBot.Clients.Bittrex
             }
             catch (Exception e)
             {
-                this._logger.LogError(new EventId(e.HResult), e, e.Message);
+                this.Logger.LogError(new EventId(e.HResult), e, e.Message);
 
                 throw;
             }
@@ -95,7 +81,7 @@ namespace CoinBot.Clients.Bittrex
         /// <returns></returns>
         private async Task<List<BittrexMarketSummaryDto>> GetMarketSummariesAsync()
         {
-            HttpClient httpClient = this._httpClientFactory.CreateClient(HTTP_CLIENT_NAME);
+            HttpClient httpClient = this.CreateHttpClient();
 
             using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "getmarketsummaries", UriKind.Relative)))
             {
@@ -108,10 +94,9 @@ namespace CoinBot.Clients.Bittrex
 
         public static void Register(IServiceCollection services)
         {
-            // TODO: Add Http Client Factory
             services.AddSingleton<IMarketClient, BittrexClient>();
 
-            services.AddHttpClientFactorySupport(HTTP_CLIENT_NAME, Endpoint);
+            AddHttpClientFactorySupport(services, HTTP_CLIENT_NAME, Endpoint);
         }
     }
 }

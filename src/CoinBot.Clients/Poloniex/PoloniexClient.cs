@@ -11,45 +11,36 @@ using Newtonsoft.Json.Linq;
 
 namespace CoinBot.Clients.Poloniex
 {
-    public class PoloniexClient : IMarketClient
+    public sealed class PoloniexClient : CoinClientBase, IMarketClient
     {
+        private const string HTTP_CLIENT_NAME = @"Poloniex";
+
+        /// <summary>
+        ///     The <see cref="Uri" /> of the CoinMarketCap endpoint.
+        /// </summary>
+        private static readonly Uri Endpoint = new Uri(uriString: "https://poloniex.com/", UriKind.Absolute);
+
         /// <summary>
         ///     The <see cref="CurrencyManager" />.
         /// </summary>
         private readonly CurrencyManager _currencyManager;
 
         /// <summary>
-        ///     The <see cref="Uri" /> of the CoinMarketCap endpoint.
-        /// </summary>
-        private readonly Uri _endpoint = new Uri(uriString: "https://poloniex.com/", UriKind.Absolute);
-
-        /// <summary>
-        ///     The <see cref="HttpClient" />.
-        /// </summary>
-        private readonly HttpClient _httpClient;
-
-        /// <summary>
-        ///     The <see cref="ILogger" />.
-        /// </summary>
-        private readonly ILogger _logger;
-
-        /// <summary>
         ///     The <see cref="JsonSerializerSettings" />.
         /// </summary>
         private readonly JsonSerializerSettings _serializerSettings;
 
-        public PoloniexClient(ILogger logger, CurrencyManager currencyManager)
+        public PoloniexClient(IHttpClientFactory httpClientFactory, ILogger<PoloniexClient> logger, CurrencyManager currencyManager)
+            : base(httpClientFactory, HTTP_CLIENT_NAME, logger)
         {
-            this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this._currencyManager = currencyManager ?? throw new ArgumentNullException(nameof(currencyManager));
-            this._httpClient = new HttpClient {BaseAddress = this._endpoint};
 
             this._serializerSettings = new JsonSerializerSettings
                                        {
                                            Error = (sender, args) =>
                                                    {
                                                        Exception ex = args.ErrorContext.Error.GetBaseException();
-                                                       this._logger.LogError(new EventId(args.ErrorContext.Error.HResult), ex, ex.Message);
+                                                       this.Logger.LogError(new EventId(args.ErrorContext.Error.HResult), ex, ex.Message);
                                                    }
                                        };
         }
@@ -78,7 +69,7 @@ namespace CoinBot.Clients.Poloniex
             }
             catch (Exception e)
             {
-                this._logger.LogError(new EventId(e.HResult), e, e.Message);
+                this.Logger.LogError(new EventId(e.HResult), e, e.Message);
 
                 throw;
             }
@@ -90,7 +81,9 @@ namespace CoinBot.Clients.Poloniex
         /// <returns></returns>
         private async Task<List<PoloniexTicker>> GetTickersAsync()
         {
-            using (HttpResponseMessage response = await this._httpClient.GetAsync(new Uri(uriString: "public?command=returnTicker", UriKind.Relative)))
+            HttpClient httpClient = this.CreateHttpClient();
+
+            using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "public?command=returnTicker", UriKind.Relative)))
             {
                 string json = await response.Content.ReadAsStringAsync();
                 JObject jResponse = JObject.Parse(json);
@@ -110,8 +103,9 @@ namespace CoinBot.Clients.Poloniex
 
         public static void Register(IServiceCollection services)
         {
-            // TODO: Add Http Client Factory
             services.AddSingleton<IMarketClient, PoloniexClient>();
+
+            AddHttpClientFactorySupport(services, HTTP_CLIENT_NAME, Endpoint);
         }
     }
 }

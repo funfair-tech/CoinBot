@@ -11,12 +11,19 @@ using Newtonsoft.Json.Linq;
 
 namespace CoinBot.Clients.Liqui
 {
-    public sealed class LiquiClient : IMarketClient
+    public sealed class LiquiClient : CoinClientBase, IMarketClient
     {
+        private const string HTTP_CLIENT_NAME = @"Liqui";
+
         /// <summary>
         ///     The pair separator character.
         /// </summary>
         private const char PAIR_SEPARATOR = '_';
+
+        /// <summary>
+        ///     The <see cref="Uri" /> of the CoinMarketCap endpoint.
+        /// </summary>
+        private static readonly Uri _endpoint = new Uri(uriString: "https://api.liqui.io/api/3/", UriKind.Absolute);
 
         /// <summary>
         ///     The <see cref="CurrencyManager" />.
@@ -24,37 +31,21 @@ namespace CoinBot.Clients.Liqui
         private readonly CurrencyManager _currencyManager;
 
         /// <summary>
-        ///     The <see cref="Uri" /> of the CoinMarketCap endpoint.
-        /// </summary>
-        private readonly Uri _endpoint = new Uri(uriString: "https://api.liqui.io/api/3/", UriKind.Absolute);
-
-        /// <summary>
-        ///     The <see cref="HttpClient" />.
-        /// </summary>
-        private readonly HttpClient _httpClient;
-
-        /// <summary>
-        ///     The <see cref="ILogger" />.
-        /// </summary>
-        private readonly ILogger _logger;
-
-        /// <summary>
         ///     The <see cref="JsonSerializerSettings" />.
         /// </summary>
         private readonly JsonSerializerSettings _serializerSettings;
 
-        public LiquiClient(ILogger logger, CurrencyManager currencyManager)
+        public LiquiClient(IHttpClientFactory httpClientFactory, ILogger<LiquiClient> logger, CurrencyManager currencyManager)
+            : base(httpClientFactory, HTTP_CLIENT_NAME, logger)
         {
-            this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this._currencyManager = currencyManager ?? throw new ArgumentNullException(nameof(currencyManager));
-            this._httpClient = new HttpClient {BaseAddress = this._endpoint};
 
             this._serializerSettings = new JsonSerializerSettings
                                        {
                                            Error = (sender, args) =>
                                                    {
                                                        Exception ex = args.ErrorContext.Error.GetBaseException();
-                                                       this._logger.LogError(new EventId(args.ErrorContext.Error.HResult), ex, ex.Message);
+                                                       this.Logger.LogError(new EventId(args.ErrorContext.Error.HResult), ex, ex.Message);
                                                    }
                                        };
         }
@@ -90,7 +81,7 @@ namespace CoinBot.Clients.Liqui
             }
             catch (Exception e)
             {
-                this._logger.LogError(new EventId(e.HResult), e, e.Message);
+                this.Logger.LogError(new EventId(e.HResult), e, e.Message);
 
                 throw;
             }
@@ -102,17 +93,18 @@ namespace CoinBot.Clients.Liqui
         /// <returns></returns>
         private async Task<List<string>> GetPairsAsync()
         {
-            using (HttpResponseMessage response = await this._httpClient.GetAsync(new Uri(uriString: "info", UriKind.Relative)))
+            HttpClient httpClient = this.CreateHttpClient();
+
+            using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "info", UriKind.Relative)))
             {
                 string json = await response.Content.ReadAsStringAsync();
                 JObject jResponse = JObject.Parse(json);
-                List<string> pairs = jResponse.GetValue(propertyName: "pairs")
-                                              .Children()
-                                              .Cast<JProperty>()
-                                              .Select(selector: property => property.Name)
-                                              .ToList();
 
-                return pairs;
+                return jResponse.GetValue(propertyName: "pairs")
+                                .Children()
+                                .Cast<JProperty>()
+                                .Select(selector: property => property.Name)
+                                .ToList();
             }
         }
 
@@ -122,7 +114,9 @@ namespace CoinBot.Clients.Liqui
         /// <returns></returns>
         private async Task<LiquiTicker> GetTickerAsync(string pair)
         {
-            using (HttpResponseMessage response = await this._httpClient.GetAsync(new Uri($"ticker/{pair}", UriKind.Relative)))
+            HttpClient httpClient = this.CreateHttpClient();
+
+            using (HttpResponseMessage response = await httpClient.GetAsync(new Uri($"ticker/{pair}", UriKind.Relative)))
             {
                 string json = await response.Content.ReadAsStringAsync();
                 JObject jObject = JObject.Parse(json);
@@ -137,8 +131,9 @@ namespace CoinBot.Clients.Liqui
 
         public static void Register(IServiceCollection services)
         {
-            // TODO: Add Http Client Factory
             services.AddSingleton<IMarketClient, LiquiClient>();
+
+            AddHttpClientFactorySupport(services, HTTP_CLIENT_NAME, _endpoint);
         }
     }
 }
