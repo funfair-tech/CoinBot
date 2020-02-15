@@ -57,14 +57,7 @@ namespace CoinBot.Clients.Binance
             {
                 List<BinanceProduct> products = await this.GetProductsAsync();
 
-                return products.Select(selector: p => new MarketSummaryDto
-                                                      {
-                                                          BaseCurrency = this._currencyManager.Get(p.BaseAsset),
-                                                          MarketCurrency = this._currencyManager.Get(p.QuoteAsset),
-                                                          Market = "Binance",
-                                                          Volume = p.Volume,
-                                                          Last = p.PrevClose
-                                                      })
+                return products.Select(selector: this.CreateMarketSummaryDto)
                                .ToList();
             }
             catch (Exception e)
@@ -74,6 +67,16 @@ namespace CoinBot.Clients.Binance
 
                 throw;
             }
+        }
+
+        private MarketSummaryDto CreateMarketSummaryDto(BinanceProduct product)
+        {
+            return new MarketSummaryDto(market: "Binance",
+                                        baseCurrency: this._currencyManager.Get(product.BaseAsset),
+                                        marketCurrency: this._currencyManager.Get(product.QuoteAsset),
+                                        volume: product.Volume,
+                                        last: product.PrevClose,
+                                        lastUpdated: DateTime.UtcNow);
         }
 
         public static void Register(IServiceCollection services)
