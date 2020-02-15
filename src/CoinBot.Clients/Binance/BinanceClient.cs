@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -114,6 +115,7 @@ namespace CoinBot.Clients.Binance
             }
         }
 
+        [SuppressMessage(category: "Microsoft.Performance", checkId: "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Used as data packet")]
         private sealed class Wrapper
         {
             [JsonProperty("data")]

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using CoinBot.Core;
+using CoinBot.Core.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -56,8 +57,8 @@ namespace CoinBot.Clients.Kraken
         {
             try
             {
-                List<KrakenAsset> assets = await this.GetAssetsAsync();
-                List<KrakenPair> pairs = await this.GetPairsAsync();
+                IReadOnlyList<KrakenAsset> assets = await this.GetAssetsAsync();
+                IReadOnlyList<KrakenPair> pairs = await this.GetPairsAsync();
 
                 static bool IsValid(KrakenPair pair)
                 {
@@ -79,11 +80,11 @@ namespace CoinBot.Clients.Kraken
             }
         }
 
-        private MarketSummaryDto CreateMarketSummaryDto(List<KrakenAsset> assets, KrakenTicker ticker)
+        private MarketSummaryDto CreateMarketSummaryDto(IReadOnlyList<KrakenAsset> assets, KrakenTicker ticker)
         {
-            string baseCurrency = assets.Find(match: a => StringComparer.InvariantCultureIgnoreCase.Equals(a.Id, ticker.BaseCurrency))
+            string baseCurrency = assets.First(a => StringComparer.InvariantCultureIgnoreCase.Equals(a.Id, ticker.BaseCurrency))
                                         .Altname;
-            string quoteCurrency = assets.Find(match: a => StringComparer.InvariantCultureIgnoreCase.Equals(a.Id, ticker.QuoteCurrency))
+            string quoteCurrency = assets.First(a => StringComparer.InvariantCultureIgnoreCase.Equals(a.Id, ticker.QuoteCurrency))
                                          .Altname;
 
             // Workaround for kraken
@@ -118,9 +119,15 @@ namespace CoinBot.Clients.Kraken
                 response.EnsureSuccessStatusCode();
 
                 string json = await response.Content.ReadAsStringAsync();
-                JObject jObject = JObject.Parse(json);
+                JObject? jObject = JObject.Parse(json);
+
+                if (jObject == null)
+                {
+                    return Array.Empty<KrakenAsset>();
+                }
 
                 return jObject.GetValue(propertyName: "result")
+                              .RemoveNulls()
                               .Children()
                               .Cast<JProperty>()
                               .Select(selector: property =>
@@ -136,7 +143,7 @@ namespace CoinBot.Clients.Kraken
 
                                                     return asset;
                                                 })
-                              .Where(item => item != null)
+                              .RemoveNulls()
                               .ToArray();
             }
         }
@@ -145,7 +152,7 @@ namespace CoinBot.Clients.Kraken
         ///     Get the market summaries.
         /// </summary>
         /// <returns></returns>
-        private async Task<List<KrakenPair>> GetPairsAsync()
+        private async Task<IReadOnlyList<KrakenPair>> GetPairsAsync()
         {
             HttpClient httpClient = this.CreateHttpClient();
 
@@ -154,20 +161,32 @@ namespace CoinBot.Clients.Kraken
                 response.EnsureSuccessStatusCode();
 
                 string json = await response.Content.ReadAsStringAsync();
-                JObject jResponse = JObject.Parse(json);
-                List<KrakenPair> pairs = jResponse.GetValue(propertyName: "result")
-                                                  .Children()
-                                                  .Cast<JProperty>()
-                                                  .Select(selector: property =>
-                                                                    {
-                                                                        KrakenPair pair = JsonConvert.DeserializeObject<KrakenPair>(property.Value.ToString());
-                                                                        pair.PairId = property.Name;
+                JObject? jResponse = JObject.Parse(json);
 
-                                                                        return pair;
-                                                                    })
-                                                  .ToList();
+                if (jResponse == null)
+                {
+                    return Array.Empty<KrakenPair>();
+                }
 
-                return pairs;
+                return jResponse.GetValue(propertyName: "result")
+                                .RemoveNulls()
+                                .Children()
+                                .Cast<JProperty>()
+                                .Select(selector: property =>
+                                                  {
+                                                      KrakenPair? pair = JsonConvert.DeserializeObject<KrakenPair>(property.Value.ToString());
+
+                                                      if (pair == null)
+                                                      {
+                                                          return null;
+                                                      }
+
+                                                      pair.PairId = property.Name;
+
+                                                      return pair;
+                                                  })
+                                .RemoveNulls()
+                                .ToList();
             }
         }
 
@@ -184,10 +203,28 @@ namespace CoinBot.Clients.Kraken
                 response.EnsureSuccessStatusCode();
 
                 string json = await response.Content.ReadAsStringAsync();
-                JObject jObject = JObject.Parse(json);
-                KrakenTicker? ticker = JsonConvert.DeserializeObject<KrakenTicker>(jObject[propertyName: "result"][pair.PairId]
-                                                                                       .ToString(),
-                                                                                   this._serializerSettings);
+                JObject? jObject = JObject.Parse(json);
+
+                if (jObject == null)
+                {
+                    return null;
+                }
+
+                JToken? result = jObject[propertyName: "result"];
+
+                if (result == null)
+                {
+                    return null;
+                }
+
+                JToken? pairItem = result[pair.PairId];
+
+                if (pairItem == null)
+                {
+                    return null;
+                }
+
+                KrakenTicker? ticker = JsonConvert.DeserializeObject<KrakenTicker>(pairItem.ToString(), this._serializerSettings);
 
                 if (ticker == null)
                 {

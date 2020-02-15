@@ -51,7 +51,7 @@ namespace CoinBot.Clients.Gdax
         {
             try
             {
-                List<GdaxProduct> products = await this.GetProductsAsync();
+                IReadOnlyList<GdaxProduct> products = await this.GetProductsAsync();
                 GdaxTicker[] tickers = await Task.WhenAll(products.Select(product => this.GetTickerAsync(product.Id)));
 
                 return tickers.Select(selector: this.CreateMarketSummaryDto)
@@ -102,7 +102,7 @@ namespace CoinBot.Clients.Gdax
         ///     Get the products.
         /// </summary>
         /// <returns></returns>
-        private async Task<List<GdaxProduct>> GetProductsAsync()
+        private async Task<IReadOnlyList<GdaxProduct>> GetProductsAsync()
         {
             HttpClient httpClient = this.CreateHttpClient();
 
@@ -110,7 +110,11 @@ namespace CoinBot.Clients.Gdax
             {
                 response.EnsureSuccessStatusCode();
 
-                return JsonConvert.DeserializeObject<List<GdaxProduct>>(await response.Content.ReadAsStringAsync(), this._serializerSettings);
+                string json = await response.Content.ReadAsStringAsync();
+
+                IReadOnlyList<GdaxProduct>? items = JsonConvert.DeserializeObject<List<GdaxProduct>>(json, this._serializerSettings);
+
+                return items ?? Array.Empty<GdaxProduct>();
             }
         }
 
