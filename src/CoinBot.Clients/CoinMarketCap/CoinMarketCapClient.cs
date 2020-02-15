@@ -51,7 +51,9 @@ namespace CoinBot.Clients.CoinMarketCap
                 {
                     response.EnsureSuccessStatusCode();
 
-                    return JsonConvert.DeserializeObject<List<CoinMarketCapCoin>>(await response.Content.ReadAsStringAsync(), this._serializerSettings);
+                    string json = await response.Content.ReadAsStringAsync();
+
+                    return JsonConvert.DeserializeObject<List<CoinMarketCapCoin>>(json, this._serializerSettings) ?? new List<CoinMarketCapCoin>();
                 }
             }
             catch (Exception e)
@@ -67,7 +69,7 @@ namespace CoinBot.Clients.CoinMarketCap
         ///     update the global info from coinmarketcap
         /// </summary>
         /// <returns></returns>
-        public async Task<IGlobalInfo> GetGlobalInfoAsync()
+        public async Task<IGlobalInfo?> GetGlobalInfoAsync()
         {
             try
             {

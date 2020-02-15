@@ -77,7 +77,7 @@ namespace CoinBot.Clients.Gdax
         ///     Get the products.
         /// </summary>
         /// <returns></returns>
-        private async Task<GdaxTicker> GetTickerAsync(string productId)
+        private async Task<GdaxTicker?> GetTickerAsync(string productId)
         {
             HttpClient httpClient = this.CreateHttpClient();
 
@@ -85,7 +85,13 @@ namespace CoinBot.Clients.Gdax
             {
                 response.EnsureSuccessStatusCode();
 
-                GdaxTicker ticker = JsonConvert.DeserializeObject<GdaxTicker>(await response.Content.ReadAsStringAsync(), this._serializerSettings);
+                GdaxTicker? ticker = JsonConvert.DeserializeObject<GdaxTicker>(await response.Content.ReadAsStringAsync(), this._serializerSettings);
+
+                if (ticker == null)
+                {
+                    return null;
+                }
+
                 ticker.ProductId = productId;
 
                 return ticker;

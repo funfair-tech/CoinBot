@@ -109,7 +109,7 @@ namespace CoinBot.Clients.Kraken
         ///     Get the ticker.
         /// </summary>
         /// <returns></returns>
-        private async Task<List<KrakenAsset>> GetAssetsAsync()
+        private async Task<IReadOnlyList<KrakenAsset>> GetAssetsAsync()
         {
             HttpClient httpClient = this.CreateHttpClient();
 
@@ -119,20 +119,25 @@ namespace CoinBot.Clients.Kraken
 
                 string json = await response.Content.ReadAsStringAsync();
                 JObject jObject = JObject.Parse(json);
-                List<KrakenAsset> assets = jObject.GetValue(propertyName: "result")
-                                                  .Children()
-                                                  .Cast<JProperty>()
-                                                  .Select(selector: property =>
-                                                                    {
-                                                                        KrakenAsset asset =
-                                                                            JsonConvert.DeserializeObject<KrakenAsset>(property.Value.ToString(), this._serializerSettings);
-                                                                        asset.Id = property.Name;
 
-                                                                        return asset;
-                                                                    })
-                                                  .ToList();
+                return jObject.GetValue(propertyName: "result")
+                              .Children()
+                              .Cast<JProperty>()
+                              .Select(selector: property =>
+                                                {
+                                                    KrakenAsset? asset = JsonConvert.DeserializeObject<KrakenAsset>(property.Value.ToString(), this._serializerSettings);
 
-                return assets;
+                                                    if (asset == null)
+                                                    {
+                                                        return null;
+                                                    }
+
+                                                    asset.Id = property.Name;
+
+                                                    return asset;
+                                                })
+                              .Where(item => item != null)
+                              .ToArray();
             }
         }
 
@@ -170,7 +175,7 @@ namespace CoinBot.Clients.Kraken
         ///     Get the ticker.
         /// </summary>
         /// <returns></returns>
-        private async Task<KrakenTicker> GetTickerAsync(KrakenPair pair)
+        private async Task<KrakenTicker?> GetTickerAsync(KrakenPair pair)
         {
             HttpClient httpClient = this.CreateHttpClient();
 
@@ -180,9 +185,15 @@ namespace CoinBot.Clients.Kraken
 
                 string json = await response.Content.ReadAsStringAsync();
                 JObject jObject = JObject.Parse(json);
-                KrakenTicker ticker = JsonConvert.DeserializeObject<KrakenTicker>(jObject[propertyName: "result"][pair.PairId]
-                                                                                      .ToString(),
-                                                                                  this._serializerSettings);
+                KrakenTicker? ticker = JsonConvert.DeserializeObject<KrakenTicker>(jObject[propertyName: "result"][pair.PairId]
+                                                                                       .ToString(),
+                                                                                   this._serializerSettings);
+
+                if (ticker == null)
+                {
+                    return null;
+                }
+
                 ticker.BaseCurrency = pair.BaseCurrency;
                 ticker.QuoteCurrency = pair.QuoteCurrency;
 
