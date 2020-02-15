@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using CoinBot.Clients.Extensions;
 using CoinBot.Core;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -12,7 +11,7 @@ using Newtonsoft.Json.Linq;
 
 namespace CoinBot.Clients.Binance
 {
-    public sealed class BinanceClient : IMarketClient
+    public sealed class BinanceClient : CoinClientBase, IMarketClient
     {
         private const string HTTP_CLIENT_NAME = @"Binance";
 
@@ -27,34 +26,21 @@ namespace CoinBot.Clients.Binance
         private readonly CurrencyManager _currencyManager;
 
         /// <summary>
-        /// Http Client Factory,.
-        /// </summary>
-        private readonly IHttpClientFactory _httpClientFactory;
-
-        /// <summary>
-        ///     The <see cref="ILogger" />.
-        /// </summary>
-        private readonly ILogger _logger;
-
-        /// <summary>
         ///     The <see cref="JsonSerializerSettings" />.
         /// </summary>
         private readonly JsonSerializerSettings _serializerSettings;
 
         public BinanceClient(IHttpClientFactory httpClientFactory, ILogger<BinanceClient> logger, CurrencyManager currencyManager)
+            : base(httpClientFactory, HTTP_CLIENT_NAME, logger)
         {
-            this._httpClientFactory = httpClientFactory;
-            this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this._currencyManager = currencyManager ?? throw new ArgumentNullException(nameof(currencyManager));
-
-            //this._httpClient = new HttpClient {BaseAddress = this._endpoint};
 
             this._serializerSettings = new JsonSerializerSettings
                                        {
                                            Error = (sender, args) =>
                                                    {
                                                        Exception ex = args.ErrorContext.Error.GetBaseException();
-                                                       this._logger.LogError(new EventId(args.ErrorContext.Error.HResult), ex, ex.Message);
+                                                       this.Logger.LogError(new EventId(args.ErrorContext.Error.HResult), ex, ex.Message);
                                                    }
                                        };
         }
@@ -84,7 +70,7 @@ namespace CoinBot.Clients.Binance
             catch (Exception e)
             {
                 EventId eventId = new EventId(e.HResult);
-                this._logger.LogError(eventId, e, e.Message);
+                this.Logger.LogError(eventId, e, e.Message);
 
                 throw;
             }
@@ -94,7 +80,7 @@ namespace CoinBot.Clients.Binance
         {
             services.AddSingleton<IMarketClient, BinanceClient>();
 
-            services.AddHttpClientFactorySupport(HTTP_CLIENT_NAME, Endpoint);
+            AddHttpClientFactorySupport(services, HTTP_CLIENT_NAME, Endpoint);
         }
 
         /// <summary>
@@ -103,7 +89,7 @@ namespace CoinBot.Clients.Binance
         /// <returns></returns>
         private async Task<List<BinanceProduct>> GetProductsAsync()
         {
-            HttpClient httpClient = this._httpClientFactory.CreateClient(HTTP_CLIENT_NAME);
+            HttpClient httpClient = this.CreateHttpClient();
 
             using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "product", UriKind.Relative)))
             {

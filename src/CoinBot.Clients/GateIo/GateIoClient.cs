@@ -11,9 +11,16 @@ using Newtonsoft.Json.Linq;
 
 namespace CoinBot.Clients.GateIo
 {
-    public sealed class GateIoClient : IMarketClient
+    public sealed class GateIoClient : CoinClientBase, IMarketClient
     {
+        private const string HTTP_CLIENT_NAME = @"GateIo";
+
         private const char PAIR_SEPARATOR = '_';
+
+        /// <summary>
+        ///     The <see cref="Uri" /> of the CoinMarketCap endpoint.
+        /// </summary>
+        private static readonly Uri _endpoint = new Uri(uriString: "http://data.gate.io/api2/1/", UriKind.Absolute);
 
         /// <summary>
         ///     The <see cref="CurrencyManager" />.
@@ -21,37 +28,21 @@ namespace CoinBot.Clients.GateIo
         private readonly CurrencyManager _currencyManager;
 
         /// <summary>
-        ///     The <see cref="Uri" /> of the CoinMarketCap endpoint.
-        /// </summary>
-        private readonly Uri _endpoint = new Uri(uriString: "http://data.gate.io/api2/1/", UriKind.Absolute);
-
-        /// <summary>
-        ///     The <see cref="HttpClient" />.
-        /// </summary>
-        private readonly HttpClient _httpClient;
-
-        /// <summary>
-        ///     The <see cref="ILogger" />.
-        /// </summary>
-        private readonly ILogger _logger;
-
-        /// <summary>
         ///     The <see cref="JsonSerializerSettings" />.
         /// </summary>
         private readonly JsonSerializerSettings _serializerSettings;
 
-        public GateIoClient(ILogger logger, CurrencyManager currencyManager)
+        public GateIoClient(IHttpClientFactory httpClientFactory, ILogger<GateIoClient> logger, CurrencyManager currencyManager)
+            : base(httpClientFactory, HTTP_CLIENT_NAME, logger)
         {
-            this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this._currencyManager = currencyManager ?? throw new ArgumentNullException(nameof(currencyManager));
-            this._httpClient = new HttpClient {BaseAddress = this._endpoint};
 
             this._serializerSettings = new JsonSerializerSettings
                                        {
                                            Error = (sender, args) =>
                                                    {
                                                        Exception ex = args.ErrorContext.Error.GetBaseException();
-                                                       this._logger.LogError(new EventId(args.ErrorContext.Error.HResult), ex, ex.Message);
+                                                       this.Logger.LogError(new EventId(args.ErrorContext.Error.HResult), ex, ex.Message);
                                                    }
                                        };
         }
@@ -80,7 +71,7 @@ namespace CoinBot.Clients.GateIo
             }
             catch (Exception e)
             {
-                this._logger.LogError(new EventId(e.HResult), e, e.Message);
+                this.Logger.LogError(new EventId(e.HResult), e, e.Message);
 
                 throw;
             }
@@ -92,7 +83,9 @@ namespace CoinBot.Clients.GateIo
         /// <returns></returns>
         private async Task<List<GateIoTicker>> GetTickersAsync()
         {
-            using (HttpResponseMessage response = await this._httpClient.GetAsync(new Uri(uriString: "tickers", UriKind.Relative)))
+            HttpClient httpClient = this.CreateHttpClient();
+
+            using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "tickers", UriKind.Relative)))
             {
                 string json = await response.Content.ReadAsStringAsync();
                 JObject jResponse = JObject.Parse(json);
@@ -112,8 +105,9 @@ namespace CoinBot.Clients.GateIo
 
         public static void Register(IServiceCollection services)
         {
-            // TODO: Add HTTP Client factory.
             services.AddSingleton<IMarketClient, GateIoClient>();
+
+            AddHttpClientFactorySupport(services, HTTP_CLIENT_NAME, _endpoint);
         }
     }
 }
