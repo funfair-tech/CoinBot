@@ -7,19 +7,26 @@ namespace CoinBot.Clients.Gdax
     [SuppressMessage(category: "Microsoft.Performance", checkId: "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Used as data packet")]
     internal sealed class GdaxTicker
     {
-        public string ProductId;
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public string ProductId { get; set; } = default!;
 
         [JsonProperty("ask")]
-        public string Ask { get; set; }
+
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public string Ask { get; set; } = default!;
 
         [JsonProperty("bid")]
-        public string Bid { get; set; }
+
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public string Bid { get; set; } = default!;
 
         [JsonProperty("price")]
         public decimal? Price { get; set; }
 
         [JsonProperty("size")]
-        public string Size { get; set; }
+
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public string Size { get; set; } = default!;
 
         [JsonProperty("time")]
         public DateTime? Time { get; set; }

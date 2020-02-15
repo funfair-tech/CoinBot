@@ -102,7 +102,7 @@ namespace CoinBot.Clients.Kraken
                                         marketCurrency: this._currencyManager.Get(quoteCurrency),
                                         volume: ticker.Volume[1],
                                         last: ticker.Last[0],
-                                        lastUpdated: DateTime.UtcNow);
+                                        lastUpdated: null);
         }
 
         /// <summary>

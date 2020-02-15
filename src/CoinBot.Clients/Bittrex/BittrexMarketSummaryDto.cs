@@ -8,7 +8,9 @@ namespace CoinBot.Clients.Bittrex
     internal sealed class BittrexMarketSummaryDto
     {
         [JsonProperty("MarketName")]
-        public string MarketName { get; set; }
+
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public string MarketName { get; set; } = default!;
 
         [JsonProperty("High")]
         public decimal? High { get; set; }

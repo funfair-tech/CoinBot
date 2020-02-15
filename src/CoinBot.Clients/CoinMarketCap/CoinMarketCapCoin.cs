@@ -21,16 +21,22 @@ namespace CoinBot.Clients.CoinMarketCap
         public decimal? MaxSupply { get; set; }
 
         [JsonProperty("id")]
-        public string Id { get; set; }
+
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public string Id { get; set; } = default!;
 
         [SuppressMessage(category: "Microsoft.Design", checkId: "CA1056:UriPropertiesShouldNotBeStrings", Justification = "Model for serialization")]
         public string ImageUrl => $"https://raw.githubusercontent.com/cjdowner/cryptocurrency-icons/master/128/color/{this.Symbol.ToLowerInvariant()}.png";
 
         [JsonProperty("name")]
-        public string Name { get; set; }
+
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public string Name { get; set; } = default!;
 
         [JsonProperty("symbol")]
-        public string Symbol { get; set; }
+
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public string Symbol { get; set; } = default!;
 
         [JsonProperty("rank")]
         public int? Rank { get; set; }

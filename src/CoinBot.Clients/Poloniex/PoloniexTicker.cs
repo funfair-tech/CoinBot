@@ -6,7 +6,8 @@ namespace CoinBot.Clients.Poloniex
     [SuppressMessage(category: "Microsoft.Performance", checkId: "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Used as data packet")]
     internal sealed class PoloniexTicker
     {
-        public string Pair { get; set; }
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public string Pair { get; set; } = default!;
 
         [JsonProperty("id")]
         public long Id { get; set; }
@@ -30,7 +31,9 @@ namespace CoinBot.Clients.Poloniex
         public decimal? QuoteVolume { get; set; }
 
         [JsonProperty("isFrozen")]
-        public string IsFrozen { get; set; }
+
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public string IsFrozen { get; set; } = default!;
 
         [JsonProperty("high24hr")]
         public decimal? High24Hr { get; set; }
