@@ -10,7 +10,7 @@
         <WarningsAsErrors/>
         <LangVersion>latest</LangVersion>
         <Features>strict;flow-analysis</Features>
-        <Nullable>disable</Nullable>
+        <Nullable>enable</Nullable>
         <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
         <IsPackable>true</IsPackable>
     </PropertyGroup>
