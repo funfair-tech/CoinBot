@@ -54,15 +54,7 @@ namespace CoinBot.Clients.Gdax
                 List<GdaxProduct> products = await this.GetProductsAsync();
                 GdaxTicker[] tickers = await Task.WhenAll(products.Select(product => this.GetTickerAsync(product.Id)));
 
-                return tickers.Select(selector: t => new MarketSummaryDto
-                                                     {
-                                                         BaseCurrency = this._currencyManager.Get(t.ProductId.Substring(startIndex: 0, t.ProductId.IndexOf(value: '-'))),
-                                                         MarketCurrency = this._currencyManager.Get(t.ProductId.Substring(t.ProductId.IndexOf(value: '-') + 1)),
-                                                         Market = "GDAX",
-                                                         Volume = t.Volume,
-                                                         Last = t.Price,
-                                                         LastUpdated = t.Time
-                                                     })
+                return tickers.Select(selector: this.CreateMarketSummaryDto)
                               .ToList();
             }
             catch (Exception e)
@@ -71,6 +63,14 @@ namespace CoinBot.Clients.Gdax
 
                 throw;
             }
+        }
+
+        private MarketSummaryDto CreateMarketSummaryDto(GdaxTicker t)
+        {
+            Currency? baseCurrency = this._currencyManager.Get(t.ProductId.Substring(startIndex: 0, t.ProductId.IndexOf(value: '-')));
+            Currency? marketCurrency = this._currencyManager.Get(t.ProductId.Substring(t.ProductId.IndexOf(value: '-') + 1));
+
+            return new MarketSummaryDto(market: "GDAX", baseCurrency: baseCurrency, marketCurrency: marketCurrency, volume: t.Volume, last: t.Price, lastUpdated: t.Time);
         }
 
         /// <summary>
