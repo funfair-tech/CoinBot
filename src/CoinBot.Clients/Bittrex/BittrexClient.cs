@@ -92,8 +92,9 @@ namespace CoinBot.Clients.Bittrex
             {
                 response.EnsureSuccessStatusCode();
 
-                BittrexMarketSummariesDto summaries =
-                    JsonConvert.DeserializeObject<BittrexMarketSummariesDto>(await response.Content.ReadAsStringAsync(), this._serializerSettings);
+                string content = await response.Content.ReadAsStringAsync();
+
+                BittrexMarketSummariesDto? summaries = JsonConvert.DeserializeObject<BittrexMarketSummariesDto>(content, this._serializerSettings);
 
                 return summaries.Result;
             }
