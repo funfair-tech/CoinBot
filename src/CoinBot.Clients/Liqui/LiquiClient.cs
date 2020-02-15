@@ -61,12 +61,8 @@ namespace CoinBot.Clients.Liqui
             try
             {
                 List<string> pairs = await this.GetPairsAsync();
-                List<LiquiTicker> tickers = new List<LiquiTicker>();
 
-                foreach (string pair in pairs)
-                {
-                    tickers.Add(await this.GetTickerAsync(pair));
-                }
+                LiquiTicker[] tickers = await Task.WhenAll(pairs.Select(this.GetTickerAsync));
 
                 return tickers.Select(selector: m => new MarketSummaryDto
                                                      {
