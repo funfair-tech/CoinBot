@@ -16,7 +16,7 @@ namespace CoinBot.Clients.CoinMarketCap
         /// <summary>
         ///     The <see cref="Uri" /> of the CoinMarketCap endpoint.
         /// </summary>
-        private static readonly Uri _endpoint = new Uri(uriString: "https://api.coinmarketcap.com/v1/", UriKind.Absolute);
+        private static readonly Uri Endpoint = new Uri(uriString: "https://api.coinmarketcap.com/v1/", UriKind.Absolute);
 
         /// <summary>
         ///     The <see cref="JsonSerializerSettings" />.
@@ -88,7 +88,7 @@ namespace CoinBot.Clients.CoinMarketCap
         {
             services.AddSingleton<ICoinClient, CoinMarketCapClient>();
 
-            AddHttpClientFactorySupport(services, HTTP_CLIENT_NAME, _endpoint);
+            AddHttpClientFactorySupport(services, HTTP_CLIENT_NAME, Endpoint);
         }
     }
 }

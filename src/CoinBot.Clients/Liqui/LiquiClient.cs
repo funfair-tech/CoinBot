@@ -23,7 +23,7 @@ namespace CoinBot.Clients.Liqui
         /// <summary>
         ///     The <see cref="Uri" /> of the CoinMarketCap endpoint.
         /// </summary>
-        private static readonly Uri _endpoint = new Uri(uriString: "https://api.liqui.io/api/3/", UriKind.Absolute);
+        private static readonly Uri Endpoint = new Uri(uriString: "https://api.liqui.io/api/3/", UriKind.Absolute);
 
         /// <summary>
         ///     The <see cref="CurrencyManager" />.
@@ -133,7 +133,7 @@ namespace CoinBot.Clients.Liqui
         {
             services.AddSingleton<IMarketClient, LiquiClient>();
 
-            AddHttpClientFactorySupport(services, HTTP_CLIENT_NAME, _endpoint);
+            AddHttpClientFactorySupport(services, HTTP_CLIENT_NAME, Endpoint);
         }
     }
 }

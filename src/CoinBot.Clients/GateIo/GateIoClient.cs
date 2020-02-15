@@ -20,7 +20,7 @@ namespace CoinBot.Clients.GateIo
         /// <summary>
         ///     The <see cref="Uri" /> of the CoinMarketCap endpoint.
         /// </summary>
-        private static readonly Uri _endpoint = new Uri(uriString: "http://data.gate.io/api2/1/", UriKind.Absolute);
+        private static readonly Uri Endpoint = new Uri(uriString: "http://data.gate.io/api2/1/", UriKind.Absolute);
 
         /// <summary>
         ///     The <see cref="CurrencyManager" />.
@@ -107,7 +107,7 @@ namespace CoinBot.Clients.GateIo
         {
             services.AddSingleton<IMarketClient, GateIoClient>();
 
-            AddHttpClientFactorySupport(services, HTTP_CLIENT_NAME, _endpoint);
+            AddHttpClientFactorySupport(services, HTTP_CLIENT_NAME, Endpoint);
         }
     }
 }

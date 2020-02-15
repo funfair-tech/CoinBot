@@ -13,12 +13,12 @@ namespace CoinBot.Clients.Kraken
 {
     public sealed class KrakenClient : CoinClientBase, IMarketClient
     {
-        public const string HTTP_CLIENT_NAME = @"Kraken";
+        private const string HTTP_CLIENT_NAME = @"Kraken";
 
         /// <summary>
         ///     The <see cref="Uri" /> of the CoinMarketCap endpoint.
         /// </summary>
-        private static readonly Uri _endpoint = new Uri(uriString: "https://api.kraken.com/0/public/", UriKind.Absolute);
+        private static readonly Uri Endpoint = new Uri(uriString: "https://api.kraken.com/0/public/", UriKind.Absolute);
 
         /// <summary>
         ///     The <see cref="CurrencyManager" />.
@@ -191,7 +191,7 @@ namespace CoinBot.Clients.Kraken
         {
             services.AddSingleton<IMarketClient, KrakenClient>();
 
-            AddHttpClientFactorySupport(services, HTTP_CLIENT_NAME, _endpoint);
+            AddHttpClientFactorySupport(services, HTTP_CLIENT_NAME, Endpoint);
         }
     }
 }
