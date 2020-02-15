@@ -7,7 +7,7 @@ namespace CoinBot.Clients
     /// <summary>
     /// A custom <see cref="DateTimeConverterBase"/> implementation for unix timestamps.
     /// </summary>
-    public class UnixTimeConverter : DateTimeConverterBase
+    public sealed class UnixTimeConverter : DateTimeConverterBase
     {
         /// <summary>
         /// The <see cref="DateTime"/> to start with when adding seconds.

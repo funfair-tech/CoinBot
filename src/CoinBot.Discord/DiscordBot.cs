@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace CoinBot.Discord
 {
-    public class DiscordBot : DiscordSocketClient
+    public sealed class DiscordBot : DiscordSocketClient
     {
         /// <summary>
         /// The General channel name.

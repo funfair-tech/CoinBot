@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 namespace CoinBot.Clients.CoinMarketCap
 {
     [JsonObject]
-    public class CoinMarketCapCoin : ICoinInfo
+    public sealed class CoinMarketCapCoin : ICoinInfo
     {
         [SuppressMessage(category: "Microsoft.Design", checkId: "CA1056:UriPropertiesShouldNotBeStrings", Justification = "Model for serialization")]
         public string Url => $"https://coinmarketcap.com/currencies/{this.Id}";

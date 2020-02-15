@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +14,7 @@ using Microsoft.Extensions.Logging;
 
 namespace CoinBot.Discord.Commands
 {
-    public class MarketsCommands : CommandBase
+    public sealed class MarketsCommands : CommandBase
     {
         private readonly CurrencyManager _currencyManager;
         private readonly ILogger _logger;
@@ -36,7 +37,7 @@ namespace CoinBot.Discord.Commands
             using (this.Context.Channel.EnterTypingState())
                 try
                 {
-                    if (!this.GetCurrencies(input, out Currency primaryCurrency, out Currency secondaryCurrency))
+                    if (!this.GetCurrencies(input, out Currency? primaryCurrency, out Currency? secondaryCurrency))
                     {
                         await this.ReplyAsync($"Oops! I did not understand `{input}`.");
 
@@ -139,15 +140,21 @@ namespace CoinBot.Discord.Commands
             builder.Append("```");
         }
 
-        private bool GetCurrencies(string input, out Currency primaryCurrency, out Currency secondaryCurrency)
+        private bool GetCurrencies(string input, [NotNullWhen(true)] out Currency? primaryCurrency, [NotNullWhen(true)] out Currency? secondaryCurrency)
         {
             primaryCurrency = null;
             secondaryCurrency = null;
             int countSeparators = input.Count(c => this._separators.Contains(c));
 
-            if (countSeparators > 1) return false;
+            if (countSeparators > 1)
+            {
+                return false;
+            }
 
-            if (countSeparators == 0) primaryCurrency = this._currencyManager.Get(input);
+            if (countSeparators == 0)
+            {
+                primaryCurrency = this._currencyManager.Get(input);
+            }
             else
             {
                 string first = input.Substring(0, input.IndexOfAny(this._separators));

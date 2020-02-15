@@ -5,7 +5,7 @@ using Discord.Commands;
 
 namespace CoinBot.Discord.Commands
 {
-    public class HelpCommands : CommandBase
+    public sealed class HelpCommands : CommandBase
     {
         private readonly CommandService _commandService;
 

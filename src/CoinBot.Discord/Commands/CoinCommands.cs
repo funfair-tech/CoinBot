@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 
 namespace CoinBot.Discord.Commands
 {
-    public class CoinCommands : CommandBase
+    public sealed class CoinCommands : CommandBase
     {
         private readonly CurrencyManager _currencyManager;
         private readonly ILogger _logger;
@@ -31,7 +31,7 @@ namespace CoinBot.Discord.Commands
             {
                 try
                 {
-                    Currency currency = this._currencyManager.Get(symbol);
+                    Currency? currency = this._currencyManager.Get(symbol);
 
                     if (currency != null)
                     {
@@ -84,7 +84,7 @@ namespace CoinBot.Discord.Commands
                 {
                     try
                     {
-                        Currency currency = this._currencyManager.Get(symbol);
+                        Currency? currency = this._currencyManager.Get(symbol);
 
                         if (currency?.Getdetails<CoinMarketCapCoin>() != null)
                         {
