@@ -56,15 +56,7 @@ namespace CoinBot.Clients.Bittrex
             {
                 List<BittrexMarketSummaryDto> summaries = await this.GetMarketSummariesAsync();
 
-                return summaries.Select(selector: m => new MarketSummaryDto
-                                                       {
-                                                           BaseCurrency = this._currencyManager.Get(m.MarketName.Substring(startIndex: 0, m.MarketName.IndexOf(value: '-'))),
-                                                           MarketCurrency = this._currencyManager.Get(m.MarketName.Substring(m.MarketName.IndexOf(value: '-') + 1)),
-                                                           Market = "Bittrex",
-                                                           Volume = m.BaseVolume,
-                                                           Last = m.Last,
-                                                           LastUpdated = m.TimeStamp
-                                                       })
+                return summaries.Select(selector: this.CreateMarketSummaryDto)
                                 .ToList();
             }
             catch (Exception e)
@@ -73,6 +65,19 @@ namespace CoinBot.Clients.Bittrex
 
                 throw;
             }
+        }
+
+        private MarketSummaryDto CreateMarketSummaryDto(BittrexMarketSummaryDto marketSummary)
+        {
+            Currency? baseCurrency = this._currencyManager.Get(marketSummary.MarketName.Substring(startIndex: 0, marketSummary.MarketName.IndexOf(value: '-')));
+            Currency? marketCurrency = this._currencyManager.Get(marketSummary.MarketName.Substring(marketSummary.MarketName.IndexOf(value: '-') + 1));
+
+            return new MarketSummaryDto(market: "Bittrex",
+                                        baseCurrency: baseCurrency,
+                                        marketCurrency: marketCurrency,
+                                        volume: marketSummary.BaseVolume,
+                                        last: marketSummary.Last,
+                                        lastUpdated: marketSummary.TimeStamp);
         }
 
         /// <summary>

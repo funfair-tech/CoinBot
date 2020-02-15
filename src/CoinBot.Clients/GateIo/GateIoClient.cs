@@ -59,14 +59,7 @@ namespace CoinBot.Clients.GateIo
             {
                 List<GateIoTicker> tickers = await this.GetTickersAsync();
 
-                return tickers.Select(selector: m => new MarketSummaryDto
-                                                     {
-                                                         BaseCurrency = this._currencyManager.Get(m.Pair.Substring(startIndex: 0, m.Pair.IndexOf(PAIR_SEPARATOR))),
-                                                         MarketCurrency = this._currencyManager.Get(m.Pair.Substring(m.Pair.IndexOf(PAIR_SEPARATOR) + 1)),
-                                                         Market = "Gate.io",
-                                                         Volume = m.BaseVolume,
-                                                         Last = m.Last
-                                                     })
+                return tickers.Select(selector: this.CreateMarketSummaryDto)
                               .ToList();
             }
             catch (Exception e)
@@ -75,6 +68,19 @@ namespace CoinBot.Clients.GateIo
 
                 throw;
             }
+        }
+
+        private MarketSummaryDto CreateMarketSummaryDto(GateIoTicker marketSummary)
+        {
+            Currency? baseCurrency = this._currencyManager.Get(marketSummary.Pair.Substring(startIndex: 0, marketSummary.Pair.IndexOf(PAIR_SEPARATOR)));
+            Currency? marketCurrency = this._currencyManager.Get(marketSummary.Pair.Substring(marketSummary.Pair.IndexOf(PAIR_SEPARATOR) + 1));
+
+            return new MarketSummaryDto(market: "Gate.io",
+                                        baseCurrency: baseCurrency,
+                                        marketCurrency: marketCurrency,
+                                        volume: marketSummary.BaseVolume,
+                                        last: marketSummary.Last,
+                                        lastUpdated: DateTime.UtcNow);
         }
 
         /// <summary>

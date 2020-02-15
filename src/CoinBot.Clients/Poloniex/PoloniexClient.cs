@@ -57,14 +57,7 @@ namespace CoinBot.Clients.Poloniex
             {
                 List<PoloniexTicker> tickers = await this.GetTickersAsync();
 
-                return tickers.Select(selector: t => new MarketSummaryDto
-                                                     {
-                                                         BaseCurrency = this._currencyManager.Get(t.Pair.Substring(startIndex: 0, t.Pair.IndexOf(value: '_'))),
-                                                         MarketCurrency = this._currencyManager.Get(t.Pair.Substring(t.Pair.IndexOf(value: '_') + 1)),
-                                                         Market = "Poloniex",
-                                                         Volume = t.BaseVolume,
-                                                         Last = t.Last
-                                                     })
+                return tickers.Select(selector: this.CreateMarketSummaryDto)
                               .ToList();
             }
             catch (Exception e)
@@ -73,6 +66,19 @@ namespace CoinBot.Clients.Poloniex
 
                 throw;
             }
+        }
+
+        private MarketSummaryDto CreateMarketSummaryDto(PoloniexTicker t)
+        {
+            var baseCurrency = this._currencyManager.Get(t.Pair.Substring(startIndex: 0, t.Pair.IndexOf(value: '_')));
+            var marketCurrency = this._currencyManager.Get(t.Pair.Substring(t.Pair.IndexOf(value: '_') + 1));
+
+            return new MarketSummaryDto(market: "Poloniex",
+                                        baseCurrency: this._currencyManager.Get(t.Pair.Substring(startIndex: 0, t.Pair.IndexOf(value: '_'))),
+                                        marketCurrency: this._currencyManager.Get(t.Pair.Substring(t.Pair.IndexOf(value: '_') + 1)),
+                                        volume: t.BaseVolume,
+                                        last: t.Last,
+                                        lastUpdated: DateTime.UtcNow);
         }
 
         /// <summary>
