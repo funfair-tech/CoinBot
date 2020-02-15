@@ -96,7 +96,9 @@ namespace CoinBot.Clients.Bittrex
 
                 BittrexMarketSummariesDto? summaries = JsonConvert.DeserializeObject<BittrexMarketSummariesDto>(content, this._serializerSettings);
 
-                return summaries?.Result ?? Array.Empty<BittrexMarketSummaryDto>();
+                IReadOnlyList<BittrexMarketSummaryDto>? items = summaries?.Result;
+
+                return items ?? Array.Empty<BittrexMarketSummaryDto>();
             }
         }
 

@@ -99,9 +99,20 @@ namespace CoinBot.Clients.GateIo
                 JObject jResponse = JObject.Parse(json);
                 List<GateIoTicker> tickers = new List<GateIoTicker>();
 
-                foreach (KeyValuePair<string, JToken> jToken in jResponse)
+                foreach (KeyValuePair<string, JToken?> jToken in jResponse)
                 {
-                    JObject obj = JObject.Parse(jToken.Value.ToString());
+                    if (jToken.Value == null)
+                    {
+                        continue;
+                    }
+
+                    JObject? obj = JObject.Parse(jToken.Value.ToString());
+
+                    if (obj == null)
+                    {
+                        continue;
+                    }
+
                     GateIoTicker? ticker = JsonConvert.DeserializeObject<GateIoTicker>(obj.ToString(), this._serializerSettings);
 
                     if (ticker != null)

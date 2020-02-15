@@ -92,8 +92,13 @@ namespace CoinBot.Clients.Poloniex
                 JObject jResponse = JObject.Parse(json);
                 List<PoloniexTicker> tickers = new List<PoloniexTicker>();
 
-                foreach (KeyValuePair<string, JToken> jToken in jResponse)
+                foreach (KeyValuePair<string, JToken?> jToken in jResponse)
                 {
+                    if (jToken.Value == null)
+                    {
+                        continue;
+                    }
+
                     JObject obj = JObject.Parse(jToken.Value.ToString());
                     PoloniexTicker? ticker = JsonConvert.DeserializeObject<PoloniexTicker>(obj.ToString(), this._serializerSettings);
 

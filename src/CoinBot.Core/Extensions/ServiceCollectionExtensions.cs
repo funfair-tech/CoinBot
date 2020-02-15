@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Collections.Generic;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CoinBot.Core.Extensions
@@ -24,6 +25,26 @@ namespace CoinBot.Core.Extensions
             return services.Configure<MarketManagerSettings>(configuration.GetSection(MARKET_MANAGER_SETTINGS_SECTION))
                            .AddSingleton<CurrencyManager>()
                            .AddSingleton<MarketManager>();
+        }
+    }
+
+    public static class EnumerableExtensions
+    {
+        public static IEnumerable<T> RemoveNulls<T>(this IEnumerable<T?>? items)
+            where T : class
+        {
+            if (items != null)
+            {
+                foreach (T? item in items)
+                {
+                    if (item == null)
+                    {
+                        continue;
+                    }
+
+                    yield return item;
+                }
+            }
         }
     }
 }
