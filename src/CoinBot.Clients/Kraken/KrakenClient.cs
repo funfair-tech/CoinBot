@@ -58,18 +58,20 @@ namespace CoinBot.Clients.Kraken
             {
                 List<KrakenAsset> assets = await this.GetAssetsAsync();
                 List<KrakenPair> pairs = await this.GetPairsAsync();
-                List<KrakenTicker> tickers = new List<KrakenTicker>();
 
-                foreach (KrakenPair pair in pairs)
+                static bool IsValid(KrakenPair pair)
                 {
                     // todo: can't get kraken details on these markets
                     if (pair.PairId.EndsWith(value: ".d", StringComparison.Ordinal))
                     {
-                        continue;
+                        return false;
                     }
 
-                    tickers.Add(await this.GetTickerAsync(pair));
+                    return true;
                 }
+
+                KrakenTicker[] tickers = await Task.WhenAll(pairs.Where(IsValid)
+                                                                 .Select(this.GetTickerAsync));
 
                 return tickers.Select(selector: m =>
                                                 {
