@@ -7,7 +7,7 @@ namespace CoinBot.Core
     /// <summary>
     ///     Coin information.
     /// </summary>
-    public class Currency
+    public sealed class Currency
     {
         /// <summary>
         ///     Coin information.

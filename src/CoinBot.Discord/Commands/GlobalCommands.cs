@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace CoinBot.Discord.Commands
 {
-    public class GlobalCommands : CommandBase
+    public sealed class GlobalCommands : CommandBase
     {
         private readonly CurrencyManager _currencyManager;
         private readonly ILogger _logger;
@@ -24,11 +24,10 @@ namespace CoinBot.Discord.Commands
         {
             using (this.Context.Channel.EnterTypingState())
             {
-                IGlobalInfo globalInfo = this._currencyManager.GetGlobalInfo();
+                IGlobalInfo? globalInfo = this._currencyManager.GetGlobalInfo();
 
-                EmbedBuilder builder = new EmbedBuilder();
+                EmbedBuilder builder = new EmbedBuilder {Color = Color.DarkPurple};
                 builder.WithTitle("Global Currency Information");
-                builder.Color = Color.DarkPurple;
                 AddAuthor(builder);
 
                 StringBuilder descriptionBuilder = new StringBuilder();

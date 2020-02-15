@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace CoinBot.Clients.Liqui
 {
-    public class LiquiTicker
+    public sealed class LiquiTicker
     {
         // ReSharper disable once RedundantDefaultMemberInitializer
         public string Pair { get; set; } = default!;

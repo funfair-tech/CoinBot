@@ -2,7 +2,7 @@
 
 namespace CoinBot.Clients.Kraken
 {
-    public class KrakenPair
+    public sealed class KrakenPair
     {
         // ReSharper disable once RedundantDefaultMemberInitializer
         public string PairId { get; set; } = default!;

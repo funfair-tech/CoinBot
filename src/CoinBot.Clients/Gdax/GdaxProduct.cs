@@ -2,7 +2,7 @@
 
 namespace CoinBot.Clients.Gdax
 {
-    public class GdaxProduct
+    public sealed class GdaxProduct
     {
         [JsonProperty("id")]
 
