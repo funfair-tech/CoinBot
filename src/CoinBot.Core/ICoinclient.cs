@@ -15,6 +15,6 @@ namespace CoinBot.Core
         ///     Get global info.
         /// </summary>
         /// <returns></returns>
-        Task<IGlobalInfo> GetGlobalInfoAsync();
+        Task<IGlobalInfo?> GetGlobalInfoAsync();
     }
 }

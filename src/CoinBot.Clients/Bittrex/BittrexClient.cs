@@ -54,7 +54,7 @@ namespace CoinBot.Clients.Bittrex
         {
             try
             {
-                List<BittrexMarketSummaryDto> summaries = await this.GetMarketSummariesAsync();
+                IReadOnlyList<BittrexMarketSummaryDto> summaries = await this.GetMarketSummariesAsync();
 
                 return summaries.Select(selector: this.CreateMarketSummaryDto)
                                 .ToList();
@@ -84,7 +84,7 @@ namespace CoinBot.Clients.Bittrex
         ///     Get the market summaries.
         /// </summary>
         /// <returns></returns>
-        private async Task<List<BittrexMarketSummaryDto>> GetMarketSummariesAsync()
+        private async Task<IReadOnlyList<BittrexMarketSummaryDto>> GetMarketSummariesAsync()
         {
             HttpClient httpClient = this.CreateHttpClient();
 
@@ -96,7 +96,7 @@ namespace CoinBot.Clients.Bittrex
 
                 BittrexMarketSummariesDto? summaries = JsonConvert.DeserializeObject<BittrexMarketSummariesDto>(content, this._serializerSettings);
 
-                return summaries.Result;
+                return summaries?.Result ?? Array.Empty<BittrexMarketSummaryDto>();
             }
         }
 

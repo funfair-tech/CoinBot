@@ -80,15 +80,12 @@ namespace CoinBot.Clients.Liqui
             var baseCurrrency = this._currencyManager.Get(m.Pair.Substring(startIndex: 0, m.Pair.IndexOf(PAIR_SEPARATOR)));
             var marketCurrency = this._currencyManager.Get(m.Pair.Substring(m.Pair.IndexOf(PAIR_SEPARATOR) + 1));
 
-
-            return new MarketSummaryDto(
-                       baseCurrency: baseCurrrency,
-                       marketCurrency: marketCurrency,
-                       market: "Liqui",
-                       volume: m.Vol,
-                       lastUpdated: m.Updated.GetValueOrDefault(),
-                       last: m.Last
-                   );
+            return new MarketSummaryDto(baseCurrency: baseCurrrency,
+                                        marketCurrency: marketCurrency,
+                                        market: "Liqui",
+                                        volume: m.Vol,
+                                        lastUpdated: m.Updated.GetValueOrDefault(),
+                                        last: m.Last);
         }
 
         /// <summary>
@@ -106,13 +103,18 @@ namespace CoinBot.Clients.Liqui
                     response.EnsureSuccessStatusCode();
 
                     string json = await response.Content.ReadAsStringAsync();
-                    JObject jResponse = JObject.Parse(json);
+                    JObject? jResponse = JObject.Parse(json);
+
+                    if (jResponse == null)
+                    {
+                        return Array.Empty<string>();
+                    }
 
                     return jResponse.GetValue(propertyName: "pairs")
                                     .Children()
                                     .Cast<JProperty>()
                                     .Select(selector: property => property.Name)
-                                    .ToList();
+                                    .ToArray();
                 }
             }
             catch (Exception exception)
