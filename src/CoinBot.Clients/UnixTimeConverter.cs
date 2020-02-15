@@ -22,7 +22,7 @@ namespace CoinBot.Clients
         /// <param name="writer">The <see cref="Newtonsoft.Json.JsonWriter" />.</param>
         /// <param name="value">The value <see cref="System.Object" />.</param>
         /// <param name="serializer">The <see cref="Newtonsoft.Json.JsonSerializer" />.</param>
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) => throw new NotImplementedException();
+        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer) => throw new NotImplementedException();
 
         /// <inheritdoc />
         /// <summary>
@@ -33,7 +33,7 @@ namespace CoinBot.Clients
         /// <param name="existingValue"></param>
         /// <param name="serializer"></param>
         /// <returns></returns>
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
         {
             if (reader.Value == null) return null;
 

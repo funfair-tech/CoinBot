@@ -73,12 +73,7 @@ namespace CoinBot.Clients.Poloniex
             var baseCurrency = this._currencyManager.Get(t.Pair.Substring(startIndex: 0, t.Pair.IndexOf(value: '_')));
             var marketCurrency = this._currencyManager.Get(t.Pair.Substring(t.Pair.IndexOf(value: '_') + 1));
 
-            return new MarketSummaryDto(market: "Poloniex",
-                                        baseCurrency: this._currencyManager.Get(t.Pair.Substring(startIndex: 0, t.Pair.IndexOf(value: '_'))),
-                                        marketCurrency: this._currencyManager.Get(t.Pair.Substring(t.Pair.IndexOf(value: '_') + 1)),
-                                        volume: t.BaseVolume,
-                                        last: t.Last,
-                                        lastUpdated: DateTime.UtcNow);
+            return new MarketSummaryDto(market: "Poloniex", baseCurrency: baseCurrency, marketCurrency: marketCurrency, volume: t.BaseVolume, last: t.Last, lastUpdated: null);
         }
 
         /// <summary>

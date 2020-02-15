@@ -76,7 +76,7 @@ namespace CoinBot.Clients.Binance
                                         marketCurrency: this._currencyManager.Get(product.QuoteAsset),
                                         volume: product.Volume,
                                         last: product.PrevClose,
-                                        lastUpdated: DateTime.UtcNow);
+                                        lastUpdated: null);
         }
 
         public static void Register(IServiceCollection services)

@@ -80,7 +80,7 @@ namespace CoinBot.Clients.GateIo
                                         marketCurrency: marketCurrency,
                                         volume: marketSummary.BaseVolume,
                                         last: marketSummary.Last,
-                                        lastUpdated: DateTime.UtcNow);
+                                        lastUpdated: null);
         }
 
         /// <summary>

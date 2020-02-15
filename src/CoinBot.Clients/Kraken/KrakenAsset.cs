@@ -4,9 +4,12 @@ namespace CoinBot.Clients.Kraken
 {
     public class KrakenAsset
     {
-        public string Id { get; set; }
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public string Id { get; set; } = default!;
 
         [JsonProperty("altname")]
-        public string Altname { get; set; }
+
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public string Altname { get; set; } = default!;
     }
 }

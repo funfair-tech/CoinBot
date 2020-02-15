@@ -7,25 +7,37 @@ namespace CoinBot.Clients.Binance
     internal sealed class BinanceProduct
     {
         [JsonProperty("symbol")]
-        public string Symbol { get; set; }
+
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public string Symbol { get; set; } = default!;
 
         [JsonProperty("quoteAssetName")]
-        public string QuoteAssetName { get; set; }
+
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public string QuoteAssetName { get; set; } = default!;
 
         [JsonProperty("tradedMoney")]
         public double TradedMoney { get; set; }
 
         [JsonProperty("baseAssetUnit")]
-        public string BaseAssetUnit { get; set; }
+
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public string BaseAssetUnit { get; set; } = default!;
 
         [JsonProperty("baseAssetName")]
-        public string BaseAssetName { get; set; }
+
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public string BaseAssetName { get; set; } = default!;
 
         [JsonProperty("baseAsset")]
-        public string BaseAsset { get; set; }
+
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public string BaseAsset { get; set; } = default!;
 
         [JsonProperty("tickSize")]
-        public string TickSize { get; set; }
+
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public string TickSize { get; set; } = default!;
 
         [JsonProperty("prevClose")]
         public decimal? PrevClose { get; set; }
@@ -34,34 +46,48 @@ namespace CoinBot.Clients.Binance
         public long ActiveBuy { get; set; }
 
         [JsonProperty("high")]
-        public string High { get; set; }
+
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public string High { get; set; } = default!;
 
         [JsonProperty("lastAggTradeId")]
         public long LastAggTradeId { get; set; }
 
         [JsonProperty("low")]
-        public string Low { get; set; }
+
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public string Low { get; set; } = default!;
 
         [JsonProperty("matchingUnitType")]
-        public string MatchingUnitType { get; set; }
+
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public string MatchingUnitType { get; set; } = default!;
 
         [JsonProperty("close")]
-        public string Close { get; set; }
+
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public string Close { get; set; } = default!;
 
         [JsonProperty("quoteAsset")]
-        public string QuoteAsset { get; set; }
+
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public string QuoteAsset { get; set; } = default!;
 
         [JsonProperty("active")]
         public bool Active { get; set; }
 
         [JsonProperty("minTrade")]
-        public string MinTrade { get; set; }
+
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public string MinTrade { get; set; } = default!;
 
         [JsonProperty("activeSell")]
         public double ActiveSell { get; set; }
 
         [JsonProperty("withdrawFee")]
-        public string WithdrawFee { get; set; }
+
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public string WithdrawFee { get; set; } = default!;
 
         [JsonProperty("volume")]
         public decimal? Volume { get; set; }
@@ -70,15 +96,23 @@ namespace CoinBot.Clients.Binance
         public long DecimalPlaces { get; set; }
 
         [JsonProperty("quoteAssetUnit")]
-        public string QuoteAssetUnit { get; set; }
+
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public string QuoteAssetUnit { get; set; } = default!;
 
         [JsonProperty("open")]
-        public string Open { get; set; }
+
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public string Open { get; set; } = default!;
 
         [JsonProperty("status")]
-        public string Status { get; set; }
+
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public string Status { get; set; } = default!;
 
         [JsonProperty("minQty")]
-        public string MinQty { get; set; }
+
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public string MinQty { get; set; } = default!;
     }
 }
