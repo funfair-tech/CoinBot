@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace CoinBot.Core
 {
-    public class CurrencyManager
+    public sealed class CurrencyManager
     {
         private readonly BufferBlock<Func<Task>> _bufferBlock;
 
@@ -36,14 +36,19 @@ namespace CoinBot.Core
         /// <summary>
         ///     The <see cref="IGlobalInfo" />.
         /// </summary>
-        private IGlobalInfo _globalInfo;
+        private IGlobalInfo? _globalInfo;
 
         /// <summary>
         ///     The <see cref="Timer" />.
         /// </summary>
-        private Timer _timer;
+        private Timer? _timer;
 
-        public CurrencyManager(ILogger logger, IEnumerable<ICoinClient> coinClients)
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="logger">Logging</param>
+        /// <param name="coinClients">Clients</param>
+        public CurrencyManager(ILogger<CurrencyManager> logger, IEnumerable<ICoinClient> coinClients)
         {
             this._coinClients = coinClients;
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -77,7 +82,7 @@ namespace CoinBot.Core
             finally
             {
                 // and reset the timer
-                this._timer.Change(this._tickInterval, TimeSpan.Zero);
+                this._timer?.Change(this._tickInterval, TimeSpan.Zero);
             }
         }
 
@@ -95,27 +100,27 @@ namespace CoinBot.Core
         public void Stop()
         {
             // stop the timer
-            this._timer.Dispose();
+            this._timer?.Dispose();
             this._timer = null;
         }
 
-        public IGlobalInfo GetGlobalInfo()
+        public IGlobalInfo? GetGlobalInfo()
         {
             return this._globalInfo;
         }
 
-        public Currency Get(string nameOrSymbol)
+        public Currency? Get(string nameOrSymbol)
         {
             return this.GetCoinBySymbol(nameOrSymbol) ?? this.GetCoinByName(nameOrSymbol);
         }
 
-        private Currency GetCoinBySymbol(string symbol)
+        private Currency? GetCoinBySymbol(string symbol)
         {
             //this._lock.EnterReadLock();
             return this._coinInfoCollection.FirstOrDefault(predicate: c => string.Compare(c.Symbol, symbol, StringComparison.OrdinalIgnoreCase) == 0);
         }
 
-        private Currency GetCoinByName(string name)
+        private Currency? GetCoinByName(string name)
         {
             //this._lock.EnterReadLock();
             return this._coinInfoCollection.FirstOrDefault(predicate: c => string.Compare(c.Name, name, StringComparison.OrdinalIgnoreCase) == 0);
@@ -129,24 +134,27 @@ namespace CoinBot.Core
 
         private async Task UpdateCoinsAsync()
         {
-            ICoinClient client = this._coinClients.First();
+            static Currency CreateCurrency(IReadOnlyList<ICoinInfo> cryptoInfo)
+            {
+                ICoinInfo first = cryptoInfo.First();
 
-            //this._lock.EnterWriteLock();
-            List<ICoinInfo> coinInfos = (await client.GetCoinInfoAsync()).ToList();
+                Currency currency = new Currency(symbol: first.Symbol, name: first.Name) {ImageUrl = first.ImageUrl};
 
-            List<Currency> currencies = new List<Currency>();
-            currencies.AddRange(new[] {new Currency {Symbol = "EUR", Name = "Euro"}, new Currency {Symbol = "USD", Name = "United States dollar"}});
+                foreach (ICoinInfo info in cryptoInfo)
+                {
+                    currency.AddDetails(info);
+                }
 
-            currencies.AddRange(coinInfos.Select(selector: cryptoInfo =>
-                                                           {
-                                                               Currency currency = new Currency
-                                                                                   {
-                                                                                       Symbol = cryptoInfo.Symbol, Name = cryptoInfo.Name, ImageUrl = cryptoInfo.ImageUrl
-                                                                                   };
-                                                               currency.AddDetails(cryptoInfo);
+                return currency;
+            }
 
-                                                               return currency;
-                                                           }));
+            IReadOnlyCollection<ICoinInfo>[] allCoinInfos = await Task.WhenAll(this._coinClients.Select(client => client.GetCoinInfoAsync()));
+
+            List<Currency> currencies = new List<Currency> {new Currency(symbol: "EUR", name: "Euro"), new Currency(symbol: "USD", name: "United States dollar")};
+
+            currencies.AddRange(allCoinInfos.SelectMany(ci => ci)
+                                            .GroupBy(c => c.Symbol)
+                                            .Select(selector: info => CreateCurrency(info.ToArray())));
 
             this._coinInfoCollection = new ReadOnlyCollection<Currency>(currencies);
         }

@@ -14,26 +14,33 @@ namespace CoinBot.Core
         /// </summary>
         private readonly List<ICoinInfo> _details;
 
-        public Currency()
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="name">Currency name.</param>
+        /// <param name="symbol">Currency symbol.</param>
+        public Currency(string name, string symbol)
         {
+            this.Name = name;
+            this.Symbol = symbol;
             this._details = new List<ICoinInfo>();
         }
 
         /// <summary>
         ///     The coin name.
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; }
 
         /// <summary>
         ///     The token symbol.
         /// </summary>
-        public string Symbol { get; set; }
+        public string Symbol { get; }
 
         /// <summary>
         ///     The currency image url.
         /// </summary>
         [SuppressMessage(category: "Microsoft.Design", checkId: "CA1056:UriPropertiesShouldNotBeStrings", Justification = "Model for serialization")]
-        public string ImageUrl { get; set; }
+        public string? ImageUrl { get; set; }
 
         public void AddDetails(ICoinInfo details)
         {
