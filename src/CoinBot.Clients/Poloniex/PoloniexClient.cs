@@ -85,6 +85,8 @@ namespace CoinBot.Clients.Poloniex
 
             using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "public?command=returnTicker", UriKind.Relative)))
             {
+                response.EnsureSuccessStatusCode();
+
                 string json = await response.Content.ReadAsStringAsync();
                 JObject jResponse = JObject.Parse(json);
                 List<PoloniexTicker> tickers = new List<PoloniexTicker>();

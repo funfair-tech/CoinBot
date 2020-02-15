@@ -49,6 +49,8 @@ namespace CoinBot.Clients.CoinMarketCap
 
                 using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "ticker/?convert=ETH&limit=1000", UriKind.Relative)))
                 {
+                    response.EnsureSuccessStatusCode();
+
                     return JsonConvert.DeserializeObject<List<CoinMarketCapCoin>>(await response.Content.ReadAsStringAsync(), this._serializerSettings);
                 }
             }
@@ -73,6 +75,8 @@ namespace CoinBot.Clients.CoinMarketCap
 
                 using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "global/", UriKind.Relative)))
                 {
+                    response.EnsureSuccessStatusCode();
+
                     return JsonConvert.DeserializeObject<CoinMarketCapGlobalInfo>(await response.Content.ReadAsStringAsync(), this._serializerSettings);
                 }
             }

@@ -87,6 +87,8 @@ namespace CoinBot.Clients.GateIo
 
             using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "tickers", UriKind.Relative)))
             {
+                response.EnsureSuccessStatusCode();
+
                 string json = await response.Content.ReadAsStringAsync();
                 JObject jResponse = JObject.Parse(json);
                 List<GateIoTicker> tickers = new List<GateIoTicker>();

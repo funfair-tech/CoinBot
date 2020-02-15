@@ -93,6 +93,8 @@ namespace CoinBot.Clients.Binance
 
             using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "product", UriKind.Relative)))
             {
+                response.EnsureSuccessStatusCode();
+
                 string json = await response.Content.ReadAsStringAsync();
                 JObject jObject = JObject.Parse(json);
 

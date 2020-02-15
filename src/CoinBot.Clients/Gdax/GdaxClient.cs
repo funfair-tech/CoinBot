@@ -83,6 +83,8 @@ namespace CoinBot.Clients.Gdax
 
             using (HttpResponseMessage response = await httpClient.GetAsync(new Uri($"products/{productId}/ticker", UriKind.Relative)))
             {
+                response.EnsureSuccessStatusCode();
+
                 GdaxTicker ticker = JsonConvert.DeserializeObject<GdaxTicker>(await response.Content.ReadAsStringAsync(), this._serializerSettings);
                 ticker.ProductId = productId;
 
@@ -100,6 +102,8 @@ namespace CoinBot.Clients.Gdax
 
             using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "products/", UriKind.Relative)))
             {
+                response.EnsureSuccessStatusCode();
+
                 return JsonConvert.DeserializeObject<List<GdaxProduct>>(await response.Content.ReadAsStringAsync(), this._serializerSettings);
             }
         }
