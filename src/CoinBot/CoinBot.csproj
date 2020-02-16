@@ -61,7 +61,9 @@
 
     <ItemGroup>
         <TrimmerRootAssembly Include="System.Text.Json"/>
+        <TrimmerRootAssembly Include="System.IO.MemoryMappedFiles"/>
         <TrimmerRootAssembly Include="System.Resources.Writer"/>
+        <TrimmerRootAssembly Include="System.Threading.ThreadPool"/>
         <TrimmerRootAssembly Include="System.Transactions"/>
         <TrimmerRootAssembly Include="System.Diagnostics.FileVersionInfo"/>
     </ItemGroup>
