@@ -31,8 +31,16 @@ namespace CoinBot.Discord.Commands
 
                     if (currency != null)
                     {
-                        CoinMarketCapCoin details = currency.Getdetails<CoinMarketCapCoin>();
-                        await this.ReplyAsync($"{currency.Symbol} - ${details.GetPriceSummary()} ({details.GetChangeSummary()})");
+                        CoinMarketCapCoin? details = currency.Getdetails<CoinMarketCapCoin>();
+
+                        if (details != null)
+                        {
+                            await this.ReplyAsync($"{currency.Symbol} - ${details.GetPriceSummary()} ({details.GetChangeSummary()})");
+                        }
+                        else
+                        {
+                            await this.ReplyAsync($"sorry, {symbol} was not found");
+                        }
                     }
                     else
                     {

@@ -38,7 +38,7 @@ namespace CoinBot.Discord.Commands
                         EmbedBuilder builder = new EmbedBuilder();
                         builder.WithTitle(currency.GetTitle());
 
-                        CoinMarketCapCoin details = currency.Getdetails<CoinMarketCapCoin>();
+                        CoinMarketCapCoin? details = currency.Getdetails<CoinMarketCapCoin>();
 
                         if (details != null)
                         {
@@ -117,7 +117,7 @@ namespace CoinBot.Discord.Commands
                 }
 
                 double? totalChange = coins.Sum(c => c.Getdetails<CoinMarketCapCoin>()
-                                                      .DayChange);
+                                                      ?.DayChange.GetValueOrDefault(0d));
                 await this.MultiCoinReplyAsync(coins, totalChange > 0 ? Color.Green : Color.Red, "Snapshot", string.Join(", ", coins.Select(c => c.Symbol)));
             }
         }
@@ -134,7 +134,7 @@ namespace CoinBot.Discord.Commands
                     coins = this._currencyManager.Get(x => x.Getdetails<CoinMarketCapCoin>()
                                                             ?.Rank <= 100)
                                 .OrderByDescending(x => x.Getdetails<CoinMarketCapCoin>()
-                                                         .DayChange);
+                                                         ?.DayChange.GetValueOrDefault());
                 }
                 catch (Exception e)
                 {
@@ -192,11 +192,17 @@ namespace CoinBot.Discord.Commands
             AddAuthor(builder);
             AddFooter(builder,
                       coins.Max(c => c.Getdetails<CoinMarketCapCoin>()
-                                      .LastUpdated));
+                                      ?.LastUpdated.GetValueOrDefault(DateTime.MinValue)));
 
             foreach (Currency coin in coins)
             {
-                CoinMarketCapCoin details = coin.Getdetails<CoinMarketCapCoin>();
+                CoinMarketCapCoin? details = coin.Getdetails<CoinMarketCapCoin>();
+
+                if (details == null)
+                {
+                    continue;
+                }
+
                 builder.Fields.Add(new EmbedFieldBuilder
                                    {
                                        Name = $"{coin.Name} ({coin.Symbol}) | {details.DayChange.AsPercentage()} | {details.GetPriceSummary()}",
