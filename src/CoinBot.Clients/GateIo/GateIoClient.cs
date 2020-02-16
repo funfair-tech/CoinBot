@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using CoinBot.Core;
+using CoinBot.Core.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -50,7 +51,7 @@ namespace CoinBot.Clients.GateIo
         /// <summary>
         ///     The Exchange name.
         /// </summary>
-        public string Name => "Gate.io";
+        public string Name => @"Gate.io";
 
         /// <inheritdoc />
         public async Task<IReadOnlyCollection<MarketSummaryDto>> GetAsync()
@@ -60,6 +61,7 @@ namespace CoinBot.Clients.GateIo
                 List<GateIoTicker> tickers = await this.GetTickersAsync();
 
                 return tickers.Select(selector: this.CreateMarketSummaryDto)
+                              .RemoveNulls()
                               .ToList();
             }
             catch (Exception e)
@@ -70,12 +72,23 @@ namespace CoinBot.Clients.GateIo
             }
         }
 
-        private MarketSummaryDto CreateMarketSummaryDto(GateIoTicker marketSummary)
+        private MarketSummaryDto? CreateMarketSummaryDto(GateIoTicker marketSummary)
         {
             Currency? baseCurrency = this._currencyManager.Get(marketSummary.Pair.Substring(startIndex: 0, marketSummary.Pair.IndexOf(PAIR_SEPARATOR)));
+
+            if (baseCurrency == null)
+            {
+                return null;
+            }
+
             Currency? marketCurrency = this._currencyManager.Get(marketSummary.Pair.Substring(marketSummary.Pair.IndexOf(PAIR_SEPARATOR) + 1));
 
-            return new MarketSummaryDto(market: "Gate.io",
+            if (marketCurrency == null)
+            {
+                return null;
+            }
+
+            return new MarketSummaryDto(market: this.Name,
                                         baseCurrency: baseCurrency,
                                         marketCurrency: marketCurrency,
                                         volume: marketSummary.BaseVolume,

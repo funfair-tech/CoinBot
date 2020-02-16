@@ -11,9 +11,9 @@ namespace CoinBot.Discord.Commands
     public sealed class GlobalCommands : CommandBase
     {
         private readonly CurrencyManager _currencyManager;
-        private readonly ILogger _logger;
+        private readonly ILogger<GlobalCommands> _logger;
 
-        public GlobalCommands(CurrencyManager currencyManager, ILogger logger)
+        public GlobalCommands(CurrencyManager currencyManager, ILogger<GlobalCommands> logger)
         {
             this._currencyManager = currencyManager;
             this._logger = logger;
@@ -25,6 +25,12 @@ namespace CoinBot.Discord.Commands
             using (this.Context.Channel.EnterTypingState())
             {
                 IGlobalInfo? globalInfo = this._currencyManager.GetGlobalInfo();
+
+                if (globalInfo == null)
+                {
+                    // TODO: report not available.
+                    return;
+                }
 
                 EmbedBuilder builder = new EmbedBuilder {Color = Color.DarkPurple};
                 builder.WithTitle("Global Currency Information");

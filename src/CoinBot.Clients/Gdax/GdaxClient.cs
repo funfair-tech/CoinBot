@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using CoinBot.Core;
+using CoinBot.Core.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -55,6 +56,7 @@ namespace CoinBot.Clients.Gdax
                 GdaxTicker[] tickers = await Task.WhenAll(products.Select(product => this.GetTickerAsync(product.Id)));
 
                 return tickers.Select(selector: this.CreateMarketSummaryDto)
+                              .RemoveNulls()
                               .ToList();
             }
             catch (Exception e)
@@ -65,12 +67,28 @@ namespace CoinBot.Clients.Gdax
             }
         }
 
-        private MarketSummaryDto CreateMarketSummaryDto(GdaxTicker t)
+        private MarketSummaryDto? CreateMarketSummaryDto(GdaxTicker ticker)
         {
-            Currency? baseCurrency = this._currencyManager.Get(t.ProductId.Substring(startIndex: 0, t.ProductId.IndexOf(value: '-')));
-            Currency? marketCurrency = this._currencyManager.Get(t.ProductId.Substring(t.ProductId.IndexOf(value: '-') + 1));
+            Currency? baseCurrency = this._currencyManager.Get(ticker.ProductId.Substring(startIndex: 0, ticker.ProductId.IndexOf(value: '-')));
 
-            return new MarketSummaryDto(market: "GDAX", baseCurrency: baseCurrency, marketCurrency: marketCurrency, volume: t.Volume, last: t.Price, lastUpdated: t.Time);
+            if (baseCurrency == null)
+            {
+                return null;
+            }
+
+            Currency? marketCurrency = this._currencyManager.Get(ticker.ProductId.Substring(ticker.ProductId.IndexOf(value: '-') + 1));
+
+            if (marketCurrency == null)
+            {
+                return null;
+            }
+
+            return new MarketSummaryDto(market: this.Name,
+                                        baseCurrency: baseCurrency,
+                                        marketCurrency: marketCurrency,
+                                        volume: ticker.Volume,
+                                        last: ticker.Price,
+                                        lastUpdated: ticker.Time);
         }
 
         /// <summary>

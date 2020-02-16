@@ -70,6 +70,7 @@ namespace CoinBot.Clients.Kraken
                                                                  .Select(this.GetTickerAsync));
 
                 return tickers.Select(selector: m => this.CreateMarketSummaryDto(assets, m))
+                              .RemoveNulls()
                               .ToList();
             }
             catch (Exception e)
@@ -80,30 +81,66 @@ namespace CoinBot.Clients.Kraken
             }
         }
 
-        private MarketSummaryDto CreateMarketSummaryDto(IReadOnlyList<KrakenAsset> assets, KrakenTicker ticker)
+        private MarketSummaryDto? CreateMarketSummaryDto(IReadOnlyList<KrakenAsset> assets, KrakenTicker ticker)
         {
-            string baseCurrency = assets.First(a => StringComparer.InvariantCultureIgnoreCase.Equals(a.Id, ticker.BaseCurrency))
-                                        .Altname;
-            string quoteCurrency = assets.First(a => StringComparer.InvariantCultureIgnoreCase.Equals(a.Id, ticker.QuoteCurrency))
-                                         .Altname;
+            string? baseCurrencySymbol = FindCurrency(assets, ticker.BaseCurrency);
 
-            // Workaround for kraken
-            if (baseCurrency.Equals(value: "xbt", StringComparison.OrdinalIgnoreCase))
+            if (baseCurrencySymbol == null)
             {
-                baseCurrency = "btc";
+                return null;
             }
 
-            if (quoteCurrency.Equals(value: "xbt", StringComparison.OrdinalIgnoreCase))
+            string? marketCurrencySymbol = FindCurrency(assets, ticker.QuoteCurrency);
+
+            if (marketCurrencySymbol == null)
             {
-                quoteCurrency = "btc";
+                return null;
             }
 
-            return new MarketSummaryDto(market: "Kraken",
-                                        baseCurrency: this._currencyManager.Get(baseCurrency),
-                                        marketCurrency: this._currencyManager.Get(quoteCurrency),
+            Currency? baseCurrency = this._currencyManager.Get(baseCurrencySymbol);
+
+            if (baseCurrency == null)
+            {
+                return null;
+            }
+
+            Currency? marketCurrency = this._currencyManager.Get(marketCurrencySymbol);
+
+            if (marketCurrency == null)
+            {
+                return null;
+            }
+
+            return new MarketSummaryDto(market: this.Name,
+                                        baseCurrency: baseCurrency,
+                                        marketCurrency: marketCurrency,
                                         volume: ticker.Volume[1],
                                         last: ticker.Last[0],
                                         lastUpdated: null);
+        }
+
+        private static string? FindCurrency(IReadOnlyList<KrakenAsset> assets, string search)
+        {
+            KrakenAsset? found = assets.FirstOrDefault(a => StringComparer.InvariantCultureIgnoreCase.Equals(a.Id, search));
+
+            if (found == null)
+            {
+                return null;
+            }
+
+            return NormalizeCurrency(found.Altname);
+        }
+
+        private static string NormalizeCurrency(string currencySymbol)
+        {
+            // Workaround for kraken
+
+            if (currencySymbol.Equals(value: "xbt", StringComparison.OrdinalIgnoreCase))
+            {
+                return "btc";
+            }
+
+            return currencySymbol;
         }
 
         /// <summary>
