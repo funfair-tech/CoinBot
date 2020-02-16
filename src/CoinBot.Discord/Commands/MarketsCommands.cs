@@ -59,7 +59,7 @@ namespace CoinBot.Discord.Commands
 
                     EmbedBuilder builder = new EmbedBuilder();
                     builder.WithTitle(primaryCurrency.GetTitle());
-                    CoinMarketCapCoin details = primaryCurrency.Getdetails<CoinMarketCapCoin>();
+                    CoinMarketCapCoin? details = primaryCurrency.Getdetails<CoinMarketCapCoin>();
 
                     if (details != null)
                     {

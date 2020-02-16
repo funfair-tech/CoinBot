@@ -47,7 +47,8 @@ namespace CoinBot.Core
             this._details.Add(details);
         }
 
-        public T Getdetails<T>()
+        public T? Getdetails<T>()
+            where T : class, ICoinInfo
         {
             return this._details.OfType<T>()
                        .FirstOrDefault();
