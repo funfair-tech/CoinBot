@@ -60,6 +60,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <TrimmerRootAssembly Include="System.Text.Json"/>
         <TrimmerRootAssembly Include="System.Resources.Writer"/>
         <TrimmerRootAssembly Include="System.Transactions"/>
         <TrimmerRootAssembly Include="System.Diagnostics.FileVersionInfo"/>
