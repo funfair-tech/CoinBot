@@ -35,17 +35,5 @@ namespace CoinBot.Clients.Bittrex
 
         [JsonProperty("Ask")]
         public decimal? Ask { get; set; }
-
-        //[JsonProperty("OpenBuyOrders")]
-        //public long OpenBuyOrders { get; set; }
-
-        //[JsonProperty("OpenSellOrders")]
-        //public long OpenSellOrders { get; set; }
-
-        //[JsonProperty("PrevDay")]
-        //public double PrevDay { get; set; }
-
-        //[JsonProperty("Created")]
-        //public string Created { get; set; }
     }
 }
