@@ -66,6 +66,7 @@ namespace CoinBot.Clients.Liqui
                 LiquiTicker[] tickers = await Task.WhenAll(pairs.Select(this.GetTickerAsync));
 
                 return tickers.Select(this.CreateMarketSummaryDto)
+                              .RemoveNulls()
                               .ToList();
             }
             catch (Exception exception)
@@ -76,17 +77,28 @@ namespace CoinBot.Clients.Liqui
             }
         }
 
-        private MarketSummaryDto CreateMarketSummaryDto(LiquiTicker m)
+        private MarketSummaryDto? CreateMarketSummaryDto(LiquiTicker ticker)
         {
-            var baseCurrrency = this._currencyManager.Get(m.Pair.Substring(startIndex: 0, m.Pair.IndexOf(PAIR_SEPARATOR)));
-            var marketCurrency = this._currencyManager.Get(m.Pair.Substring(m.Pair.IndexOf(PAIR_SEPARATOR) + 1));
+            Currency? baseCurrency = this._currencyManager.Get(ticker.Pair.Substring(startIndex: 0, ticker.Pair.IndexOf(PAIR_SEPARATOR)));
 
-            return new MarketSummaryDto(baseCurrency: baseCurrrency,
+            if (baseCurrency == null)
+            {
+                return null;
+            }
+
+            Currency? marketCurrency = this._currencyManager.Get(ticker.Pair.Substring(ticker.Pair.IndexOf(PAIR_SEPARATOR) + 1));
+
+            if (marketCurrency == null)
+            {
+                return null;
+            }
+
+            return new MarketSummaryDto(market: this.Name,
+                                        baseCurrency: baseCurrency,
                                         marketCurrency: marketCurrency,
-                                        market: "Liqui",
-                                        volume: m.Vol,
-                                        lastUpdated: m.Updated.GetValueOrDefault(),
-                                        last: m.Last);
+                                        volume: ticker.Vol,
+                                        lastUpdated: ticker.Updated.GetValueOrDefault(),
+                                        last: ticker.Last);
         }
 
         /// <summary>

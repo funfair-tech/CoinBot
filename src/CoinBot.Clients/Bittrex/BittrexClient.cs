@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using CoinBot.Core;
+using CoinBot.Core.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -57,6 +58,7 @@ namespace CoinBot.Clients.Bittrex
                 IReadOnlyList<BittrexMarketSummaryDto> summaries = await this.GetMarketSummariesAsync();
 
                 return summaries.Select(selector: this.CreateMarketSummaryDto)
+                                .RemoveNulls()
                                 .ToList();
             }
             catch (Exception e)
@@ -67,12 +69,23 @@ namespace CoinBot.Clients.Bittrex
             }
         }
 
-        private MarketSummaryDto CreateMarketSummaryDto(BittrexMarketSummaryDto marketSummary)
+        private MarketSummaryDto? CreateMarketSummaryDto(BittrexMarketSummaryDto marketSummary)
         {
             Currency? baseCurrency = this._currencyManager.Get(marketSummary.MarketName.Substring(startIndex: 0, marketSummary.MarketName.IndexOf(value: '-')));
+
+            if (baseCurrency == null)
+            {
+                return null;
+            }
+
             Currency? marketCurrency = this._currencyManager.Get(marketSummary.MarketName.Substring(marketSummary.MarketName.IndexOf(value: '-') + 1));
 
-            return new MarketSummaryDto(market: "Bittrex",
+            if (marketCurrency == null)
+            {
+                return null;
+            }
+
+            return new MarketSummaryDto(market: this.Name,
                                         baseCurrency: baseCurrency,
                                         marketCurrency: marketCurrency,
                                         volume: marketSummary.BaseVolume,

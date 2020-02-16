@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using CoinBot.Core;
+using CoinBot.Core.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -58,6 +59,7 @@ namespace CoinBot.Clients.Binance
                 IReadOnlyList<BinanceProduct> products = await this.GetProductsAsync();
 
                 return products.Select(selector: this.CreateMarketSummaryDto)
+                               .RemoveNulls()
                                .ToList();
             }
             catch (Exception exception)
@@ -69,11 +71,25 @@ namespace CoinBot.Clients.Binance
             }
         }
 
-        private MarketSummaryDto CreateMarketSummaryDto(BinanceProduct product)
+        private MarketSummaryDto? CreateMarketSummaryDto(BinanceProduct product)
         {
+            Currency? baseCurrency = this._currencyManager.Get(product.BaseAsset);
+
+            if (baseCurrency == null)
+            {
+                return null;
+            }
+
+            Currency? marketCurrency = this._currencyManager.Get(product.QuoteAsset);
+
+            if (marketCurrency == null)
+            {
+                return null;
+            }
+
             return new MarketSummaryDto(market: "Binance",
-                                        baseCurrency: this._currencyManager.Get(product.BaseAsset),
-                                        marketCurrency: this._currencyManager.Get(product.QuoteAsset),
+                                        baseCurrency: baseCurrency,
+                                        marketCurrency: marketCurrency,
                                         volume: product.Volume,
                                         last: product.PrevClose,
                                         lastUpdated: null);

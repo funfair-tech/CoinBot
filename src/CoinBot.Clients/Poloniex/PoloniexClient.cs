@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using CoinBot.Core;
+using CoinBot.Core.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -58,6 +59,7 @@ namespace CoinBot.Clients.Poloniex
                 List<PoloniexTicker> tickers = await this.GetTickersAsync();
 
                 return tickers.Select(selector: this.CreateMarketSummaryDto)
+                              .RemoveNulls()
                               .ToList();
             }
             catch (Exception e)
@@ -68,12 +70,28 @@ namespace CoinBot.Clients.Poloniex
             }
         }
 
-        private MarketSummaryDto CreateMarketSummaryDto(PoloniexTicker t)
+        private MarketSummaryDto? CreateMarketSummaryDto(PoloniexTicker ticker)
         {
-            var baseCurrency = this._currencyManager.Get(t.Pair.Substring(startIndex: 0, t.Pair.IndexOf(value: '_')));
-            var marketCurrency = this._currencyManager.Get(t.Pair.Substring(t.Pair.IndexOf(value: '_') + 1));
+            Currency? baseCurrency = this._currencyManager.Get(ticker.Pair.Substring(startIndex: 0, ticker.Pair.IndexOf(value: '_')));
 
-            return new MarketSummaryDto(market: "Poloniex", baseCurrency: baseCurrency, marketCurrency: marketCurrency, volume: t.BaseVolume, last: t.Last, lastUpdated: null);
+            if (baseCurrency == null)
+            {
+                return null;
+            }
+
+            Currency? marketCurrency = this._currencyManager.Get(ticker.Pair.Substring(ticker.Pair.IndexOf(value: '_') + 1));
+
+            if (marketCurrency == null)
+            {
+                return null;
+            }
+
+            return new MarketSummaryDto(market: this.Name,
+                                        baseCurrency: baseCurrency,
+                                        marketCurrency: marketCurrency,
+                                        volume: ticker.BaseVolume,
+                                        last: ticker.Last,
+                                        lastUpdated: null);
         }
 
         /// <summary>
