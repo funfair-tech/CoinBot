@@ -59,19 +59,16 @@ namespace CoinBot.Core
 
         private Currency? GetCoinBySymbol(string symbol)
         {
-            //this._lock.EnterReadLock();
             return this._coinInfoCollection.FirstOrDefault(predicate: c => string.Compare(c.Symbol, symbol, StringComparison.OrdinalIgnoreCase) == 0);
         }
 
         private Currency? GetCoinByName(string name)
         {
-            //this._lock.EnterReadLock();
             return this._coinInfoCollection.FirstOrDefault(predicate: c => string.Compare(c.Name, name, StringComparison.OrdinalIgnoreCase) == 0);
         }
 
         public IEnumerable<Currency> Get(Func<Currency, bool> predicate)
         {
-            //this._lock.EnterReadLock();
             return this._coinInfoCollection.Where(predicate);
         }
 
