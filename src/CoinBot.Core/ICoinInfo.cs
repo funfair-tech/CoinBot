@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace CoinBot.Core
 {
     /// <summary>
-    ///     TODO
+    ///     Coin information.
     /// </summary>
     public interface ICoinInfo
     {
@@ -58,21 +58,6 @@ namespace CoinBot.Core
         ///     The USD market cap.
         /// </summary>
         double? MarketCap { get; }
-
-        ///// <summary>
-        ///// Available supply is the best approximation of the number of coins that are circulating in the market and in the general public's hands.
-        ///// </summary>
-        //decimal? AvailableSupply { get; }
-
-        ///// <summary>
-        ///// Total supply is the total amount of coins in existence right now (minus any coins that have been verifiably burned).
-        ///// </summary>
-        //decimal? TotalSupply { get; }
-
-        ///// <summary>
-        ///// Max supply the best approximation of the maximum amount of coins that will ever exist in the lifetime of the Currency.
-        ///// </summary>
-        //decimal? MaxSupply { get; }
 
         /// <summary>
         ///     The price change last hour as a percentage.
