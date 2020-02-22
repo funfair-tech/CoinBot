@@ -30,7 +30,7 @@ namespace CoinBot
             // Load the application configuration
             this._configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
                                                             .AddJsonFile(path: "appsettings.json", optional: true)
-                                                            .AddJsonFile(path: "appsettings-local.json", optional: true)
+                                                            .AddJsonFile(path: "appsettings-local.json", optional: false)
                                                             .AddEnvironmentVariables()
                                                             .Build();
         }
@@ -65,7 +65,7 @@ namespace CoinBot
                                                              return loggerFactory.CreateLogger(nameof(CoinBot));
                                                          })
                     .AddMemoryCache()
-                    .AddClients()
+                    .AddClients(this._configuration)
                     .AddCore(this._configuration)
                     .AddCoinBot(this._configuration);
         }
