@@ -23,8 +23,9 @@ namespace CoinBot.Discord.Commands
             this._logger = logger;
         }
 
-        [Command("coin"), Summary("get info for a coin, e.g. !coin FUN")]
-        public async Task CoinAsync([Remainder, Summary("The symbol for the coin")]
+        [Command(text: "coin")]
+        [Summary(text: "get info for a coin, e.g. !coin FUN")]
+        public async Task CoinAsync([Remainder] [Summary(text: "The symbol for the coin")]
                                     string symbol)
         {
             using (this.Context.Channel.EnterTypingState())
@@ -47,13 +48,18 @@ namespace CoinBot.Discord.Commands
 
                             builder.WithDescription(details.GetDescription());
                             builder.WithUrl(details.Url);
-                            if (currency.ImageUrl != null) builder.WithThumbnailUrl(currency.ImageUrl);
-                            builder.AddField("Price", details.GetPrice());
-                            builder.AddField("Change", details.GetChange());
+
+                            if (currency.ImageUrl != null)
+                            {
+                                builder.WithThumbnailUrl(currency.ImageUrl);
+                            }
+
+                            builder.AddField(name: "Price", details.GetPrice());
+                            builder.AddField(name: "Change", details.GetChange());
                             AddFooter(builder, details.LastUpdated);
                         }
 
-                        await this.ReplyAsync(string.Empty, false, builder.Build());
+                        await this.ReplyAsync(string.Empty, isTTS: false, builder.Build());
                     }
                     else
                     {
@@ -63,19 +69,20 @@ namespace CoinBot.Discord.Commands
                 catch (Exception e)
                 {
                     this._logger.LogError(new EventId(e.HResult), e, e.Message);
-                    await this.ReplyAsync("oops, something went wrong, sorry!");
+                    await this.ReplyAsync(message: "oops, something went wrong, sorry!");
                 }
             }
         }
 
-        [Command("snapshot"), Summary("get info on a list of coins, !snapshot FUN,BTC,IOTA,ETH,ETC")]
-        public async Task SnapshotAsync([Remainder, Summary("A comma separated list of coin symbols")]
+        [Command(text: "snapshot")]
+        [Summary(text: "get info on a list of coins, !snapshot FUN,BTC,IOTA,ETH,ETC")]
+        public async Task SnapshotAsync([Remainder] [Summary(text: "A comma separated list of coin symbols")]
                                         string symbols)
         {
             using (this.Context.Channel.EnterTypingState())
             {
-                string[] symbolsList = symbols.Split(',')
-                                              .Select(s => s.Trim())
+                string[] symbolsList = symbols.Split(separator: ',')
+                                              .Select(selector: s => s.Trim())
                                               .ToArray();
                 List<Currency> coins = new List<Currency>();
                 IList<string> notFound = new List<string>();
@@ -98,7 +105,7 @@ namespace CoinBot.Discord.Commands
                     catch (Exception e)
                     {
                         this._logger.LogError(new EventId(e.HResult), e, e.Message);
-                        await this.ReplyAsync("oops, something went wrong, sorry!");
+                        await this.ReplyAsync(message: "oops, something went wrong, sorry!");
 
                         return;
                     }
@@ -108,21 +115,25 @@ namespace CoinBot.Discord.Commands
                 {
                     if (notFound.Count > 1)
                     {
-                        await this.ReplyAsync($"sorry, {string.Join(", ", notFound)} were not found");
+                        await this.ReplyAsync($"sorry, {string.Join(separator: ", ", notFound)} were not found");
                     }
                     else
                     {
-                        await this.ReplyAsync($"sorry, {notFound[0]} was not found");
+                        await this.ReplyAsync($"sorry, {notFound[index: 0]} was not found");
                     }
                 }
 
-                double? totalChange = coins.Sum(c => c.Getdetails<CoinMarketCapCoin>()
-                                                      ?.DayChange.GetValueOrDefault(0d));
-                await this.MultiCoinReplyAsync(coins, totalChange > 0 ? Color.Green : Color.Red, "Snapshot", string.Join(", ", coins.Select(c => c.Symbol)));
+                double? totalChange = coins.Sum(selector: c => c.Getdetails<CoinMarketCapCoin>()
+                                                                ?.DayChange.GetValueOrDefault(defaultValue: 0d));
+                await this.MultiCoinReplyAsync(coins,
+                                               totalChange > 0 ? Color.Green : Color.Red,
+                                               title: "Snapshot",
+                                               string.Join(separator: ", ", coins.Select(selector: c => c.Symbol)));
             }
         }
 
-        [Command("gainers"), Summary("get list of top 5 coins by Day Change of top 100 coins, e.g. !gainers")]
+        [Command(text: "gainers")]
+        [Summary(text: "get list of top 5 coins by Day Change of top 100 coins, e.g. !gainers")]
         public async Task GainersAsync()
         {
             using (this.Context.Channel.EnterTypingState())
@@ -131,28 +142,29 @@ namespace CoinBot.Discord.Commands
 
                 try
                 {
-                    coins = this._currencyManager.Get(x => x.Getdetails<CoinMarketCapCoin>()
-                                                            ?.Rank <= 100)
-                                .OrderByDescending(x => x.Getdetails<CoinMarketCapCoin>()
-                                                         ?.DayChange.GetValueOrDefault());
+                    coins = this._currencyManager.Get(predicate: x => x.Getdetails<CoinMarketCapCoin>()
+                                                                       ?.Rank <= 100)
+                                .OrderByDescending(keySelector: x => x.Getdetails<CoinMarketCapCoin>()
+                                                                      ?.DayChange.GetValueOrDefault());
                 }
                 catch (Exception e)
                 {
                     this._logger.LogError(new EventId(e.HResult), e, e.Message);
-                    await this.ReplyAsync("oops, something went wrong, sorry!");
+                    await this.ReplyAsync(message: "oops, something went wrong, sorry!");
 
                     return;
                 }
 
-                await this.MultiCoinReplyAsync(coins.Take(5)
+                await this.MultiCoinReplyAsync(coins.Take(count: 5)
                                                     .ToList(),
                                                Color.Green,
-                                               "Gainers",
-                                               "The 5 coins in the top 100 with the biggest 24 hour gain");
+                                               title: "Gainers",
+                                               description: "The 5 coins in the top 100 with the biggest 24 hour gain");
             }
         }
 
-        [Command("losers"), Summary("get list of bottom 5 coins by Day Change of top 100 coins, e.g. !losers")]
+        [Command(text: "losers")]
+        [Summary(text: "get list of bottom 5 coins by Day Change of top 100 coins, e.g. !losers")]
         public async Task LosersAsync()
         {
             using (this.Context.Channel.EnterTypingState())
@@ -161,26 +173,27 @@ namespace CoinBot.Discord.Commands
 
                 try
                 {
-                    coins = this._currencyManager.Get(x => x.Getdetails<CoinMarketCapCoin>()
-                                                            ?.Rank <= 100)
-                                .OrderByDescending(x => x.Getdetails<CoinMarketCapCoin>()
-                                                         .DayChange)
+                    coins = this._currencyManager.Get(predicate: x => x.Getdetails<CoinMarketCapCoin>()
+                                                                       ?.Rank <= 100)
+                                .RemoveNulls()
+                                .OrderByDescending(keySelector: x => x.Getdetails<CoinMarketCapCoin>()
+                                                                      ?.DayChange ?? 0d)
                                 .ToList();
                     coins.Reverse();
                 }
                 catch (Exception e)
                 {
                     this._logger.LogError(new EventId(e.HResult), e, e.Message);
-                    await this.ReplyAsync("oops, something went wrong, sorry!");
+                    await this.ReplyAsync(message: "oops, something went wrong, sorry!");
 
                     return;
                 }
 
-                await this.MultiCoinReplyAsync(coins.Take(5)
+                await this.MultiCoinReplyAsync(coins.Take(count: 5)
                                                     .ToList(),
                                                Color.Red,
-                                               "Losers",
-                                               "The 5 coins in the top 100 with the biggest 24 hour loss");
+                                               title: "Losers",
+                                               description: "The 5 coins in the top 100 with the biggest 24 hour loss");
             }
         }
 
@@ -191,8 +204,8 @@ namespace CoinBot.Discord.Commands
             builder.WithDescription(description);
             AddAuthor(builder);
             AddFooter(builder,
-                      coins.Max(c => c.Getdetails<CoinMarketCapCoin>()
-                                      ?.LastUpdated.GetValueOrDefault(DateTime.MinValue)));
+                      coins.Max(selector: c => c.Getdetails<CoinMarketCapCoin>()
+                                                ?.LastUpdated.GetValueOrDefault(DateTime.MinValue)));
 
             foreach (Currency coin in coins)
             {
@@ -211,7 +224,7 @@ namespace CoinBot.Discord.Commands
                                    });
             }
 
-            return this.ReplyAsync(string.Empty, false, builder.Build());
+            return this.ReplyAsync(string.Empty, isTTS: false, builder.Build());
         }
     }
 }
