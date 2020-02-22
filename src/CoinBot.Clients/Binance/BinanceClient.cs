@@ -58,7 +58,7 @@ namespace CoinBot.Clients.Binance
             {
                 IReadOnlyList<BinanceProduct> products = await this.GetProductsAsync();
 
-                return products.Select(selector: this.CreateMarketSummaryDto)
+                return products.Select(this.CreateMarketSummaryDto)
                                .RemoveNulls()
                                .ToList();
             }
@@ -87,7 +87,7 @@ namespace CoinBot.Clients.Binance
                 return null;
             }
 
-            return new MarketSummaryDto(market: "Binance",
+            return new MarketSummaryDto(market: this.Name,
                                         baseCurrency: baseCurrency,
                                         marketCurrency: marketCurrency,
                                         volume: product.Volume,
@@ -118,7 +118,7 @@ namespace CoinBot.Clients.Binance
 
                 Wrapper? packet = JsonConvert.DeserializeObject<Wrapper>(json, this._serializerSettings);
 
-                return ((IReadOnlyList<BinanceProduct>?) packet?.Data) ?? Array.Empty<BinanceProduct>();
+                return (IReadOnlyList<BinanceProduct>?) packet?.Data ?? Array.Empty<BinanceProduct>();
 
                 // WAS:
 #if OLD
@@ -134,7 +134,7 @@ namespace CoinBot.Clients.Binance
         [SuppressMessage(category: "Microsoft.Performance", checkId: "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Used as data packet")]
         private sealed class Wrapper
         {
-            [JsonProperty("data")]
+            [JsonProperty(propertyName: "data")]
 
             // ReSharper disable once RedundantDefaultMemberInitializer
             public List<BinanceProduct> Data { get; set; } = default!;
