@@ -9,7 +9,6 @@ using CoinBot.Core.Extensions;
 using CoinBot.Core.JsonConverters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace CoinBot.Clients.FunFair
 {
@@ -46,7 +45,7 @@ namespace CoinBot.Clients.FunFair
 
             try
             {
-                MarketSummaryDto[] products = await Task.WhenAll(symbols.Select(selector: pair => this.GetCurrentPriceCommonAsync(pair)));
+                MarketSummaryDto[] products = await Task.WhenAll(symbols.Select(this.GetCurrentPriceCommonAsync));
 
                 return products.RemoveNulls()
                                .ToList();
@@ -60,20 +59,20 @@ namespace CoinBot.Clients.FunFair
             }
         }
 
-        public static void Register(IServiceCollection services, IOptions<FunFairClientConfiguration> options)
+        public static void Register(IServiceCollection services, FunFairClientConfiguration? options)
         {
-            if (options.Value == null)
+            if (options == null)
             {
                 return;
             }
 
-            if (!Uri.TryCreate(options.Value.Endpoint ?? string.Empty, UriKind.Absolute, out Uri? endpoint))
+            if (!Uri.TryCreate(options.Endpoint ?? string.Empty, UriKind.Absolute, out Uri? endpoint))
             {
                 return;
             }
 
             services.AddSingleton<IMarketClient, FunFairClient>();
-            services.AddSingleton(options.Value);
+            services.AddSingleton(options);
 
             AddHttpClientFactorySupport(services, HTTP_CLIENT_NAME, endpoint);
         }
