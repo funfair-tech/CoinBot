@@ -11,6 +11,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoinBot", "CoinBot\CoinBot.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinBot.Core", "CoinBot.Core\CoinBot.Core.csproj", "{6DEC910A-A6A5-4C6F-B285-FBDEF398FA2C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Config", "Config", "{0F961285-A850-4AC1-B155-73F881D7C7D3}"
+ProjectSection(SolutionItems) = preProject
+	global.json = global.json
+	CodeAnalysis.ruleset = CodeAnalysis.ruleset
+EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
