@@ -19,7 +19,8 @@ namespace CoinBot.Discord.Commands
             this._logger = logger;
         }
 
-        [Command("global"), Summary("get global crypto market information")]
+        [Command(text: "global")]
+        [Summary(text: "get global crypto market information")]
         public async Task GlobalAsync()
         {
             using (this.Context.Channel.EnterTypingState())
@@ -28,12 +29,13 @@ namespace CoinBot.Discord.Commands
 
                 if (globalInfo == null)
                 {
-                    // TODO: report not available.
+                    this._logger.LogWarning(message: "Global info is not available");
+
                     return;
                 }
 
                 EmbedBuilder builder = new EmbedBuilder {Color = Color.DarkPurple};
-                builder.WithTitle("Global Currency Information");
+                builder.WithTitle(title: "Global Currency Information");
                 AddAuthor(builder);
 
                 StringBuilder descriptionBuilder = new StringBuilder();
@@ -47,7 +49,7 @@ namespace CoinBot.Discord.Commands
 
                 AddFooter(builder, globalInfo.LastUpdated);
 
-                await this.ReplyAsync(string.Empty, false, builder.Build());
+                await this.ReplyAsync(string.Empty, isTTS: false, builder.Build());
             }
         }
     }
