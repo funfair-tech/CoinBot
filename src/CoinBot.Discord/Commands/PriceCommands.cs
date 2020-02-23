@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using CoinBot.Clients.CoinMarketCap;
+using CoinBot.Clients.FunFair;
 using CoinBot.Core;
 using CoinBot.Discord.Extensions;
 using Discord.Commands;
@@ -37,16 +38,21 @@ namespace CoinBot.Discord.Commands
                         if (details != null)
                         {
                             await this.ReplyAsync($"{currency.Symbol} - ${details.GetPriceSummary()} ({details.GetChangeSummary()})");
+
+                            return;
                         }
-                        else
+
+                        FunFairWalletCoin? walletCoinDetails = currency.Getdetails<FunFairWalletCoin>();
+
+                        if (walletCoinDetails != null)
                         {
-                            await this.ReplyAsync($"sorry, {symbol} was not found");
+                            await this.ReplyAsync($"{currency.Symbol} - ${walletCoinDetails.GetPriceSummary()}");
+
+                            return;
                         }
                     }
-                    else
-                    {
-                        await this.ReplyAsync($"sorry, {symbol} was not found");
-                    }
+
+                    await this.ReplyAsync($"sorry, {symbol} was not found");
                 }
                 catch (Exception e)
                 {
