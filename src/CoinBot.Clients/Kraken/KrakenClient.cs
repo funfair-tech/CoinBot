@@ -121,7 +121,7 @@ namespace CoinBot.Clients.Kraken
 
         private static string? FindCurrency(IReadOnlyList<KrakenAsset> assets, string search)
         {
-            KrakenAsset? found = assets.FirstOrDefault(a => StringComparer.InvariantCultureIgnoreCase.Equals(a.Id, search));
+            KrakenAsset? found = assets.FirstOrDefault(predicate: a => StringComparer.InvariantCultureIgnoreCase.Equals(a.Id, search));
 
             if (found == null)
             {

@@ -20,7 +20,7 @@ namespace CoinBot.Core
         private readonly IReadOnlyDictionary<string, Exchange> _exchanges;
 
         /// <summary>
-        /// Constructor.
+        ///     Constructor.
         /// </summary>
         /// <param name="settings">Settings.</param>
         /// <param name="clients">Market Clients.</param>
@@ -65,7 +65,7 @@ namespace CoinBot.Core
                                                                                                   }
 
                                                                                                   if (m.BaseCurrency?.Symbol.Equals(currency.Symbol,
-                                                                                                                                     StringComparison.OrdinalIgnoreCase) != false ||
+                                                                                                                                    StringComparison.OrdinalIgnoreCase) != false ||
                                                                                                       m.MarketCurrency?.Symbol.Equals(currency.Symbol,
                                                                                                                                       StringComparison.OrdinalIgnoreCase) != false)
                                                                                                   {
@@ -118,12 +118,12 @@ namespace CoinBot.Core
                                                                                                   }
 
                                                                                                   if (m.BaseCurrency?.Symbol.Equals(currency1.Symbol,
-                                                                                                                                     StringComparison.OrdinalIgnoreCase) != false &&
+                                                                                                                                    StringComparison.OrdinalIgnoreCase) != false &&
                                                                                                       m.MarketCurrency?.Symbol.Equals(currency2.Symbol,
                                                                                                                                       StringComparison.OrdinalIgnoreCase) !=
                                                                                                       false ||
                                                                                                       m.BaseCurrency?.Symbol.Equals(currency2.Symbol,
-                                                                                                                                     StringComparison.OrdinalIgnoreCase) != false &&
+                                                                                                                                    StringComparison.OrdinalIgnoreCase) != false &&
                                                                                                       m.MarketCurrency?.Symbol.Equals(currency1.Symbol,
                                                                                                                                       StringComparison.OrdinalIgnoreCase) != false)
                                                                                                   {

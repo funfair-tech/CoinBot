@@ -60,7 +60,7 @@ namespace CoinBot.Clients.GateIo
             {
                 List<GateIoTicker> tickers = await this.GetTickersAsync();
 
-                return tickers.Select(selector: this.CreateMarketSummaryDto)
+                return tickers.Select(this.CreateMarketSummaryDto)
                               .RemoveNulls()
                               .ToList();
             }

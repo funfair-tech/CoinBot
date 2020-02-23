@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using CoinBot.Core.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace CoinBot.Core
@@ -25,7 +26,7 @@ namespace CoinBot.Core
         private IGlobalInfo? _globalInfo;
 
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         /// <param name="logger">Logging</param>
         /// <param name="coinClients">Clients</param>
@@ -88,12 +89,12 @@ namespace CoinBot.Core
                 return currency;
             }
 
-            IReadOnlyCollection<ICoinInfo>[] allCoinInfos = await Task.WhenAll(this._coinClients.Select(client => client.GetCoinInfoAsync()));
+            IReadOnlyCollection<ICoinInfo>[] allCoinInfos = await Task.WhenAll(this._coinClients.Select(selector: client => client.GetCoinInfoAsync()));
 
             List<Currency> currencies = new List<Currency> {new Currency(symbol: "EUR", name: "Euro"), new Currency(symbol: "USD", name: "United States dollar")};
 
-            currencies.AddRange(allCoinInfos.SelectMany(ci => ci)
-                                            .GroupBy(c => c.Symbol)
+            currencies.AddRange(allCoinInfos.SelectMany(selector: ci => ci)
+                                            .GroupBy(keySelector: c => c.Symbol)
                                             .Select(selector: info => CreateCurrency(info.ToArray())));
 
             this._coinInfoCollection = new ReadOnlyCollection<Currency>(currencies);
@@ -101,9 +102,10 @@ namespace CoinBot.Core
 
         private async Task UpdateGlobalInfoAsync()
         {
-            ICoinClient client = this._coinClients.First();
+            IGlobalInfo?[] results = await Task.WhenAll(this._coinClients.Select(selector: client => client.GetGlobalInfoAsync()));
 
-            this._globalInfo = await client.GetGlobalInfoAsync();
+            this._globalInfo = results.RemoveNulls()
+                                      .FirstOrDefault();
         }
     }
 }

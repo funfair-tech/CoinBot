@@ -11,17 +11,17 @@ namespace CoinBot.Clients.Kraken
         public string QuoteCurrency { get; set; } = default!;
 
         /// <summary>
-        /// last trade closed array(price, lot volume)
+        ///     last trade closed array(price, lot volume)
         /// </summary>
-        [JsonProperty("c")]
+        [JsonProperty(propertyName: "c")]
 
         // ReSharper disable once RedundantDefaultMemberInitializer
         public decimal?[] Last { get; set; } = default!;
 
         /// <summary>
-        /// 24 Hour volume array(today, last 24 hours)
+        ///     24 Hour volume array(today, last 24 hours)
         /// </summary>
-        [JsonProperty("v")]
+        [JsonProperty(propertyName: "v")]
 
         // ReSharper disable once RedundantDefaultMemberInitializer
         public decimal?[] Volume { get; set; } = default!;

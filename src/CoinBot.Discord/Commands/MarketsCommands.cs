@@ -29,12 +29,13 @@ namespace CoinBot.Discord.Commands
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        [Command("markets")]
-        [Summary("get price details per market for a coin, e.g. `!markets FUN` or `!markets ETH/FUN`.")]
-        public async Task MarketsAsync([Remainder] [Summary("The input as a single coin symbol or a pair")]
+        [Command(text: "markets")]
+        [Summary(text: "get price details per market for a coin, e.g. `!markets FUN` or `!markets ETH/FUN`.")]
+        public async Task MarketsAsync([Remainder] [Summary(text: "The input as a single coin symbol or a pair")]
                                        string input)
         {
             using (this.Context.Channel.EnterTypingState())
+            {
                 try
                 {
                     if (!this.GetCurrencies(input, out Currency? primaryCurrency, out Currency? secondaryCurrency))
@@ -75,9 +76,9 @@ namespace CoinBot.Discord.Commands
 
                     // Group by exchange, and if looking for a pair orderby volume
                     IEnumerable<IGrouping<string, MarketSummaryDto>> grouped = secondaryCurrency != null
-                        ? markets.GroupBy(m => m.Market)
-                                 .OrderByDescending(g => g.Sum(m => m.Volume * m.Last))
-                        : markets.GroupBy(m => m.Market);
+                        ? markets.GroupBy(keySelector: m => m.Market)
+                                 .OrderByDescending(keySelector: g => g.Sum(selector: m => m.Volume * m.Last))
+                        : markets.GroupBy(keySelector: m => m.Market);
 
                     foreach (IGrouping<string, MarketSummaryDto> group in grouped)
                     {
@@ -97,9 +98,9 @@ namespace CoinBot.Discord.Commands
 
                                 marketDetails.AppendLine();
                                 marketDetails.AppendLine($"Found {diff} more {primaryCurrency.Symbol} market(s) at {exchangeName}:");
-                                marketDetails.AppendLine(string.Join(", ",
+                                marketDetails.AppendLine(string.Join(separator: ", ",
                                                                      group.Skip(maxResults)
-                                                                          .Select(m => $"{m.BaseCurrency.Symbol}/{m.MarketCurrency.Symbol}")));
+                                                                          .Select(selector: m => $"{m.BaseCurrency.Symbol}/{m.MarketCurrency.Symbol}")));
                             }
                             else
                             {
@@ -114,37 +115,38 @@ namespace CoinBot.Discord.Commands
                         builder.AddField($"{exchangeName}", marketDetails);
                     }
 
-                    DateTime? lastUpdated = markets.Min(m => m.LastUpdated);
+                    DateTime? lastUpdated = markets.Min(selector: m => m.LastUpdated);
                     AddFooter(builder, lastUpdated);
 
-                    string operationName = (secondaryCurrency != null) ? $"{primaryCurrency.Name}/{secondaryCurrency.Name}" : primaryCurrency.Name;
+                    string operationName = secondaryCurrency != null ? $"{primaryCurrency.Name}/{secondaryCurrency.Name}" : primaryCurrency.Name;
 
-                    await this.ReplyAsync($"Markets for `{operationName}`:", false, builder.Build());
+                    await this.ReplyAsync($"Markets for `{operationName}`:", isTTS: false, builder.Build());
                 }
                 catch (Exception e)
                 {
-                    this._logger.LogError(0, e, $"Something went wrong while processing the !markets command with input '{input}'");
-                    await this.ReplyAsync("oops, something went wrong, sorry!");
+                    this._logger.LogError(eventId: 0, e, $"Something went wrong while processing the !markets command with input '{input}'");
+                    await this.ReplyAsync(message: "oops, something went wrong, sorry!");
                 }
+            }
         }
 
         private static void WriteMarketSummaries(StringBuilder builder, IEnumerable<MarketSummaryDto> markets)
         {
-            builder.Append("```");
+            builder.Append(value: "```");
 
             foreach (MarketSummaryDto market in markets)
             {
                 builder.AppendLine(market.GetSummary());
             }
 
-            builder.Append("```");
+            builder.Append(value: "```");
         }
 
-        private bool GetCurrencies(string input, [NotNullWhen(true)] out Currency? primaryCurrency, [NotNullWhen(true)] out Currency? secondaryCurrency)
+        private bool GetCurrencies(string input, [NotNullWhen(returnValue: true)] out Currency? primaryCurrency, [NotNullWhen(returnValue: true)] out Currency? secondaryCurrency)
         {
             primaryCurrency = null;
             secondaryCurrency = null;
-            int countSeparators = input.Count(c => this._separators.Contains(c));
+            int countSeparators = input.Count(predicate: c => this._separators.Contains(c));
 
             if (countSeparators > 1)
             {
@@ -157,7 +159,7 @@ namespace CoinBot.Discord.Commands
             }
             else
             {
-                string first = input.Substring(0, input.IndexOfAny(this._separators));
+                string first = input.Substring(startIndex: 0, input.IndexOfAny(this._separators));
                 string second = input.Substring(input.IndexOfAny(this._separators) + 1);
                 primaryCurrency = this._currencyManager.Get(first);
                 secondaryCurrency = this._currencyManager.Get(second);

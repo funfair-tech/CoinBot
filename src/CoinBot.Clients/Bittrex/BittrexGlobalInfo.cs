@@ -9,31 +9,31 @@ namespace CoinBot.Clients.Bittrex
     public sealed class BittrexGlobalInfo : IGlobalInfo
     {
         /// <inheritdoc />
-        [JsonProperty("total_market_cap_usd")]
+        [JsonProperty(propertyName: "total_market_cap_usd")]
         public double? MarketCap { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("total_24h_volume_usd")]
+        [JsonProperty(propertyName: "total_24h_volume_usd")]
         public double? Volume { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("bitcoin_percentage_of_market_cap")]
+        [JsonProperty(propertyName: "bitcoin_percentage_of_market_cap")]
         public double? BtcDominance { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("active_currencies")]
+        [JsonProperty(propertyName: "active_currencies")]
         public int? Currencies { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("active_assets")]
+        [JsonProperty(propertyName: "active_assets")]
         public int? Assets { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("active_markets")]
+        [JsonProperty(propertyName: "active_markets")]
         public int? Markets { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty("last_updated")]
+        [JsonProperty(propertyName: "last_updated")]
         [JsonConverter(typeof(UnixTimeConverter))]
         public DateTime? LastUpdated { get; set; }
     }

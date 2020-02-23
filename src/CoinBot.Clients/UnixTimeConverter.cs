@@ -5,28 +5,31 @@ using Newtonsoft.Json.Converters;
 namespace CoinBot.Clients
 {
     /// <summary>
-    /// A custom <see cref="DateTimeConverterBase"/> implementation for unix timestamps.
+    ///     A custom <see cref="DateTimeConverterBase" /> implementation for unix timestamps.
     /// </summary>
     public sealed class UnixTimeConverter : DateTimeConverterBase
     {
         /// <summary>
-        /// The <see cref="DateTime"/> to start with when adding seconds.
+        ///     The <see cref="DateTime" /> to start with when adding seconds.
         /// </summary>
         /// <remarks>It is a static readonly field for performance reasons.</remarks>
-        private static readonly DateTime Epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        private static readonly DateTime Epoch = new DateTime(year: 1970, month: 1, day: 1, hour: 0, minute: 0, second: 0, DateTimeKind.Utc);
 
         /// <inheritdoc />
         /// <summary>
-        /// TODO: Implementation is not yet needed because we do not write JSON.
+        ///     TODO: Implementation is not yet needed because we do not write JSON.
         /// </summary>
         /// <param name="writer">The <see cref="Newtonsoft.Json.JsonWriter" />.</param>
         /// <param name="value">The value <see cref="System.Object" />.</param>
         /// <param name="serializer">The <see cref="Newtonsoft.Json.JsonSerializer" />.</param>
-        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer) => throw new NotImplementedException();
+        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <inheritdoc />
         /// <summary>
-        /// Converts a unix timestamp (expressed as string or long) to a <see cref="DateTime"/>.
+        ///     Converts a unix timestamp (expressed as string or long) to a <see cref="DateTime" />.
         /// </summary>
         /// <param name="reader"></param>
         /// <param name="objectType"></param>
@@ -35,7 +38,10 @@ namespace CoinBot.Clients
         /// <returns></returns>
         public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
         {
-            if (reader.Value == null) return null;
+            if (reader.Value == null)
+            {
+                return null;
+            }
 
             object value = reader.Value;
 

@@ -7,33 +7,33 @@ namespace CoinBot.Clients.Bittrex
     [SuppressMessage(category: "Microsoft.Performance", checkId: "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Used as data packet")]
     internal sealed class BittrexMarketSummaryDto
     {
-        [JsonProperty("MarketName")]
+        [JsonProperty(propertyName: "MarketName")]
 
         // ReSharper disable once RedundantDefaultMemberInitializer
         public string MarketName { get; set; } = default!;
 
-        [JsonProperty("High")]
+        [JsonProperty(propertyName: "High")]
         public decimal? High { get; set; }
 
-        [JsonProperty("Low")]
+        [JsonProperty(propertyName: "Low")]
         public decimal? Low { get; set; }
 
-        [JsonProperty("Volume")]
+        [JsonProperty(propertyName: "Volume")]
         public decimal? Volume { get; set; }
 
-        [JsonProperty("Last")]
+        [JsonProperty(propertyName: "Last")]
         public decimal? Last { get; set; }
 
-        [JsonProperty("BaseVolume")]
+        [JsonProperty(propertyName: "BaseVolume")]
         public decimal? BaseVolume { get; set; }
 
-        [JsonProperty("TimeStamp")]
+        [JsonProperty(propertyName: "TimeStamp")]
         public DateTime? TimeStamp { get; set; }
 
-        [JsonProperty("Bid")]
+        [JsonProperty(propertyName: "Bid")]
         public decimal? Bid { get; set; }
 
-        [JsonProperty("Ask")]
+        [JsonProperty(propertyName: "Ask")]
         public decimal? Ask { get; set; }
     }
 }

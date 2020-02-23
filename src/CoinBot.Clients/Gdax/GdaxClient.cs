@@ -53,9 +53,9 @@ namespace CoinBot.Clients.Gdax
             try
             {
                 IReadOnlyList<GdaxProduct> products = await this.GetProductsAsync();
-                GdaxTicker[] tickers = await Task.WhenAll(products.Select(product => this.GetTickerAsync(product.Id)));
+                GdaxTicker[] tickers = await Task.WhenAll(products.Select(selector: product => this.GetTickerAsync(product.Id)));
 
-                return tickers.Select(selector: this.CreateMarketSummaryDto)
+                return tickers.Select(this.CreateMarketSummaryDto)
                               .RemoveNulls()
                               .ToList();
             }

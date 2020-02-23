@@ -5,19 +5,19 @@ using CoinBot.Core.Extensions;
 namespace CoinBot.Discord.Extensions
 {
     /// <summary>
-    /// <see cref="CoinMarketCapCoin"/> extension methods.
+    ///     <see cref="CoinMarketCapCoin" /> extension methods.
     /// </summary>
     public static class CoinMarketCapCoinExtensions
     {
         /// <summary>
-        /// The USD precision to use when formatting <see cref="CoinMarketCapCoin"/> prices.
+        ///     The USD precision to use when formatting <see cref="CoinMarketCapCoin" /> prices.
         /// </summary>
         private const int USD_PRICE_PRECISION = 7;
 
         /// <summary>
-        /// Get information about the price change from last hour, day and week.
+        ///     Get information about the price change from last hour, day and week.
         /// </summary>
-        /// <param name="details">The <see cref="CoinMarketCapCoin"/>.</param>
+        /// <param name="details">The <see cref="CoinMarketCapCoin" />.</param>
         /// <returns></returns>
         public static string GetChange(this CoinMarketCapCoin details)
         {
@@ -30,7 +30,7 @@ namespace CoinBot.Discord.Extensions
         }
 
         /// <summary>
-        /// Get a summary about the price change from last hour, day and week.
+        ///     Get a summary about the price change from last hour, day and week.
         /// </summary>
         /// <param name="details"></param>
         /// <returns></returns>
@@ -40,9 +40,9 @@ namespace CoinBot.Discord.Extensions
         }
 
         /// <summary>
-        /// Get the <paramref name="details"/> description, including market cap, rank and 24H volume.
+        ///     Get the <paramref name="details" /> description, including market cap, rank and 24H volume.
         /// </summary>
-        /// <param name="details">The <see cref="CoinMarketCapCoin"/>.</param>
+        /// <param name="details">The <see cref="CoinMarketCapCoin" />.</param>
         /// <returns></returns>
         public static string GetDescription(this CoinMarketCapCoin details)
         {
@@ -54,9 +54,9 @@ namespace CoinBot.Discord.Extensions
         }
 
         /// <summary>
-        /// Get the <paramref name="details"/> price in USD, BTC and ETH.
+        ///     Get the <paramref name="details" /> price in USD, BTC and ETH.
         /// </summary>
-        /// <param name="details">The <see cref="CoinMarketCapCoin"/>.</param>
+        /// <param name="details">The <see cref="CoinMarketCapCoin" />.</param>
         /// <returns></returns>
         public static string GetPrice(this CoinMarketCapCoin details)
         {
@@ -69,7 +69,7 @@ namespace CoinBot.Discord.Extensions
         }
 
         /// <summary>
-        /// Get the <paramref name="details"/> price summary in USD and BTC.
+        ///     Get the <paramref name="details" /> price summary in USD and BTC.
         /// </summary>
         /// <param name="details"></param>
         /// <returns></returns>

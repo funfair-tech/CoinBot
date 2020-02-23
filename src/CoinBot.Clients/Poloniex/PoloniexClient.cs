@@ -58,7 +58,7 @@ namespace CoinBot.Clients.Poloniex
             {
                 List<PoloniexTicker> tickers = await this.GetTickersAsync();
 
-                return tickers.Select(selector: this.CreateMarketSummaryDto)
+                return tickers.Select(this.CreateMarketSummaryDto)
                               .RemoveNulls()
                               .ToList();
             }
