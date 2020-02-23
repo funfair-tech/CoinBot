@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CoinBot.Clients.CoinMarketCap;
+using CoinBot.Clients.FunFair;
 using CoinBot.Core;
 using CoinBot.Core.Extensions;
 using CoinBot.Discord.Extensions;
@@ -57,6 +58,24 @@ namespace CoinBot.Discord.Commands
                             builder.AddField(name: "Price", details.GetPrice());
                             builder.AddField(name: "Change", details.GetChange());
                             AddFooter(builder, details.LastUpdated);
+                        }
+                        else
+                        {
+                            FunFairWalletCoin? walletDetails = currency.Getdetails<FunFairWalletCoin>();
+
+                            if (walletDetails != null)
+                            {
+                                AddAuthor(builder);
+
+                                if (currency.ImageUrl != null)
+                                {
+                                    builder.WithThumbnailUrl(currency.ImageUrl);
+                                }
+
+                                builder.AddField(name: "Price", walletDetails.GetPrice());
+
+                                AddFooter(builder, walletDetails.LastUpdated);
+                            }
                         }
 
                         await this.ReplyAsync(string.Empty, isTTS: false, builder.Build());
