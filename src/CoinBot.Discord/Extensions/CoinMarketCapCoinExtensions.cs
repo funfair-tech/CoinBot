@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using CoinBot.Clients.CoinMarketCap;
+using CoinBot.Core;
 using CoinBot.Core.Extensions;
 
 namespace CoinBot.Discord.Extensions
@@ -58,12 +59,24 @@ namespace CoinBot.Discord.Extensions
         /// </summary>
         /// <param name="details">The <see cref="CoinMarketCapCoin" />.</param>
         /// <returns></returns>
-        public static string GetPrice(this CoinMarketCapCoin details)
+        public static string GetPrice(this ICoinInfo details)
         {
             StringBuilder priceStringBuilder = new StringBuilder();
-            priceStringBuilder.AppendLine(details.PriceUsd.AsUsdPrice(USD_PRICE_PRECISION));
-            priceStringBuilder.AppendLine($"{details.PriceBtc} BTC");
-            priceStringBuilder.AppendLine($"{details.PriceEth} ETH");
+
+            if (details.PriceUsd != null)
+            {
+                priceStringBuilder.AppendLine(details.PriceUsd.AsUsdPrice(USD_PRICE_PRECISION));
+            }
+
+            if (details.PriceBtc != null)
+            {
+                priceStringBuilder.AppendLine($"{details.PriceBtc} BTC");
+            }
+
+            if (details.PriceEth != null)
+            {
+                priceStringBuilder.AppendLine($"{details.PriceEth} ETH");
+            }
 
             return priceStringBuilder.ToString();
         }
