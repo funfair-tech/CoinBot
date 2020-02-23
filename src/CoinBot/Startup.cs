@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Threading.Tasks;
 using CoinBot.Clients.Extensions;
 using CoinBot.Core;
@@ -28,7 +27,7 @@ namespace CoinBot
         internal Startup()
         {
             // Load the application configuration
-            this._configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
+            this._configuration = new ConfigurationBuilder().SetBasePath(ApplicationConfig.ConfigurationFilesPath)
                                                             .AddJsonFile(path: "appsettings.json", optional: true)
                                                             .AddJsonFile(path: "appsettings-local.json", optional: false)
                                                             .AddEnvironmentVariables()
