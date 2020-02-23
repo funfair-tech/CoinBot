@@ -9,36 +9,36 @@ namespace CoinBot.Clients.Poloniex
         // ReSharper disable once RedundantDefaultMemberInitializer
         public string Pair { get; set; } = default!;
 
-        [JsonProperty("id")]
+        [JsonProperty(propertyName: "id")]
         public long Id { get; set; }
 
-        [JsonProperty("last")]
+        [JsonProperty(propertyName: "last")]
         public decimal? Last { get; set; }
 
-        [JsonProperty("lowestAsk")]
+        [JsonProperty(propertyName: "lowestAsk")]
         public decimal? LowestAsk { get; set; }
 
-        [JsonProperty("highestBid")]
+        [JsonProperty(propertyName: "highestBid")]
         public decimal? HighestBid { get; set; }
 
-        [JsonProperty("percentChange")]
+        [JsonProperty(propertyName: "percentChange")]
         public double PercentChange { get; set; }
 
-        [JsonProperty("baseVolume")]
+        [JsonProperty(propertyName: "baseVolume")]
         public decimal? BaseVolume { get; set; }
 
-        [JsonProperty("quoteVolume")]
+        [JsonProperty(propertyName: "quoteVolume")]
         public decimal? QuoteVolume { get; set; }
 
-        [JsonProperty("isFrozen")]
+        [JsonProperty(propertyName: "isFrozen")]
 
         // ReSharper disable once RedundantDefaultMemberInitializer
         public string IsFrozen { get; set; } = default!;
 
-        [JsonProperty("high24hr")]
+        [JsonProperty(propertyName: "high24hr")]
         public decimal? High24Hr { get; set; }
 
-        [JsonProperty("low24hr")]
+        [JsonProperty(propertyName: "low24hr")]
         public decimal? Low24Hr { get; set; }
     }
 }

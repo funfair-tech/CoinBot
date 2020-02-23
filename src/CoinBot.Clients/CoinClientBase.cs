@@ -9,7 +9,7 @@ using Polly;
 namespace CoinBot.Clients
 {
     /// <summary>
-    /// Base class for Coin clients.
+    ///     Base class for Coin clients.
     /// </summary>
     public abstract class CoinClientBase
     {
@@ -18,7 +18,7 @@ namespace CoinBot.Clients
         private readonly IHttpClientFactory _httpClientFactory;
 
         /// <summary>
-        /// Constructor.
+        ///     Constructor.
         /// </summary>
         /// <param name="httpClientFactory">Http client factory.</param>
         /// <param name="clientName">Name of the client.</param>
@@ -31,21 +31,21 @@ namespace CoinBot.Clients
         }
 
         /// <summary>
-        /// Logging.
+        ///     Logging.
         /// </summary>
         protected ILogger Logger { get; }
 
         /// <summary>
-        /// Creates the <see cref="HttpClient"/>.
+        ///     Creates the <see cref="HttpClient" />.
         /// </summary>
-        /// <returns>The <see cref="HttpClient"/>.</returns>
+        /// <returns>The <see cref="HttpClient" />.</returns>
         protected HttpClient CreateHttpClient()
         {
             return this._httpClientFactory.CreateClient(this._clientName);
         }
 
         /// <summary>
-        /// Registers the HTTP Client with dependency injection.
+        ///     Registers the HTTP Client with dependency injection.
         /// </summary>
         /// <param name="services">The Dependency Injection collection to register the service with.</param>
         /// <param name="clientName">The HTTP Client name.</param>
@@ -71,7 +71,7 @@ namespace CoinBot.Clients
 
         private static TimeSpan Calculate(int attempts)
         {
-            return attempts > 1 ? TimeSpan.FromSeconds(Math.Pow(2.0, attempts)) : TimeSpan.Zero;
+            return attempts > 1 ? TimeSpan.FromSeconds(Math.Pow(x: 2.0, attempts)) : TimeSpan.Zero;
         }
     }
 }

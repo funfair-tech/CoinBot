@@ -14,11 +14,12 @@ namespace CoinBot.Discord.Commands
             this._commandService = commandService;
         }
 
-        [Command("help"), Summary("prints this help text, which you've already figured out")]
+        [Command(text: "help")]
+        [Summary(text: "prints this help text, which you've already figured out")]
         public Task HelpAsync()
         {
             EmbedBuilder builder = new EmbedBuilder();
-            builder.WithTitle("Help");
+            builder.WithTitle(title: "Help");
             AddAuthor(builder);
             AddFooter(builder);
 
@@ -31,7 +32,7 @@ namespace CoinBot.Discord.Commands
 
             builder.WithDescription(stringBuilder.ToString());
 
-            return this.ReplyAsync(string.Empty, false, builder.Build());
+            return this.ReplyAsync(string.Empty, isTTS: false, builder.Build());
         }
     }
 }

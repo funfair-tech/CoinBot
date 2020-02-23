@@ -4,7 +4,7 @@ using CoinBot.Core.Extensions;
 namespace CoinBot.Discord.Extensions
 {
     /// <summary>
-    /// <see cref="MarketSummaryDto"/> extension methods.
+    ///     <see cref="MarketSummaryDto" /> extension methods.
     /// </summary>
     public static class MarketSummaryDtoExtensions
     {

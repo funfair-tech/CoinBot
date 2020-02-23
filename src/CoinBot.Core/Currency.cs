@@ -15,7 +15,7 @@ namespace CoinBot.Core
         private readonly List<ICoinInfo> _details;
 
         /// <summary>
-        /// Constructor.
+        ///     Constructor.
         /// </summary>
         /// <param name="name">Currency name.</param>
         /// <param name="symbol">Currency symbol.</param>

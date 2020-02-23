@@ -7,12 +7,12 @@ namespace CoinBot.Clients.Kraken
         // ReSharper disable once RedundantDefaultMemberInitializer
         public string PairId { get; set; } = default!;
 
-        [JsonProperty("base")]
+        [JsonProperty(propertyName: "base")]
 
         // ReSharper disable once RedundantDefaultMemberInitializer
         public string BaseCurrency { get; set; } = default!;
 
-        [JsonProperty("quote")]
+        [JsonProperty(propertyName: "quote")]
 
         // ReSharper disable once RedundantDefaultMemberInitializer
         public string QuoteCurrency { get; set; } = default!;

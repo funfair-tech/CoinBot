@@ -34,9 +34,9 @@ namespace CoinBot.Clients.Extensions
             LiquiClient.Register(services);
             PoloniexClient.Register(services);
 
-            FunFairClient.Register(services,
-                                   configurationRoot.GetSection(key: "Sources:FunFair")
-                                                    .Get<FunFairClientConfiguration>());
+            FunFairClientBase.Register(services,
+                                       configurationRoot.GetSection(key: "Sources:FunFair")
+                                                        .Get<FunFairClientConfiguration>());
 
             return services;
         }

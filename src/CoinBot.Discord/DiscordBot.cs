@@ -11,31 +11,31 @@ namespace CoinBot.Discord
     public sealed class DiscordBot : DiscordSocketClient
     {
         /// <summary>
-        /// The General channel name.
+        ///     The General channel name.
         /// </summary>
         private const string GENERAL_CHANNEL_NAME = "general";
 
         /// <summary>
-        /// The <see cref="CommandService"/>.
+        ///     The <see cref="CommandService" />.
         /// </summary>
         private readonly CommandService _commands;
 
         /// <summary>
-        /// The <see cref="ILogger"/>.
+        ///     The <see cref="ILogger" />.
         /// </summary>
         private readonly ILogger _logger;
 
         /// <summary>
-        /// The <see cref="IServiceProvider"/>.
+        ///     The <see cref="IServiceProvider" />.
         /// </summary>
         private readonly IServiceProvider _serviceProvider;
 
         /// <inheritdoc />
         /// <summary>
-        /// Constructs the <see cref="DiscordBot" />.
+        ///     Constructs the <see cref="DiscordBot" />.
         /// </summary>
-        /// <param name="serviceProvider">The <see cref="IServiceProvider"/>.</param>
-        /// <param name="commandService">The <see cref="CommandService"/>.</param>
+        /// <param name="serviceProvider">The <see cref="IServiceProvider" />.</param>
+        /// <param name="commandService">The <see cref="CommandService" />.</param>
         public DiscordBot(IServiceProvider serviceProvider, CommandService commandService)
         {
             this._serviceProvider = serviceProvider;
@@ -48,9 +48,9 @@ namespace CoinBot.Discord
         }
 
         /// <summary>
-        /// Handles the <paramref name="logParam"/>.
+        ///     Handles the <paramref name="logParam" />.
         /// </summary>
-        /// <param name="logParam">The <see cref="LogMessage"/>.</param>
+        /// <param name="logParam">The <see cref="LogMessage" />.</param>
         /// <returns></returns>
         private Task HandleLogAsync(LogMessage logParam)
         {
@@ -110,23 +110,32 @@ namespace CoinBot.Discord
         }
 
         /// <summary>
-        /// Handles the <paramref name="messageParam"/>.
+        ///     Handles the <paramref name="messageParam" />.
         /// </summary>
-        /// <param name="messageParam">The <see cref="SocketMessage"/>.</param>
+        /// <param name="messageParam">The <see cref="SocketMessage" />.</param>
         /// <returns></returns>
         private async Task HandleCommandAsync(SocketMessage messageParam)
         {
-            if (!(messageParam is SocketUserMessage message)) return;
+            if (!(messageParam is SocketUserMessage message))
+            {
+                return;
+            }
 
             // don't respond to messages in general, access to all other channels can be controlled with
             // permissions on discord
-            if (message.Channel.Name.Equals(GENERAL_CHANNEL_NAME, StringComparison.OrdinalIgnoreCase)) return;
+            if (message.Channel.Name.Equals(GENERAL_CHANNEL_NAME, StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
 
             // Create a number to track where the prefix ends and the command begins
             int argPos = 0;
 
             // Determine if the message is a command, based on if it starts with '!' or a mention prefix
-            if (!(message.HasCharPrefix('!', ref argPos) || message.HasMentionPrefix(this.CurrentUser, ref argPos))) return;
+            if (!(message.HasCharPrefix(c: '!', ref argPos) || message.HasMentionPrefix(this.CurrentUser, ref argPos)))
+            {
+                return;
+            }
 
             // Create a Command Context
             CommandContext context = new CommandContext(this, message);

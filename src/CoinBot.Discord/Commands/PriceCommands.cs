@@ -19,8 +19,9 @@ namespace CoinBot.Discord.Commands
             this._logger = logger;
         }
 
-        [Command("price"), Summary("get price info for a coin, e.g. !price FUN")]
-        public async Task PriceAsync([Remainder, Summary("The symbol for the coin")]
+        [Command(text: "price")]
+        [Summary(text: "get price info for a coin, e.g. !price FUN")]
+        public async Task PriceAsync([Remainder] [Summary(text: "The symbol for the coin")]
                                      string symbol)
         {
             using (this.Context.Channel.EnterTypingState())
@@ -50,7 +51,7 @@ namespace CoinBot.Discord.Commands
                 catch (Exception e)
                 {
                     this._logger.LogError(new EventId(e.HResult), e, e.Message);
-                    await this.ReplyAsync($"oops, something went wrong, sorry!");
+                    await this.ReplyAsync(message: "oops, something went wrong, sorry!");
                 }
             }
         }

@@ -57,7 +57,7 @@ namespace CoinBot.Clients.Bittrex
             {
                 IReadOnlyList<BittrexMarketSummaryDto> summaries = await this.GetMarketSummariesAsync();
 
-                return summaries.Select(selector: this.CreateMarketSummaryDto)
+                return summaries.Select(this.CreateMarketSummaryDto)
                                 .RemoveNulls()
                                 .ToList();
             }

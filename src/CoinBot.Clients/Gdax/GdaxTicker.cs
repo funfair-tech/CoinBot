@@ -10,31 +10,31 @@ namespace CoinBot.Clients.Gdax
         // ReSharper disable once RedundantDefaultMemberInitializer
         public string ProductId { get; set; } = default!;
 
-        [JsonProperty("ask")]
+        [JsonProperty(propertyName: "ask")]
 
         // ReSharper disable once RedundantDefaultMemberInitializer
         public string Ask { get; set; } = default!;
 
-        [JsonProperty("bid")]
+        [JsonProperty(propertyName: "bid")]
 
         // ReSharper disable once RedundantDefaultMemberInitializer
         public string Bid { get; set; } = default!;
 
-        [JsonProperty("price")]
+        [JsonProperty(propertyName: "price")]
         public decimal? Price { get; set; }
 
-        [JsonProperty("size")]
+        [JsonProperty(propertyName: "size")]
 
         // ReSharper disable once RedundantDefaultMemberInitializer
         public string Size { get; set; } = default!;
 
-        [JsonProperty("time")]
+        [JsonProperty(propertyName: "time")]
         public DateTime? Time { get; set; }
 
-        [JsonProperty("trade_id")]
+        [JsonProperty(propertyName: "trade_id")]
         public long TradeId { get; set; }
 
-        [JsonProperty("volume")]
+        [JsonProperty(propertyName: "volume")]
         public decimal? Volume { get; set; }
     }
 }
