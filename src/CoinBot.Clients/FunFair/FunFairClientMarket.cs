@@ -34,7 +34,7 @@ namespace CoinBot.Clients.FunFair
 
         private MarketSummaryDto? CreateMarketSummaryDto(FunFairWalletPriceResultPairDto pkt)
         {
-            Currency? baseCurrency = this._currencyManager.Get(pkt.Price.Symbol);
+            Currency? baseCurrency = this._currencyManager.Get(pkt.TokenSymbol);
 
             if (baseCurrency == null)
             {
@@ -48,12 +48,7 @@ namespace CoinBot.Clients.FunFair
                 return null;
             }
 
-            return new MarketSummaryDto(market: this.Name,
-                                        baseCurrency: baseCurrency,
-                                        marketCurrency: marketCurrency,
-                                        volume: 0m,
-                                        last: pkt.Price.Price,
-                                        lastUpdated: pkt.Price.Date);
+            return new MarketSummaryDto(market: this.Name, baseCurrency: baseCurrency, marketCurrency: marketCurrency, volume: 0m, last: pkt.Price, lastUpdated: pkt.LastUpdated);
         }
     }
 }

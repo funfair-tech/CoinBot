@@ -15,9 +15,16 @@ namespace CoinBot.Clients.FunFair
     {
         private const string HTTP_CLIENT_NAME = @"FunFair";
 
-        private readonly IReadOnlyList<string> _cryptoSymbols = new[] {@"ETH", @"FUN"};
+        /// <summary>
+        ///     List of crypto currencies hard coded for now.
+        /// </summary>
+        private readonly IReadOnlyList<string> _cryptoSymbols = new[] {@"FUN"};
 
+        /// <summary>
+        ///     List of fiat currencies hard coded for now.
+        /// </summary>
         private readonly IReadOnlyList<string> _fiatSymbols = new[] {@"USD"};
+
         private readonly JsonSerializerOptions _jsonSerializerSettings;
 
         protected FunFairClientBase(IHttpClientFactory httpClientFactory, ILogger logger)
@@ -109,7 +116,7 @@ namespace CoinBot.Clients.FunFair
 
                 this.Logger.LogDebug($"Retrieved price for {tokenSymbol}.  Currently {pkt.Price} {fiatCurrencySymbol}");
 
-                return new FunFairWalletPriceResultPairDto(fiatCurrencySymbol, pkt);
+                return new FunFairWalletPriceResultPairDto(fiatCurrencySymbol, pkt.Symbol, pkt.Price, pkt.Date);
             }
         }
 
