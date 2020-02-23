@@ -29,7 +29,7 @@ namespace CoinBot
             // Load the application configuration
             this._configuration = new ConfigurationBuilder().SetBasePath(ApplicationConfig.ConfigurationFilesPath)
                                                             .AddJsonFile(path: "appsettings.json", optional: true)
-                                                            .AddJsonFile(path: "appsettings-local.json", optional: false)
+                                                            .AddJsonFile(path: "appsettings-local.json", optional: true)
                                                             .AddEnvironmentVariables()
                                                             .Build();
         }
