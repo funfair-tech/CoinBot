@@ -35,7 +35,7 @@ namespace CoinBot.Clients.FunFair
 
         private ICoinInfo CreateCoinInfo(FunFairWalletPriceResultPairDto item)
         {
-            return new FunFairWalletCoin(priceUsd: Convert.ToDouble(item.Price.Price), symbol: item.Price.Symbol, lastUpdated: item.Price.Date);
+            return new FunFairWalletCoin(priceUsd: Convert.ToDouble(item.Price), symbol: item.TokenSymbol, lastUpdated: item.LastUpdated);
         }
     }
 }
