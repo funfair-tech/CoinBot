@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk;Microsoft.NET.Sdk.Publish">
+﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -54,13 +54,16 @@
         <ProjectReference Include="..\CoinBot.Discord\CoinBot.Discord.csproj"/>
     </ItemGroup>
     <ItemGroup>
-        <Content Include="appsettings.json">
+        <Content Update="appsettings.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <Content Include="appsettings-local.json" Condition="Exists('appsettings-local.json')">
+        <Content Update="appsettings-local.json" Condition="Exists('appsettings-local.json')">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
+    <Target Name="PrePublish" BeforeTargets="PrepareForPublish">
+        <Copy SourceFiles="appsettings.json" DestinationFiles="$(PublishDir)\appsettings.json" SkipUnchangedFiles="true"/>
+    </Target>
     <ItemGroup>
         <None Remove="appsettings-local.json"/>
     </ItemGroup>
