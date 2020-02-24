@@ -4,115 +4,143 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using CoinBot.Core;
+using CoinBot.Core.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace CoinBot.Clients.Gdax
 {
-	public class GdaxClient : IMarketClient
-	{
-		/// <summary>
-		/// The <see cref="CurrencyManager"/>.
-		/// </summary>
-		private readonly CurrencyManager _currencyManager;
+    public sealed class GdaxClient : CoinClientBase, IMarketClient
+    {
+        private const string HTTP_CLIENT_NAME = @"Gdax";
 
-		public string Name => "GDAX";
+        /// <summary>
+        ///     The <see cref="Uri" /> of the CoinMarketCap endpoint.
+        /// </summary>
+        private static readonly Uri Endpoint = new Uri(uriString: "https://api.gdax.com/", UriKind.Absolute);
 
-		/// <summary>
-		/// The <see cref="Uri"/> of the CoinMarketCap endpoint.
-		/// </summary>
-		private readonly Uri _endpoint = new Uri("https://api.gdax.com/", UriKind.Absolute);
+        /// <summary>
+        ///     The <see cref="CurrencyManager" />.
+        /// </summary>
+        private readonly CurrencyManager _currencyManager;
 
-		/// <summary>
-		/// The <see cref="HttpClient"/>.
-		/// </summary>
-		private readonly HttpClient _httpClient;
+        /// <summary>
+        ///     The <see cref="JsonSerializerSettings" />.
+        /// </summary>
+        private readonly JsonSerializerSettings _serializerSettings;
 
-		/// <summary>
-		/// The <see cref="ILogger"/>.
-		/// </summary>
-		private readonly ILogger _logger;
+        public GdaxClient(IHttpClientFactory httpClientFactory, ILogger<GdaxClient> logger, CurrencyManager currencyManager)
+            : base(httpClientFactory, HTTP_CLIENT_NAME, logger)
+        {
+            this._currencyManager = currencyManager ?? throw new ArgumentNullException(nameof(currencyManager));
 
-		/// <summary>
-		/// The <see cref="JsonSerializerSettings"/>.
-		/// </summary>
-		private readonly JsonSerializerSettings _serializerSettings;
+            this._serializerSettings = new JsonSerializerSettings
+                                       {
+                                           Error = (sender, args) =>
+                                                   {
+                                                       Exception ex = args.ErrorContext.Error.GetBaseException();
+                                                       this.Logger.LogError(new EventId(args.ErrorContext.Error.HResult), ex, ex.Message);
+                                                   }
+                                       };
+        }
 
-		public GdaxClient(ILogger logger, CurrencyManager currencyManager)
-		{
-			this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
-		    this._currencyManager = currencyManager ?? throw new ArgumentNullException(nameof(currencyManager));
+        public string Name => "GDAX";
 
-		    this._httpClient = new HttpClient
-			{
-				BaseAddress = this._endpoint
-			};
-		    this._httpClient.DefaultRequestHeaders.Add("User-Agent", "CoinBot");
+        /// <inheritdoc />
+        public async Task<IReadOnlyCollection<MarketSummaryDto>> GetAsync()
+        {
+            try
+            {
+                IReadOnlyList<GdaxProduct> products = await this.GetProductsAsync();
+                GdaxTicker[] tickers = await Task.WhenAll(products.Select(selector: product => this.GetTickerAsync(product.Id)));
 
-		    this._serializerSettings = new JsonSerializerSettings
-			{
-				Error = (sender, args) =>
-				{
-					Exception ex = args.ErrorContext.Error.GetBaseException();
-					this._logger.LogError(new EventId(args.ErrorContext.Error.HResult), ex, ex.Message);
-				}
-			};
-		}
+                return tickers.Select(this.CreateMarketSummaryDto)
+                              .RemoveNulls()
+                              .ToList();
+            }
+            catch (Exception e)
+            {
+                this.Logger.LogError(new EventId(e.HResult), e, e.Message);
 
-		/// <inheritdoc/>
-		public async Task<IReadOnlyCollection<MarketSummaryDto>> Get()
-		{
-			try
-			{
-				List<GdaxProduct> products = await this.GetProducts();
-				List<GdaxTicker> tickers = new List<GdaxTicker>();
+                throw;
+            }
+        }
 
-			    foreach (GdaxProduct product in products)
-			    {
-			        tickers.Add(await this.GetTicker(product.Id));
-			    }
+        private MarketSummaryDto? CreateMarketSummaryDto(GdaxTicker ticker)
+        {
+            Currency? baseCurrency = this._currencyManager.Get(ticker.ProductId.Substring(startIndex: 0, ticker.ProductId.IndexOf(value: '-')));
 
-			    return tickers.Select(t => new MarketSummaryDto
-				{
-					BaseCurrrency = this._currencyManager.Get(t.ProductId.Substring(0, t.ProductId.IndexOf('-'))),
-					MarketCurrency = this._currencyManager.Get(t.ProductId.Substring(t.ProductId.IndexOf('-') + 1)),
-					Market = "GDAX",
-					Volume = t.Volume,
-					Last = t.Price,
-					LastUpdated = t.Time,
-				}).ToList();
-			}
-			catch (Exception e)
-			{
-				this._logger.LogError(new EventId(e.HResult), e, e.Message);
-				throw;
-			}
-		}
+            if (baseCurrency == null)
+            {
+                return null;
+            }
 
-		/// <summary>
-		/// Get the products.
-		/// </summary>
-		/// <returns></returns>
-		private async Task<GdaxTicker> GetTicker(string productId)
-		{
-			using (HttpResponseMessage response = await this._httpClient.GetAsync(new Uri($"products/{productId}/ticker", UriKind.Relative)))
-			{
-				GdaxTicker ticker = JsonConvert.DeserializeObject<GdaxTicker>(await response.Content.ReadAsStringAsync(), this._serializerSettings);
-				ticker.ProductId = productId;
-				return ticker;
-			}
-		}
+            Currency? marketCurrency = this._currencyManager.Get(ticker.ProductId.Substring(ticker.ProductId.IndexOf(value: '-') + 1));
 
-		/// <summary>
-		/// Get the products.
-		/// </summary>
-		/// <returns></returns>
-		private async Task<List<GdaxProduct>> GetProducts()
-		{
-			using (HttpResponseMessage response = await this._httpClient.GetAsync(new Uri("products/", UriKind.Relative)))
-			{
-				return JsonConvert.DeserializeObject<List<GdaxProduct>>(await response.Content.ReadAsStringAsync(), this._serializerSettings);
-			}
-		}
-	}
+            if (marketCurrency == null)
+            {
+                return null;
+            }
+
+            return new MarketSummaryDto(market: this.Name,
+                                        baseCurrency: baseCurrency,
+                                        marketCurrency: marketCurrency,
+                                        volume: ticker.Volume,
+                                        last: ticker.Price,
+                                        lastUpdated: ticker.Time);
+        }
+
+        /// <summary>
+        ///     Get the products.
+        /// </summary>
+        /// <returns></returns>
+        private async Task<GdaxTicker?> GetTickerAsync(string productId)
+        {
+            HttpClient httpClient = this.CreateHttpClient();
+
+            using (HttpResponseMessage response = await httpClient.GetAsync(new Uri($"products/{productId}/ticker", UriKind.Relative)))
+            {
+                response.EnsureSuccessStatusCode();
+
+                GdaxTicker? ticker = JsonConvert.DeserializeObject<GdaxTicker>(await response.Content.ReadAsStringAsync(), this._serializerSettings);
+
+                if (ticker == null)
+                {
+                    return null;
+                }
+
+                ticker.ProductId = productId;
+
+                return ticker;
+            }
+        }
+
+        /// <summary>
+        ///     Get the products.
+        /// </summary>
+        /// <returns></returns>
+        private async Task<IReadOnlyList<GdaxProduct>> GetProductsAsync()
+        {
+            HttpClient httpClient = this.CreateHttpClient();
+
+            using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "products/", UriKind.Relative)))
+            {
+                response.EnsureSuccessStatusCode();
+
+                string json = await response.Content.ReadAsStringAsync();
+
+                IReadOnlyList<GdaxProduct>? items = JsonConvert.DeserializeObject<List<GdaxProduct>>(json, this._serializerSettings);
+
+                return items ?? Array.Empty<GdaxProduct>();
+            }
+        }
+
+        public static void Register(IServiceCollection services)
+        {
+            services.AddSingleton<IMarketClient, GdaxClient>();
+
+            AddHttpClientFactorySupport(services, HTTP_CLIENT_NAME, Endpoint);
+        }
+    }
 }

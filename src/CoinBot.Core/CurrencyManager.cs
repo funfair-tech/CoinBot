@@ -2,197 +2,110 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
+using CoinBot.Core.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace CoinBot.Core
 {
-	public class CurrencyManager
-	{
-		/// <summary>
-		/// The <see cref="ICoinClient"/>s.
-		/// </summary>
-		private readonly IEnumerable<ICoinClient> _coinClients;
+    public sealed class CurrencyManager : TickingService
+    {
+        /// <summary>
+        ///     The <see cref="ICoinClient" />s.
+        /// </summary>
+        private readonly IReadOnlyList<ICoinClient> _coinClients;
 
-		/// <summary>
-		/// The <see cref="TimeSpan"/>.
-		/// </summary>
-		private readonly TimeSpan _tickInterval;
+        /// <summary>
+        ///     The <see cref="Currency" /> list.
+        /// </summary>
+        private IReadOnlyCollection<Currency> _coinInfoCollection = Array.Empty<Currency>();
 
-		/// <summary>
-		/// The <see cref="Timer"/>.
-		/// </summary>
-		private Timer _timer;
+        /// <summary>
+        ///     The <see cref="IGlobalInfo" />.
+        /// </summary>
+        private IGlobalInfo? _globalInfo;
 
-		/// <summary>
-		/// The <see cref="ILogger"/>.
-		/// </summary>
-		private readonly ILogger _logger;
+        /// <summary>
+        ///     Constructor
+        /// </summary>
+        /// <param name="logger">Logging</param>
+        /// <param name="coinClients">Clients</param>
+        public CurrencyManager(ILogger<CurrencyManager> logger, IEnumerable<ICoinClient> coinClients)
+            : base(TimeSpan.FromSeconds(value: 10), logger)
+        {
+            this._coinClients = coinClients.ToArray();
+        }
 
-		/// <summary>
-		/// The <see cref="ReaderWriterLockSlim"/>.
-		/// </summary>
-		//private readonly ReaderWriterLockSlim _lock;
+        protected override async Task TickAsync()
+        {
+            try
+            {
+                await Task.WhenAll(this.UpdateCoinsAsync(), this.UpdateGlobalInfoAsync());
+            }
+            catch (Exception e)
+            {
+                this.Logger.LogError(new EventId(e.HResult), e, e.Message);
+            }
+        }
 
-		/// <summary>
-		/// The <see cref="Currency"/> list.
-		/// </summary>
-		private IReadOnlyCollection<Currency> _coinInfoCollection = new Currency[0];
+        public IGlobalInfo? GetGlobalInfo()
+        {
+            return this._globalInfo;
+        }
 
-		/// <summary>
-		/// The <see cref="IGlobalInfo"/>.
-		/// </summary>
-		private IGlobalInfo _globalInfo;
+        public Currency? Get(string nameOrSymbol)
+        {
+            return this.GetCoinBySymbol(nameOrSymbol) ?? this.GetCoinByName(nameOrSymbol);
+        }
 
-		public CurrencyManager(ILogger logger, IEnumerable<ICoinClient> coinClients)
-		{
-		    this._coinClients = coinClients;
-		    this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
-		    this._tickInterval = TimeSpan.FromSeconds(10);
-		    //this._lock = new ReaderWriterLockSlim();
-		}
+        private Currency? GetCoinBySymbol(string symbol)
+        {
+            return this._coinInfoCollection.FirstOrDefault(predicate: c => string.Compare(c.Symbol, symbol, StringComparison.OrdinalIgnoreCase) == 0);
+        }
 
-		private async Task Tick()
-		{
-			try
-			{
-				await Task.WhenAll(this.UpdateCoins(), this.UpdateGlobalInfo());
-			}
-			catch (Exception e)
-			{
-			    this._logger.LogError(new EventId(e.HResult), e, e.Message);
-			}
-			finally
-			{
-                // and reset the timer
-			    this._timer.Change(this._tickInterval, TimeSpan.Zero);
-			}
-		}
+        private Currency? GetCoinByName(string name)
+        {
+            return this._coinInfoCollection.FirstOrDefault(predicate: c => string.Compare(c.Name, name, StringComparison.OrdinalIgnoreCase) == 0);
+        }
 
-		public void Start()
-		{
-            // start a timer to fire the tickFunction
-		    this._timer = new Timer(
-				async (state) => await this.Tick(),
-				null,
-				TimeSpan.FromSeconds(0),
-				Timeout.InfiniteTimeSpan);
-		}
+        public IEnumerable<Currency> Get(Func<Currency, bool> predicate)
+        {
+            return this._coinInfoCollection.Where(predicate);
+        }
 
-		public void Stop()
-		{
-            // stop the timer
-		    this._timer.Dispose();
-		    this._timer = null;
-		}
+        private async Task UpdateCoinsAsync()
+        {
+            static Currency CreateCurrency(IReadOnlyList<ICoinInfo> cryptoInfo)
+            {
+                ICoinInfo first = cryptoInfo.First();
 
-		public IGlobalInfo GetGlobalInfo()
-		{
-			return this._globalInfo;
-		}
+                Currency currency = new Currency(symbol: first.Symbol, name: first.Name) {ImageUrl = first.ImageUrl};
 
-		public Currency Get(string nameOrSymbol) => this.GetCoinBySymbol(nameOrSymbol) ?? this.GetCoinByName(nameOrSymbol);
+                foreach (ICoinInfo info in cryptoInfo)
+                {
+                    currency.AddDetails(info);
+                }
 
-		private Currency GetCoinBySymbol(string symbol)
-		{
-		    //this._lock.EnterReadLock();
-			try
-			{
-				return this._coinInfoCollection.FirstOrDefault(c => string.Compare(c.Symbol, symbol, StringComparison.OrdinalIgnoreCase) == 0);
-			}
-			finally
-			{
-			  //  this._lock.ExitReadLock();
-			}
-		}
+                return currency;
+            }
 
-		private Currency GetCoinByName(string name)
-		{
-		    //this._lock.EnterReadLock();
-			try
-			{
-				return this._coinInfoCollection.FirstOrDefault(c => string.Compare(c.Name, name, StringComparison.OrdinalIgnoreCase) == 0);
-			}
-			finally
-			{
-			    //this._lock.ExitReadLock();
-			}
-		}
+            IReadOnlyCollection<ICoinInfo>[] allCoinInfos = await Task.WhenAll(this._coinClients.Select(selector: client => client.GetCoinInfoAsync()));
 
-		public IEnumerable<Currency> Get(Func<Currency, bool> predicate)
-		{
-		    //this._lock.EnterReadLock();
-			try
-			{
-				return this._coinInfoCollection.Where(predicate);
-			}
-			finally
-			{
-			    //this._lock.ExitReadLock();
-			}
-		}
+            List<Currency> currencies = new List<Currency> {new Currency(symbol: "EUR", name: "Euro"), new Currency(symbol: "USD", name: "United States dollar")};
 
-		private Task UpdateCoins()
-		{
-			ICoinClient client = this._coinClients.First();
+            currencies.AddRange(allCoinInfos.SelectMany(selector: ci => ci)
+                                            .GroupBy(keySelector: c => c.Symbol)
+                                            .Select(selector: info => CreateCurrency(info.ToArray())));
 
-		    //this._lock.EnterWriteLock();
-			try
-			{
-				List<ICoinInfo> coinInfos = client.GetCoinInfo().Result.ToList();
+            this._coinInfoCollection = new ReadOnlyCollection<Currency>(currencies);
+        }
 
-				List<Currency> currencies = new List<Currency>();
-				currencies.AddRange(new[]
-				{
-					new Currency
-					{
-						Symbol = "EUR",
-						Name = "Euro"
-					},
-					new Currency
-					{
-						Symbol = "USD",
-						Name = "United States dollar"
-					}
-				});
+        private async Task UpdateGlobalInfoAsync()
+        {
+            IGlobalInfo?[] results = await Task.WhenAll(this._coinClients.Select(selector: client => client.GetGlobalInfoAsync()));
 
-				currencies.AddRange(coinInfos.Select(cryptoInfo =>
-				{
-					Currency currency = new Currency
-					{
-						Symbol = cryptoInfo.Symbol,
-						Name = cryptoInfo.Name,
-						ImageUrl = cryptoInfo.ImageUrl
-					};
-					currency.AddDetails(cryptoInfo);
-					return currency;
-				}));
-
-			    this._coinInfoCollection = new ReadOnlyCollection<Currency>(currencies);
-
-				return Task.CompletedTask;
-			}
-			finally
-			{
-			    //this._lock.ExitWriteLock();
-			}
-		}
-
-		private Task UpdateGlobalInfo()
-		{
-			ICoinClient client = this._coinClients.First();
-
-		    //this._lock.EnterWriteLock();
-			try
-			{
-			    this._globalInfo = client.GetGlobalInfo().Result;
-				return Task.CompletedTask;
-			}
-			finally
-			{
-			    //this._lock.ExitWriteLock();
-			}
-		}
-	}
+            this._globalInfo = results.RemoveNulls()
+                                      .FirstOrDefault();
+        }
+    }
 }

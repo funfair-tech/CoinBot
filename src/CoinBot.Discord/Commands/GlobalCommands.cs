@@ -1,34 +1,41 @@
-﻿using Discord;
-using Discord.Commands;
-using Microsoft.Extensions.Logging;
-using System.Text;
+﻿using System.Text;
 using System.Threading.Tasks;
 using CoinBot.Core;
 using CoinBot.Core.Extensions;
+using Discord;
+using Discord.Commands;
+using Microsoft.Extensions.Logging;
 
 namespace CoinBot.Discord.Commands
 {
-    public class GlobalCommands : CommandBase
+    public sealed class GlobalCommands : CommandBase
     {
         private readonly CurrencyManager _currencyManager;
-        private readonly ILogger _logger;
+        private readonly ILogger<GlobalCommands> _logger;
 
-        public GlobalCommands(CurrencyManager currencyManager, ILogger logger)
+        public GlobalCommands(CurrencyManager currencyManager, ILogger<GlobalCommands> logger)
         {
             this._currencyManager = currencyManager;
             this._logger = logger;
         }
 
-        [Command("global"), Summary("get global crypto market information")]
-        public async Task Global()
+        [Command(text: "global")]
+        [Summary(text: "get global crypto market information")]
+        public async Task GlobalAsync()
         {
             using (this.Context.Channel.EnterTypingState())
             {
-                IGlobalInfo globalInfo = this._currencyManager.GetGlobalInfo();
+                IGlobalInfo? globalInfo = this._currencyManager.GetGlobalInfo();
 
-                EmbedBuilder builder = new EmbedBuilder();
-                builder.WithTitle("Global Currency Information");
-                builder.Color = Color.DarkPurple;
+                if (globalInfo == null)
+                {
+                    this._logger.LogWarning(message: "Global info is not available");
+
+                    return;
+                }
+
+                EmbedBuilder builder = new EmbedBuilder {Color = Color.DarkPurple};
+                builder.WithTitle(title: "Global Currency Information");
                 AddAuthor(builder);
 
                 StringBuilder descriptionBuilder = new StringBuilder();
@@ -39,10 +46,10 @@ namespace CoinBot.Discord.Commands
                 descriptionBuilder.AppendLine($"Assets: {globalInfo.Assets}");
                 descriptionBuilder.AppendLine($"Markets: {globalInfo.Markets}");
                 builder.WithDescription(descriptionBuilder.ToString());
-                
+
                 AddFooter(builder, globalInfo.LastUpdated);
 
-                await this.ReplyAsync(string.Empty, false, builder.Build());
+                await this.ReplyAsync(string.Empty, isTTS: false, builder.Build());
             }
         }
     }

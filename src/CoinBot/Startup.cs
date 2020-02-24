@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Threading.Tasks;
 using CoinBot.Clients.Extensions;
 using CoinBot.Core;
@@ -15,95 +14,98 @@ using Serilog;
 
 namespace CoinBot
 {
-	internal sealed class Startup
-	{
-		/// <summary>
-		/// The <see cref="IConfigurationRoot"/>.
-		/// </summary>
-		private readonly IConfigurationRoot _configuration;
+    internal sealed class Startup
+    {
+        /// <summary>
+        ///     The <see cref="IConfigurationRoot" />.
+        /// </summary>
+        private readonly IConfigurationRoot _configuration;
 
-		/// <summary>
-		/// Constructs a <see cref="Startup"/>.
-		/// </summary>
-		internal Startup()
-		{
-			// Load the application configuration
-			this._configuration = new ConfigurationBuilder()
-				.SetBasePath(Directory.GetCurrentDirectory())
-				.AddJsonFile("appsettings.json", true)
-                .AddJsonFile("appsettings-local.json", true)
-                .AddEnvironmentVariables()
-				.Build();
+        /// <summary>
+        ///     Constructs a <see cref="Startup" />.
+        /// </summary>
+        internal Startup()
+        {
+            // Load the application configuration
+            this._configuration = new ConfigurationBuilder().SetBasePath(ApplicationConfig.ConfigurationFilesPath)
+                                                            .AddJsonFile(path: "appsettings.json", optional: true)
+                                                            .AddJsonFile(path: "appsettings-local.json", optional: true)
+                                                            .AddEnvironmentVariables()
+                                                            .Build();
+        }
 
-			// Build the service provider
-			ServiceCollection services = new ServiceCollection();
-		    this.ConfigureServices(services);
-			ServiceProvider provider = services.BuildServiceProvider();
+        public Task StartAsync()
+        {
+            // Build the service provider
+            ServiceCollection services = new ServiceCollection();
+            this.ConfigureServices(services);
+            ServiceProvider provider = services.BuildServiceProvider();
 
-			// Run the application
-			Run(provider).GetAwaiter().GetResult();
-		}
+            // Run the application
+            return RunAsync(provider);
+        }
 
-		/// <summary>
-		/// Adds services to the <paramref name="services"/> container.
-		/// </summary>
-		/// <param name="services">The <see cref="IServiceCollection"/>.</param>
-		private void ConfigureServices(IServiceCollection services)
-		{
-			Log.Logger = new LoggerConfiguration()
-				.Enrich.FromLogContext()
-				.WriteTo.Console()
-				.CreateLogger();
+        /// <summary>
+        ///     Adds services to the <paramref name="services" /> container.
+        /// </summary>
+        /// <param name="services">The <see cref="IServiceCollection" />.</param>
+        private void ConfigureServices(IServiceCollection services)
+        {
+            Log.Logger = new LoggerConfiguration().Enrich.FromLogContext()
+                                                  .WriteTo.Console()
+                                                  .CreateLogger();
 
-			services
-				.AddOptions()
-				.AddSingleton(provider =>
-				{
-					// set up an ILogger
-					ILoggerFactory loggerFactory = new LoggerFactory().AddSerilog();
-					return loggerFactory.CreateLogger(nameof(CoinBot));
-				})
-				.AddMemoryCache()
-				.AddClients()
-				.AddCore(this._configuration)
-				.AddCoinBot(this._configuration);
-		}
+            services.AddOptions()
+                    .AddSingleton(implementationFactory: provider =>
+                                                         {
+                                                             // set up an ILogger
+                                                             ILoggerFactory loggerFactory = new LoggerFactory().AddSerilog();
 
-		/// <summary>
-		/// Starts the <see cref="CoinBot"/>.
-		/// </summary>
-		/// <param name="provider">The <see cref="IServiceProvider"/>.</param>
-		/// <returns></returns>
-		private static async Task Run(IServiceProvider provider)
-		{
-			//set up a task completion source so we can quit on CTRL+C
-			TaskCompletionSource<bool> exitSource = new TaskCompletionSource<bool>();
-			Console.CancelKeyPress += (sender, eventArgs) =>
-			{
-				eventArgs.Cancel = true;
-				exitSource.SetResult(true);
-			};
+                                                             return loggerFactory.CreateLogger(nameof(CoinBot));
+                                                         })
+                    .AddMemoryCache()
+                    .AddClients(this._configuration)
+                    .AddCore(this._configuration)
+                    .AddCoinBot(this._configuration);
+        }
 
-			CurrencyManager coinManager = provider.GetRequiredService<CurrencyManager>();
-			MarketManager marketManager = provider.GetRequiredService<MarketManager>();
-			DiscordBot bot = provider.GetRequiredService<DiscordBot>();
+        /// <summary>
+        ///     Starts the <see cref="CoinBot" />.
+        /// </summary>
+        /// <param name="provider">The <see cref="IServiceProvider" />.</param>
+        /// <returns></returns>
+        private static async Task RunAsync(IServiceProvider provider)
+        {
+            //set up a task completion source so we can quit on CTRL+C
+            TaskCompletionSource<bool> exitSource = new TaskCompletionSource<bool>();
+            Console.CancelKeyPress += (sender, eventArgs) =>
+                                      {
+                                          eventArgs.Cancel = true;
+                                          exitSource.SetResult(result: true);
+                                      };
+            await provider.AddCommandsAsync();
 
-			// Initialize the bot
-			DiscordBotSettings botConfig = provider.GetRequiredService<IOptions<DiscordBotSettings>>().Value;
-			await bot.LoginAsync(TokenType.Bot, botConfig.Token);
+            CurrencyManager coinManager = provider.GetRequiredService<CurrencyManager>();
+            MarketManager marketManager = provider.GetRequiredService<MarketManager>();
+            DiscordBot bot = provider.GetRequiredService<DiscordBot>();
 
-			// Start the bot & coinSource
-			await bot.StartAsync();
-			coinManager.Start();
-			marketManager.Start();
+            // Initialize the bot
+            DiscordBotSettings botConfig = provider.GetRequiredService<IOptions<DiscordBotSettings>>()
+                                                   .Value;
+            await bot.LoginAsync(TokenType.Bot, botConfig.Token);
 
-			// Keep the application alive until the exitSource task is completed.
-			await exitSource.Task;
+            // Start the bot & coinSource
+            await bot.StartAsync();
+            coinManager.Start();
+            marketManager.Start();
 
-			// Stop the bot & coinSource
-			await bot.LogoutAsync();
-			coinManager.Stop();
-			marketManager.Stop();
-		}
-	}
+            // Keep the application alive until the exitSource task is completed.
+            await exitSource.Task;
+
+            // Stop the bot & coinSource
+            await bot.LogoutAsync();
+            coinManager.Stop();
+            marketManager.Stop();
+        }
+    }
 }

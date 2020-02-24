@@ -2,36 +2,54 @@
 
 namespace CoinBot.Clients.Gdax
 {
-	public class GdaxProduct
-	{
-		[JsonProperty("id")]
-		public string Id { get; set; }
+    public sealed class GdaxProduct
+    {
+        [JsonProperty(propertyName: "id")]
 
-		[JsonProperty("base_currency")]
-		public string BaseCurrency { get; set; }
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public string Id { get; set; } = default!;
 
-		[JsonProperty("quote_currency")]
-		public string QuoteCurrency { get; set; }
+        [JsonProperty(propertyName: "base_currency")]
 
-		[JsonProperty("base_min_size")]
-		public string BaseMinSize { get; set; }
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public string BaseCurrency { get; set; } = default!;
 
-		[JsonProperty("base_max_size")]
-		public string BaseMaxSize { get; set; }
+        [JsonProperty(propertyName: "quote_currency")]
 
-		[JsonProperty("quote_increment")]
-		public string QuoteIncrement { get; set; }
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public string QuoteCurrency { get; set; } = default!;
 
-		[JsonProperty("display_name")]
-		public string DisplayName { get; set; }
+        [JsonProperty(propertyName: "base_min_size")]
 
-		[JsonProperty("status")]
-		public string Status { get; set; }
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public string BaseMinSize { get; set; } = default!;
 
-		[JsonProperty("margin_enabled")]
-		public bool MarginEnabled { get; set; }
+        [JsonProperty(propertyName: "base_max_size")]
 
-		[JsonProperty("status_message")]
-		public object StatusMessage { get; set; }
-	}
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public string BaseMaxSize { get; set; } = default!;
+
+        [JsonProperty(propertyName: "quote_increment")]
+
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public string QuoteIncrement { get; set; } = default!;
+
+        [JsonProperty(propertyName: "display_name")]
+
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public string DisplayName { get; set; } = default!;
+
+        [JsonProperty(propertyName: "status")]
+
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public string Status { get; set; } = default!;
+
+        [JsonProperty(propertyName: "margin_enabled")]
+        public bool MarginEnabled { get; set; }
+
+        [JsonProperty(propertyName: "status_message")]
+
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public object StatusMessage { get; set; } = default!;
+    }
 }

@@ -1,39 +1,44 @@
-﻿using Newtonsoft.Json;
+﻿using System.Diagnostics.CodeAnalysis;
+using Newtonsoft.Json;
 
 namespace CoinBot.Clients.Poloniex
 {
-	internal sealed class PoloniexTicker
-	{
-		public string Pair { get; set; }
+    [SuppressMessage(category: "Microsoft.Performance", checkId: "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Used as data packet")]
+    internal sealed class PoloniexTicker
+    {
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public string Pair { get; set; } = default!;
 
-		[JsonProperty("id")]
-		public long Id { get; set; }
+        [JsonProperty(propertyName: "id")]
+        public long Id { get; set; }
 
-		[JsonProperty("last")]
-		public decimal? Last { get; set; }
+        [JsonProperty(propertyName: "last")]
+        public decimal? Last { get; set; }
 
-		[JsonProperty("lowestAsk")]
-		public decimal? LowestAsk { get; set; }
+        [JsonProperty(propertyName: "lowestAsk")]
+        public decimal? LowestAsk { get; set; }
 
-		[JsonProperty("highestBid")]
-		public decimal? HighestBid { get; set; }
+        [JsonProperty(propertyName: "highestBid")]
+        public decimal? HighestBid { get; set; }
 
-		[JsonProperty("percentChange")]
-		public double PercentChange { get; set; }
+        [JsonProperty(propertyName: "percentChange")]
+        public double PercentChange { get; set; }
 
-		[JsonProperty("baseVolume")]
-		public decimal? BaseVolume { get; set; }
+        [JsonProperty(propertyName: "baseVolume")]
+        public decimal? BaseVolume { get; set; }
 
-		[JsonProperty("quoteVolume")]
-		public decimal? QuoteVolume { get; set; }
+        [JsonProperty(propertyName: "quoteVolume")]
+        public decimal? QuoteVolume { get; set; }
 
-		[JsonProperty("isFrozen")]
-		public string IsFrozen { get; set; }
+        [JsonProperty(propertyName: "isFrozen")]
 
-		[JsonProperty("high24hr")]
-		public decimal? High24Hr { get; set; }
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public string IsFrozen { get; set; } = default!;
 
-		[JsonProperty("low24hr")]
-		public decimal? Low24Hr { get; set; }
-	}
+        [JsonProperty(propertyName: "high24hr")]
+        public decimal? High24Hr { get; set; }
+
+        [JsonProperty(propertyName: "low24hr")]
+        public decimal? Low24Hr { get; set; }
+    }
 }

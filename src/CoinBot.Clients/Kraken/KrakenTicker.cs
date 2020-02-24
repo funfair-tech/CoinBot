@@ -2,21 +2,28 @@
 
 namespace CoinBot.Clients.Kraken
 {
-	public class KrakenTicker
-	{
-		public string BaseCurrency { get; set; }
-		public string QuoteCurrency { get; set; }
+    public sealed class KrakenTicker
+    {
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public string BaseCurrency { get; set; } = default!;
 
-		/// <summary>
-		/// last trade closed array(price, lot volume)
-		/// </summary>
-		[JsonProperty("c")]
-		public decimal?[] Last { get; set; }
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public string QuoteCurrency { get; set; } = default!;
 
-		/// <summary>
-		/// 24 Hour volume array(today, last 24 hours)
-		/// </summary>
-		[JsonProperty("v")]
-		public decimal?[] Volume { get; set; }
-	}
+        /// <summary>
+        ///     last trade closed array(price, lot volume)
+        /// </summary>
+        [JsonProperty(propertyName: "c")]
+
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public decimal?[] Last { get; set; } = default!;
+
+        /// <summary>
+        ///     24 Hour volume array(today, last 24 hours)
+        /// </summary>
+        [JsonProperty(propertyName: "v")]
+
+        // ReSharper disable once RedundantDefaultMemberInitializer
+        public decimal?[] Volume { get; set; } = default!;
+    }
 }

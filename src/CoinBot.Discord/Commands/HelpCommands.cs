@@ -1,11 +1,11 @@
-﻿using Discord;
-using Discord.Commands;
-using System.Text;
+﻿using System.Text;
 using System.Threading.Tasks;
+using Discord;
+using Discord.Commands;
 
 namespace CoinBot.Discord.Commands
 {
-    public class HelpCommands : CommandBase
+    public sealed class HelpCommands : CommandBase
     {
         private readonly CommandService _commandService;
 
@@ -14,15 +14,17 @@ namespace CoinBot.Discord.Commands
             this._commandService = commandService;
         }
 
-        [Command("help"), Summary("prints this help text, which you've already figured out")]
-        public async Task Help()
+        [Command(text: "help")]
+        [Summary(text: "prints this help text, which you've already figured out")]
+        public Task HelpAsync()
         {
             EmbedBuilder builder = new EmbedBuilder();
-            builder.WithTitle("Help");
+            builder.WithTitle(title: "Help");
             AddAuthor(builder);
             AddFooter(builder);
 
             StringBuilder stringBuilder = new StringBuilder();
+
             foreach (CommandInfo command in this._commandService.Commands)
             {
                 stringBuilder.AppendLine($"!{command.Name} - {command.Summary}");
@@ -30,7 +32,7 @@ namespace CoinBot.Discord.Commands
 
             builder.WithDescription(stringBuilder.ToString());
 
-            await this.ReplyAsync(string.Empty, false, builder);
+            return this.ReplyAsync(string.Empty, isTTS: false, builder.Build());
         }
     }
 }

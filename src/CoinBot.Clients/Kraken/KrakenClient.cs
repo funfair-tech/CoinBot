@@ -4,164 +4,282 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using CoinBot.Core;
+using CoinBot.Core.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace CoinBot.Clients.Kraken
 {
-	public class KrakenClient : IMarketClient
-	{
-		/// <summary>
-		/// The <see cref="CurrencyManager"/>.
-		/// </summary>
-		private readonly CurrencyManager _currencyManager;
+    public sealed class KrakenClient : CoinClientBase, IMarketClient
+    {
+        private const string HTTP_CLIENT_NAME = @"Kraken";
 
-		/// <summary>
-		/// The Exchange name.
-		/// </summary>
-		public string Name => "Kraken";
+        /// <summary>
+        ///     The <see cref="Uri" /> of the CoinMarketCap endpoint.
+        /// </summary>
+        private static readonly Uri Endpoint = new Uri(uriString: "https://api.kraken.com/0/public/", UriKind.Absolute);
 
-		/// <summary>
-		/// The <see cref="Uri"/> of the CoinMarketCap endpoint.
-		/// </summary>
-		private readonly Uri _endpoint = new Uri("https://api.kraken.com/0/public/", UriKind.Absolute);
+        /// <summary>
+        ///     The <see cref="CurrencyManager" />.
+        /// </summary>
+        private readonly CurrencyManager _currencyManager;
 
-		/// <summary>
-		/// The <see cref="HttpClient"/>.
-		/// </summary>
-		private readonly HttpClient _httpClient;
+        /// <summary>
+        ///     The <see cref="JsonSerializerSettings" />.
+        /// </summary>
+        private readonly JsonSerializerSettings _serializerSettings;
 
-		/// <summary>
-		/// The <see cref="ILogger"/>.
-		/// </summary>
-		private readonly ILogger _logger;
+        public KrakenClient(IHttpClientFactory httpClientFactory, ILogger<KrakenClient> logger, CurrencyManager currencyManager)
+            : base(httpClientFactory, HTTP_CLIENT_NAME, logger)
+        {
+            this._currencyManager = currencyManager ?? throw new ArgumentNullException(nameof(currencyManager));
 
-		/// <summary>
-		/// The <see cref="JsonSerializerSettings"/>.
-		/// </summary>
-		private readonly JsonSerializerSettings _serializerSettings;
+            this._serializerSettings = new JsonSerializerSettings
+                                       {
+                                           Error = (sender, args) =>
+                                                   {
+                                                       EventId eventId = new EventId(args.ErrorContext.Error.HResult);
+                                                       Exception ex = args.ErrorContext.Error.GetBaseException();
+                                                       this.Logger.LogError(eventId, ex, ex.Message);
+                                                   }
+                                       };
+        }
 
-		public KrakenClient(ILogger logger, CurrencyManager currencyManager)
-		{
-			this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
-		    this._currencyManager = currencyManager ?? throw new ArgumentNullException(nameof(currencyManager));
-		    this._httpClient = new HttpClient
-			{
-				BaseAddress = this._endpoint
-			};
+        /// <summary>
+        ///     The Exchange name.
+        /// </summary>
+        public string Name => "Kraken";
 
-		    this._serializerSettings = new JsonSerializerSettings
-			{
-				Error = (sender, args) =>
-				{
-					EventId eventId = new EventId(args.ErrorContext.Error.HResult);
-					Exception ex = args.ErrorContext.Error.GetBaseException();
-				    this._logger.LogError(eventId, ex, ex.Message);
-				}
-			};
-		}
+        /// <inheritdoc />
+        public async Task<IReadOnlyCollection<MarketSummaryDto>> GetAsync()
+        {
+            try
+            {
+                IReadOnlyList<KrakenAsset> assets = await this.GetAssetsAsync();
+                IReadOnlyList<KrakenPair> pairs = await this.GetPairsAsync();
 
-		/// <inheritdoc/>
-		public async Task<IReadOnlyCollection<MarketSummaryDto>> Get()
-		{
-			try
-			{
-				List<KrakenAsset> assets = await this.GetAssets();
-				List<KrakenPair> pairs = await this.GetPairs();
-				List<KrakenTicker> tickers = new List<KrakenTicker>();
-				foreach (KrakenPair pair in pairs)
-				{
-					// todo: can't get kraken details on these markets
-					if (pair.PairId.EndsWith(".d"))
-						continue;
+                static bool IsValid(KrakenPair pair)
+                {
+                    // todo: can't get kraken details on these markets
+                    return !pair.PairId.EndsWith(value: ".d", StringComparison.Ordinal);
+                }
 
-					tickers.Add(await this.GetTicker(pair));
-				}
-				
-				return tickers.Select(m =>
-				{
-					string baseCurrency = assets.Find(a => a.Id.Equals(m.BaseCurrency)).Altname;
-					string quoteCurrency = assets.Find(a => a.Id.Equals(m.QuoteCurrency)).Altname;
+                KrakenTicker[] tickers = await Task.WhenAll(pairs.Where(IsValid)
+                                                                 .Select(this.GetTickerAsync));
 
-					// Workaround for kraken
-					if (baseCurrency.Equals("xbt", StringComparison.OrdinalIgnoreCase))
-						baseCurrency = "btc";
-					if (quoteCurrency.Equals("xbt", StringComparison.OrdinalIgnoreCase))
-						quoteCurrency = "btc";
+                return tickers.Select(selector: m => this.CreateMarketSummaryDto(assets, m))
+                              .RemoveNulls()
+                              .ToList();
+            }
+            catch (Exception e)
+            {
+                this.Logger.LogError(new EventId(e.HResult), e, e.Message);
 
-					return new MarketSummaryDto
-					{
-						BaseCurrrency = this._currencyManager.Get(baseCurrency),
-						MarketCurrency = this._currencyManager.Get(quoteCurrency),
-						Market = "Kraken",
-						Volume = m.Volume[1],
-						Last = m.Last[0]
-					};
-				}).ToList();
-			}
-			catch (Exception e)
-			{
-				this._logger.LogError(new EventId(e.HResult), e, e.Message);
-				throw;
-			}
-		}
+                throw;
+            }
+        }
 
-		/// <summary>
-		/// Get the ticker.
-		/// </summary>
-		/// <returns></returns>
-		private async Task<List<KrakenAsset>> GetAssets()
-		{
-			using (HttpResponseMessage response = await this._httpClient.GetAsync(new Uri("Assets", UriKind.Relative)))
-			{
-				string json = await response.Content.ReadAsStringAsync();
-				JObject jObject = JObject.Parse(json);
-				List<KrakenAsset> assets = jObject.GetValue("result").Children().Cast<JProperty>().Select(property =>
-				{
-					KrakenAsset asset = JsonConvert.DeserializeObject<KrakenAsset>(property.Value.ToString(), this._serializerSettings);
-					asset.Id = property.Name;
-					return asset;
-				}).ToList();
-				return assets;
-			}
-		}
+        private MarketSummaryDto? CreateMarketSummaryDto(IReadOnlyList<KrakenAsset> assets, KrakenTicker ticker)
+        {
+            string? baseCurrencySymbol = FindCurrency(assets, ticker.BaseCurrency);
 
-		/// <summary>
-		/// Get the market summaries.
-		/// </summary>
-		/// <returns></returns>
-		private async Task<List<KrakenPair>> GetPairs()
-		{
-			using (HttpResponseMessage response = await this._httpClient.GetAsync(new Uri("AssetPairs", UriKind.Relative)))
-			{
-				string json = await response.Content.ReadAsStringAsync();
-				JObject jResponse = JObject.Parse(json);
-				List<KrakenPair> pairs = jResponse.GetValue("result").Children().Cast<JProperty>().Select(property =>
-				{
-					KrakenPair pair = JsonConvert.DeserializeObject<KrakenPair>(property.Value.ToString());
-					pair.PairId = property.Name;
-					return pair;
-				}).ToList();
-				return pairs;
-			}
-		}
+            if (baseCurrencySymbol == null)
+            {
+                return null;
+            }
 
-		/// <summary>
-		/// Get the ticker.
-		/// </summary>
-		/// <returns></returns>
-		private async Task<KrakenTicker> GetTicker(KrakenPair pair)
-		{
-			using (HttpResponseMessage response = await this._httpClient.GetAsync(new Uri($"Ticker?pair={pair.PairId}", UriKind.Relative)))
-			{
-				string json = await response.Content.ReadAsStringAsync();
-				JObject jObject = JObject.Parse(json);
-				KrakenTicker ticker = JsonConvert.DeserializeObject<KrakenTicker>(jObject["result"][pair.PairId].ToString(), this._serializerSettings);
-				ticker.BaseCurrency = pair.BaseCurrency;
-				ticker.QuoteCurrency = pair.QuoteCurrency;
-				return ticker;
-			}
-		}
-	}
+            string? marketCurrencySymbol = FindCurrency(assets, ticker.QuoteCurrency);
+
+            if (marketCurrencySymbol == null)
+            {
+                return null;
+            }
+
+            Currency? baseCurrency = this._currencyManager.Get(baseCurrencySymbol);
+
+            if (baseCurrency == null)
+            {
+                return null;
+            }
+
+            Currency? marketCurrency = this._currencyManager.Get(marketCurrencySymbol);
+
+            if (marketCurrency == null)
+            {
+                return null;
+            }
+
+            return new MarketSummaryDto(market: this.Name,
+                                        baseCurrency: baseCurrency,
+                                        marketCurrency: marketCurrency,
+                                        volume: ticker.Volume[1],
+                                        last: ticker.Last[0],
+                                        lastUpdated: null);
+        }
+
+        private static string? FindCurrency(IReadOnlyList<KrakenAsset> assets, string search)
+        {
+            KrakenAsset? found = assets.FirstOrDefault(predicate: a => StringComparer.InvariantCultureIgnoreCase.Equals(a.Id, search));
+
+            if (found == null)
+            {
+                return null;
+            }
+
+            return NormalizeCurrency(found.Altname);
+        }
+
+        private static string NormalizeCurrency(string currencySymbol)
+        {
+            // Workaround for kraken
+
+            if (currencySymbol.Equals(value: "xbt", StringComparison.OrdinalIgnoreCase))
+            {
+                return "btc";
+            }
+
+            return currencySymbol;
+        }
+
+        /// <summary>
+        ///     Get the ticker.
+        /// </summary>
+        /// <returns></returns>
+        private async Task<IReadOnlyList<KrakenAsset>> GetAssetsAsync()
+        {
+            HttpClient httpClient = this.CreateHttpClient();
+
+            using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "Assets", UriKind.Relative)))
+            {
+                response.EnsureSuccessStatusCode();
+
+                string json = await response.Content.ReadAsStringAsync();
+                JObject? jObject = JObject.Parse(json);
+
+                if (jObject == null)
+                {
+                    return Array.Empty<KrakenAsset>();
+                }
+
+                return jObject.GetValue(propertyName: "result")
+                              .RemoveNulls()
+                              .Children()
+                              .Cast<JProperty>()
+                              .Select(selector: property =>
+                                                {
+                                                    KrakenAsset? asset = JsonConvert.DeserializeObject<KrakenAsset>(property.Value.ToString(), this._serializerSettings);
+
+                                                    if (asset == null)
+                                                    {
+                                                        return null;
+                                                    }
+
+                                                    asset.Id = property.Name;
+
+                                                    return asset;
+                                                })
+                              .RemoveNulls()
+                              .ToArray();
+            }
+        }
+
+        /// <summary>
+        ///     Get the market summaries.
+        /// </summary>
+        /// <returns></returns>
+        private async Task<IReadOnlyList<KrakenPair>> GetPairsAsync()
+        {
+            HttpClient httpClient = this.CreateHttpClient();
+
+            using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "AssetPairs", UriKind.Relative)))
+            {
+                response.EnsureSuccessStatusCode();
+
+                string json = await response.Content.ReadAsStringAsync();
+                JObject? jResponse = JObject.Parse(json);
+
+                if (jResponse == null)
+                {
+                    return Array.Empty<KrakenPair>();
+                }
+
+                return jResponse.GetValue(propertyName: "result")
+                                .RemoveNulls()
+                                .Children()
+                                .Cast<JProperty>()
+                                .Select(selector: property =>
+                                                  {
+                                                      KrakenPair? pair = JsonConvert.DeserializeObject<KrakenPair>(property.Value.ToString());
+
+                                                      if (pair == null)
+                                                      {
+                                                          return null;
+                                                      }
+
+                                                      pair.PairId = property.Name;
+
+                                                      return pair;
+                                                  })
+                                .RemoveNulls()
+                                .ToList();
+            }
+        }
+
+        /// <summary>
+        ///     Get the ticker.
+        /// </summary>
+        /// <returns></returns>
+        private async Task<KrakenTicker?> GetTickerAsync(KrakenPair pair)
+        {
+            HttpClient httpClient = this.CreateHttpClient();
+
+            using (HttpResponseMessage response = await httpClient.GetAsync(new Uri($"Ticker?pair={pair.PairId}", UriKind.Relative)))
+            {
+                response.EnsureSuccessStatusCode();
+
+                string json = await response.Content.ReadAsStringAsync();
+                JObject? jObject = JObject.Parse(json);
+
+                if (jObject == null)
+                {
+                    return null;
+                }
+
+                JToken? result = jObject[propertyName: "result"];
+
+                if (result == null)
+                {
+                    return null;
+                }
+
+                JToken? pairItem = result[pair.PairId];
+
+                if (pairItem == null)
+                {
+                    return null;
+                }
+
+                KrakenTicker? ticker = JsonConvert.DeserializeObject<KrakenTicker>(pairItem.ToString(), this._serializerSettings);
+
+                if (ticker == null)
+                {
+                    return null;
+                }
+
+                ticker.BaseCurrency = pair.BaseCurrency;
+                ticker.QuoteCurrency = pair.QuoteCurrency;
+
+                return ticker;
+            }
+        }
+
+        public static void Register(IServiceCollection services)
+        {
+            services.AddSingleton<IMarketClient, KrakenClient>();
+
+            AddHttpClientFactorySupport(services, HTTP_CLIENT_NAME, Endpoint);
+        }
+    }
 }
