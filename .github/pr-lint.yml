@@ -1,1 +1,5 @@
-        1 file(s) copied.
+projects: ['FF']
+check_title: true
+check_branch: false
+check_commits: false
+ignore_case: true
