@@ -97,22 +97,31 @@ namespace CoinBot.Clients.Gdax
         /// <returns></returns>
         private async Task<GdaxTicker?> GetTickerAsync(string productId)
         {
-            HttpClient httpClient = this.CreateHttpClient();
-
-            using (HttpResponseMessage response = await httpClient.GetAsync(new Uri($"products/{productId}/ticker", UriKind.Relative)))
+            try
             {
-                response.EnsureSuccessStatusCode();
+                HttpClient httpClient = this.CreateHttpClient();
 
-                GdaxTicker? ticker = JsonConvert.DeserializeObject<GdaxTicker>(await response.Content.ReadAsStringAsync(), this._serializerSettings);
-
-                if (ticker == null)
+                using (HttpResponseMessage response = await httpClient.GetAsync(new Uri($"products/{productId}/ticker", UriKind.Relative)))
                 {
-                    return null;
+                    response.EnsureSuccessStatusCode();
+
+                    GdaxTicker? ticker = JsonConvert.DeserializeObject<GdaxTicker>(await response.Content.ReadAsStringAsync(), this._serializerSettings);
+
+                    if (ticker == null)
+                    {
+                        return null;
+                    }
+
+                    ticker.ProductId = productId;
+
+                    return ticker;
                 }
+            }
+            catch (Exception exception)
+            {
+                this.Logger.LogError(new EventId(exception.HResult), exception, $"Failed to retrieve {productId}: {exception.Message}");
 
-                ticker.ProductId = productId;
-
-                return ticker;
+                return null;
             }
         }
 

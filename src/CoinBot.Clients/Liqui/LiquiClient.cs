@@ -146,37 +146,46 @@ namespace CoinBot.Clients.Liqui
         /// <returns></returns>
         private async Task<LiquiTicker?> GetTickerAsync(string pair)
         {
-            HttpClient httpClient = this.CreateHttpClient();
-
-            using (HttpResponseMessage response = await httpClient.GetAsync(new Uri($"ticker/{pair}", UriKind.Relative)))
+            try
             {
-                response.EnsureSuccessStatusCode();
+                HttpClient httpClient = this.CreateHttpClient();
 
-                string json = await response.Content.ReadAsStringAsync();
-                JObject? jObject = JObject.Parse(json);
-
-                if (jObject == null)
+                using (HttpResponseMessage response = await httpClient.GetAsync(new Uri($"ticker/{pair}", UriKind.Relative)))
                 {
-                    return null;
+                    response.EnsureSuccessStatusCode();
+
+                    string json = await response.Content.ReadAsStringAsync();
+                    JObject? jObject = JObject.Parse(json);
+
+                    if (jObject == null)
+                    {
+                        return null;
+                    }
+
+                    JToken? pairItem = jObject.GetValue(pair);
+
+                    if (pairItem == null)
+                    {
+                        return null;
+                    }
+
+                    LiquiTicker? ticker = JsonConvert.DeserializeObject<LiquiTicker>(pairItem.ToString(), this._serializerSettings);
+
+                    if (ticker == null)
+                    {
+                        return null;
+                    }
+
+                    ticker.Pair = pair;
+
+                    return ticker;
                 }
+            }
+            catch (Exception exception)
+            {
+                this.Logger.LogError(new EventId(exception.HResult), exception, $"Failed to retrieve {pair}: {exception.Message}");
 
-                JToken? pairItem = jObject.GetValue(pair);
-
-                if (pairItem == null)
-                {
-                    return null;
-                }
-
-                LiquiTicker? ticker = JsonConvert.DeserializeObject<LiquiTicker>(pairItem.ToString(), this._serializerSettings);
-
-                if (ticker == null)
-                {
-                    return null;
-                }
-
-                ticker.Pair = pair;
-
-                return ticker;
+                return null;
             }
         }
 

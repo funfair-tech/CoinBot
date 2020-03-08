@@ -89,7 +89,9 @@ namespace CoinBot.Core
                 return currency;
             }
 
-            IReadOnlyCollection<ICoinInfo>[] allCoinInfos = await Task.WhenAll(this._coinClients.Select(selector: client => client.GetCoinInfoAsync()));
+            this.Logger.LogInformation(message: "Updating All CoinInfos");
+
+            IReadOnlyCollection<ICoinInfo>[] allCoinInfos = await Task.WhenAll(this._coinClients.Select(this.GetCoinInfoAsync));
 
             List<Currency> currencies = new List<Currency> {new Currency(symbol: "EUR", name: "Euro"), new Currency(symbol: "USD", name: "United States dollar")};
 
@@ -100,12 +102,42 @@ namespace CoinBot.Core
             this._coinInfoCollection = new ReadOnlyCollection<Currency>(currencies);
         }
 
+        private async Task<IReadOnlyCollection<ICoinInfo>> GetCoinInfoAsync(ICoinClient client)
+        {
+            this.Logger.LogInformation($"Updating {client.GetType().Name} CoinInfo");
+
+            try
+            {
+                return await client.GetCoinInfoAsync();
+            }
+            catch (Exception exception)
+            {
+                this.Logger.LogError(new EventId(exception.HResult), exception, $"Failed to update {client.GetType().Name} CoinInfo: {exception.Message}");
+
+                return Array.Empty<ICoinInfo>();
+            }
+        }
+
         private async Task UpdateGlobalInfoAsync()
         {
-            IGlobalInfo?[] results = await Task.WhenAll(this._coinClients.Select(selector: client => client.GetGlobalInfoAsync()));
+            IGlobalInfo?[] results = await Task.WhenAll(this._coinClients.Select(selector: client => this.GetGlobalInfoAsync(client)));
 
             this._globalInfo = results.RemoveNulls()
                                       .FirstOrDefault();
+        }
+
+        private async Task<IGlobalInfo?> GetGlobalInfoAsync(ICoinClient client)
+        {
+            try
+            {
+                return await client.GetGlobalInfoAsync();
+            }
+            catch (Exception exception)
+            {
+                this.Logger.LogError(new EventId(exception.HResult), exception, $"Failed to update {client.GetType().Name} GlobalInfo: {exception.Message}");
+
+                return null;
+            }
         }
     }
 }

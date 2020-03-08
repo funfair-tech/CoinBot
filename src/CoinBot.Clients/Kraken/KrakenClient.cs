@@ -233,45 +233,54 @@ namespace CoinBot.Clients.Kraken
         /// <returns></returns>
         private async Task<KrakenTicker?> GetTickerAsync(KrakenPair pair)
         {
-            HttpClient httpClient = this.CreateHttpClient();
-
-            using (HttpResponseMessage response = await httpClient.GetAsync(new Uri($"Ticker?pair={pair.PairId}", UriKind.Relative)))
+            try
             {
-                response.EnsureSuccessStatusCode();
+                HttpClient httpClient = this.CreateHttpClient();
 
-                string json = await response.Content.ReadAsStringAsync();
-                JObject? jObject = JObject.Parse(json);
-
-                if (jObject == null)
+                using (HttpResponseMessage response = await httpClient.GetAsync(new Uri($"Ticker?pair={pair.PairId}", UriKind.Relative)))
                 {
-                    return null;
+                    response.EnsureSuccessStatusCode();
+
+                    string json = await response.Content.ReadAsStringAsync();
+                    JObject? jObject = JObject.Parse(json);
+
+                    if (jObject == null)
+                    {
+                        return null;
+                    }
+
+                    JToken? result = jObject[propertyName: "result"];
+
+                    if (result == null)
+                    {
+                        return null;
+                    }
+
+                    JToken? pairItem = result[pair.PairId];
+
+                    if (pairItem == null)
+                    {
+                        return null;
+                    }
+
+                    KrakenTicker? ticker = JsonConvert.DeserializeObject<KrakenTicker>(pairItem.ToString(), this._serializerSettings);
+
+                    if (ticker == null)
+                    {
+                        return null;
+                    }
+
+                    ticker.BaseCurrency = pair.BaseCurrency;
+                    ticker.QuoteCurrency = pair.QuoteCurrency;
+
+                    return ticker;
                 }
+            }
+            catch (Exception exception)
+            {
+                this.Logger.LogError(new EventId(exception.HResult), exception, $"Failed to retrieve {pair.BaseCurrency}/{pair.QuoteCurrency}: {exception.Message}");
 
-                JToken? result = jObject[propertyName: "result"];
-
-                if (result == null)
-                {
-                    return null;
-                }
-
-                JToken? pairItem = result[pair.PairId];
-
-                if (pairItem == null)
-                {
-                    return null;
-                }
-
-                KrakenTicker? ticker = JsonConvert.DeserializeObject<KrakenTicker>(pairItem.ToString(), this._serializerSettings);
-
-                if (ticker == null)
-                {
-                    return null;
-                }
-
-                ticker.BaseCurrency = pair.BaseCurrency;
-                ticker.QuoteCurrency = pair.QuoteCurrency;
-
-                return ticker;
+                return null;
             }
         }
 
