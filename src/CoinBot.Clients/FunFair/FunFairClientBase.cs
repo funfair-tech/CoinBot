@@ -83,40 +83,49 @@ namespace CoinBot.Clients.FunFair
 
         private async Task<FunFairWalletPriceResultPairDto?> GetCurrentPriceCommonAsync(string tokenSymbol, string fiatCurrencySymbol)
         {
-            HttpClient client = this.CreateHttpClient();
-
-            Uri uri = BuildUri(tokenSymbol, fiatCurrencySymbol);
-
-            using (HttpResponseMessage response = await client.GetAsync(uri))
+            try
             {
-                if (!response.IsSuccessStatusCode)
+                HttpClient client = this.CreateHttpClient();
+
+                Uri uri = BuildUri(tokenSymbol, fiatCurrencySymbol);
+
+                using (HttpResponseMessage response = await client.GetAsync(uri))
                 {
-                    this.Logger.LogError($"Failed to retrieve prices for {tokenSymbol} in {fiatCurrencySymbol}: Http Error: {response.StatusCode}");
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        this.Logger.LogError($"Failed to retrieve prices for {tokenSymbol} in {fiatCurrencySymbol}: Http Error: {response.StatusCode}");
 
-                    return null;
+                        return null;
+                    }
+
+                    string msg = await response.Content.ReadAsStringAsync();
+
+                    if (string.IsNullOrWhiteSpace(msg))
+                    {
+                        this.Logger.LogError($"Failed to retrieve prices for {tokenSymbol} in {fiatCurrencySymbol}: No Content returned (1)");
+
+                        return null;
+                    }
+
+                    FunFairWalletPriceResultDto pkt = JsonSerializer.Deserialize<FunFairWalletPriceResultDto>(msg, this._jsonSerializerSettings);
+
+                    if (pkt.Symbol == null)
+                    {
+                        this.Logger.LogError($"Failed to retrieve prices for {tokenSymbol} in {fiatCurrencySymbol}: No Content returned (2)");
+
+                        return null;
+                    }
+
+                    this.Logger.LogDebug($"Retrieved price for {tokenSymbol}.  Currently {pkt.Price} {fiatCurrencySymbol}");
+
+                    return new FunFairWalletPriceResultPairDto(fiatCurrencySymbol, pkt.Symbol, pkt.Price, pkt.Date);
                 }
+            }
+            catch (Exception exception)
+            {
+                this.Logger.LogError(new EventId(exception.HResult), exception, $"Failed to retrieve prices for {tokenSymbol} in {fiatCurrencySymbol}: Error: {exception.Message}");
 
-                string msg = await response.Content.ReadAsStringAsync();
-
-                if (string.IsNullOrWhiteSpace(msg))
-                {
-                    this.Logger.LogError($"Failed to retrieve prices for {tokenSymbol} in {fiatCurrencySymbol}: No Content returned (1)");
-
-                    return null;
-                }
-
-                FunFairWalletPriceResultDto pkt = JsonSerializer.Deserialize<FunFairWalletPriceResultDto>(msg, this._jsonSerializerSettings);
-
-                if (pkt.Symbol == null)
-                {
-                    this.Logger.LogError($"Failed to retrieve prices for {tokenSymbol} in {fiatCurrencySymbol}: No Content returned (2)");
-
-                    return null;
-                }
-
-                this.Logger.LogDebug($"Retrieved price for {tokenSymbol}.  Currently {pkt.Price} {fiatCurrencySymbol}");
-
-                return new FunFairWalletPriceResultPairDto(fiatCurrencySymbol, pkt.Symbol, pkt.Price, pkt.Date);
+                return null;
             }
         }
 
