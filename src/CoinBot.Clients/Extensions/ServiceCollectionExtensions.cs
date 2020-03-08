@@ -1,6 +1,5 @@
 ﻿using CoinBot.Clients.Binance;
 using CoinBot.Clients.Bittrex;
-using CoinBot.Clients.CoinMarketCap;
 using CoinBot.Clients.FunFair;
 using CoinBot.Clients.GateIo;
 using CoinBot.Clients.Gdax;
@@ -25,7 +24,8 @@ namespace CoinBot.Clients.Extensions
         /// <returns></returns>
         public static IServiceCollection AddClients(this IServiceCollection services, IConfigurationRoot configurationRoot)
         {
-            CoinMarketCapClient.Register(services);
+            // currently returning errors
+            //CoinMarketCapClient.Register(services);
             BinanceClient.Register(services);
             BittrexClient.Register(services);
             GdaxClient.Register(services);
