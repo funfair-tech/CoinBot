@@ -24,8 +24,10 @@ namespace CoinBot.Clients.Extensions
         /// <returns></returns>
         public static IServiceCollection AddClients(this IServiceCollection services, IConfigurationRoot configurationRoot)
         {
+#if NOT_DEPRECATED
             // currently returning errors
-            //CoinMarketCapClient.Register(services);
+            CoinMarketCapClient.Register(services);
+#endif
             BinanceClient.Register(services);
             BittrexClient.Register(services);
             GdaxClient.Register(services);
