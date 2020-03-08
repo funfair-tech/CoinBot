@@ -18,7 +18,7 @@ namespace CoinBot.Clients.FunFair
         /// <summary>
         ///     List of crypto currencies hard coded for now.
         /// </summary>
-        private readonly IReadOnlyList<string> _cryptoSymbols = new[] {@"FUN"};
+        private readonly IReadOnlyList<string> _cryptoSymbols = new[] {@"ETH", @"FUN"};
 
         /// <summary>
         ///     List of fiat currencies hard coded for now.
