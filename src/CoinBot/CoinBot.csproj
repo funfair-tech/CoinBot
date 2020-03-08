@@ -54,10 +54,10 @@
         <ProjectReference Include="..\CoinBot.Discord\CoinBot.Discord.csproj"/>
     </ItemGroup>
     <ItemGroup>
-        <Content Update="appsettings.json">
+        <Content Include="appsettings.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <Content Update="appsettings-local.json" Condition="Exists('appsettings-local.json')">
+        <Content Include="appsettings-local.json" Condition="Exists('appsettings-local.json')">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
