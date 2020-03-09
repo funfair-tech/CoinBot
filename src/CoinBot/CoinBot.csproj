@@ -57,7 +57,10 @@
         <None Remove="appsettings-local.json"/>
     </ItemGroup>
     <ItemGroup>
-        <Content Include="appsettings.json"/>
+        <Content Include="appsettings.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+            <CopyToPublishDirectory>Always</CopyToPublishDirectory>
+        </Content>
     </ItemGroup>
     <ItemGroup>
         <Content Update="appsettings.json">

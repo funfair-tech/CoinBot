@@ -22,8 +22,10 @@ namespace CoinBot
             if (path == null)
             {
                 // https://stackoverflow.com/questions/57222718/how-to-configure-self-contained-single-file-program
-                return Environment.CurrentDirectory;
+                path = Environment.CurrentDirectory;
             }
+
+            Console.WriteLine($"Loading Appsettings from {path}");
 
             return path;
         }
