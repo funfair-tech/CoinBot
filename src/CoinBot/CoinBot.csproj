@@ -69,11 +69,11 @@
             <CopyToPublishDirectory>Never</CopyToPublishDirectory>
         </Content>
     </ItemGroup>
-    <!--
+
     <Target Name="PrePublish" BeforeTargets="PrepareForPublish">
         <Copy SourceFiles="appsettings.json" DestinationFiles="$(PublishDir)\appsettings.json" SkipUnchangedFiles="true"/>
     </Target>
-    -->
+
 
     <ItemGroup>
         <TrimmerRootAssembly Include="System.Text.Json"/>
