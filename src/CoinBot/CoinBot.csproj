@@ -57,12 +57,6 @@
         <None Remove="appsettings-local.json"/>
     </ItemGroup>
     <ItemGroup>
-        <Content Include="appsettings.json">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-            <CopyToPublishDirectory>Always</CopyToPublishDirectory>
-        </Content>
-    </ItemGroup>
-    <ItemGroup>
         <Content Update="appsettings.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
             <CopyToPublishDirectory>Always</CopyToPublishDirectory>
@@ -72,6 +66,10 @@
             <CopyToPublishDirectory>Never</CopyToPublishDirectory>
         </Content>
     </ItemGroup>
+
+    <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+        <Copy SourceFiles="appsettings.json" DestinationFiles="$(PublishDir)\appsettings.json" SkipUnchangedFiles="true"/>
+    </Target>
 
     <Target Name="PrePublish" BeforeTargets="PrepareForPublish">
         <Copy SourceFiles="appsettings.json" DestinationFiles="$(PublishDir)\appsettings.json" SkipUnchangedFiles="true"/>
