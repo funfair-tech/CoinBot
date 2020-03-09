@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -54,10 +54,10 @@
         <ProjectReference Include="..\CoinBot.Discord\CoinBot.Discord.csproj"/>
     </ItemGroup>
     <ItemGroup>
-        <Content Include="appsettings.json">
+        <Content Update="appsettings.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <Content Include="appsettings-local.json" Condition="Exists('appsettings-local.json')">
+        <Content Update="appsettings-local.json" Condition="Exists('appsettings-local.json')">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
