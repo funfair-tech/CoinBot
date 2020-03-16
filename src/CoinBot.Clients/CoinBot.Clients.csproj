@@ -32,7 +32,7 @@
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="16.5.132" PrivateAssets="All" />
     <PackageReference Include="Roslynator.Analyzers" Version="2.3.0" PrivateAssets="All" />
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.4.0.15306" PrivateAssets="All" />
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.5.0.15942" PrivateAssets="All" />
     <PackageReference Include="SourceLink.Create.CommandLine" Version="2.8.3" PrivateAssets="All" />
   </ItemGroup>
   <ItemGroup>
