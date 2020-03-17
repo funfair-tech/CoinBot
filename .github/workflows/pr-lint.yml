@@ -4,7 +4,8 @@ jobs:
   include-JIRA-ticket:
     runs-on: ubuntu-latest
     steps:
-    - if: ${{ !startsWith(github.head_ref, 'release/') && !startsWith(github.head_ref, 'hotfix/') }}
-      uses: vijaykramesh/pr-lint-action@v1.0
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: echo Head Branch ${{ github.head_ref}
+      - if: ${{ !startsWith(github.head_ref, 'release/') && !startsWith(github.head_ref, 'hotfix/') }}
+        uses: vijaykramesh/pr-lint-action@v1.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
