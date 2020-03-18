@@ -17,6 +17,10 @@ jobs:
       run: |
         git config --local user.email "credfeto@users.noreply.github.com"
         git config --local user.name "Mark Ridgwell"
+    - name: What Branch Is This
+      run: |
+        echo Current Branch ${GITHUB_REF#refs/heads/}
+        echo ::set-env name=GIT_BRANCH::$(echo ${GITHUB_REF#refs/heads/})
     - name: Install MoreUtils
       run: |
         sudo apt-get install moreutils
@@ -25,8 +29,8 @@ jobs:
         find ./ -iname '*.sql' -type f -exec bash -c 'expand -t 4 "$0" | sponge "$0"' {} \;
     - name: Commit files
       run: |
+        git status
         git commit --all -m"Converted Tabs to spaces" || true
-#    - name: Push changes
-#      uses: ad-m/github-push-action@master
-#      with:
-#        github_token: ${{ secrets.GITHUB_PUSH_TOKEN }}
+    - name: Push
+      run: |
+        git push "https://${{github.actor}}:${{secrets.GITHUB_PUSH_TOKEN}}@github.com/${{github.repository}}.git" "HEAD:${{ env.GIT_BRANCH }}"
