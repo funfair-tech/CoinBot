@@ -9,8 +9,6 @@ using CoinBot.Core.Extensions;
 using CoinBot.Core.JsonConverters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace CoinBot.Clients.Bittrex
 {
@@ -29,7 +27,7 @@ namespace CoinBot.Clients.Bittrex
         private readonly CurrencyManager _currencyManager;
 
         /// <summary>
-        ///     The <see cref="JsonSerializerSettings" />.
+        ///     The <see cref="JsonSerializerOptions" />.
         /// </summary>
         private readonly JsonSerializerOptions _serializerSettings;
 

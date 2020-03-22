@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace CoinBot.Clients.Kraken
 {
@@ -7,14 +7,16 @@ namespace CoinBot.Clients.Kraken
         // ReSharper disable once RedundantDefaultMemberInitializer
         public string PairId { get; set; } = default!;
 
-        [JsonProperty(propertyName: "base")]
+        [JsonPropertyName(name: @"base")]
 
         // ReSharper disable once RedundantDefaultMemberInitializer
+        // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Global
         public string BaseCurrency { get; set; } = default!;
 
-        [JsonProperty(propertyName: "quote")]
+        [JsonPropertyName(name: @"quote")]
 
         // ReSharper disable once RedundantDefaultMemberInitializer
+        // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Global
         public string QuoteCurrency { get; set; } = default!;
     }
 }

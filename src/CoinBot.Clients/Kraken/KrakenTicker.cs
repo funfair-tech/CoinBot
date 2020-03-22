@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace CoinBot.Clients.Kraken
 {
@@ -13,17 +13,19 @@ namespace CoinBot.Clients.Kraken
         /// <summary>
         ///     last trade closed array(price, lot volume)
         /// </summary>
-        [JsonProperty(propertyName: "c")]
+        [JsonPropertyName(name: @"c")]
 
         // ReSharper disable once RedundantDefaultMemberInitializer
+        // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Global
         public decimal?[] Last { get; set; } = default!;
 
         /// <summary>
         ///     24 Hour volume array(today, last 24 hours)
         /// </summary>
-        [JsonProperty(propertyName: "v")]
+        [JsonPropertyName(name: @"v")]
 
         // ReSharper disable once RedundantDefaultMemberInitializer
+        // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Global
         public decimal?[] Volume { get; set; } = default!;
     }
 }

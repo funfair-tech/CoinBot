@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using CoinBot.Core;
 using CoinBot.Core.Extensions;
+using CoinBot.Core.JsonConverters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace CoinBot.Clients.Kraken
 {
@@ -27,23 +29,21 @@ namespace CoinBot.Clients.Kraken
         private readonly CurrencyManager _currencyManager;
 
         /// <summary>
-        ///     The <see cref="JsonSerializerSettings" />.
+        ///     The <see cref="JsonSerializerOptions" />.
         /// </summary>
-        private readonly JsonSerializerSettings _serializerSettings;
+        private readonly JsonSerializerOptions _serializerSettings;
 
         public KrakenClient(IHttpClientFactory httpClientFactory, ILogger<KrakenClient> logger, CurrencyManager currencyManager)
             : base(httpClientFactory, HTTP_CLIENT_NAME, logger)
         {
             this._currencyManager = currencyManager ?? throw new ArgumentNullException(nameof(currencyManager));
 
-            this._serializerSettings = new JsonSerializerSettings
+            this._serializerSettings = new JsonSerializerOptions
                                        {
-                                           Error = (sender, args) =>
-                                                   {
-                                                       EventId eventId = new EventId(args.ErrorContext.Error.HResult);
-                                                       Exception ex = args.ErrorContext.Error.GetBaseException();
-                                                       this.Logger.LogError(eventId, ex, ex.Message);
-                                                   }
+                                           IgnoreNullValues = true,
+                                           PropertyNameCaseInsensitive = false,
+                                           PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                                           Converters = {new DecimalAsStringConverter()}
                                        };
         }
 
@@ -156,32 +156,27 @@ namespace CoinBot.Clients.Kraken
                 response.EnsureSuccessStatusCode();
 
                 string json = await response.Content.ReadAsStringAsync();
-                JObject? jObject = JObject.Parse(json);
 
-                if (jObject == null)
+                try
                 {
+                    KrakenAssetResultWrapper items = JsonSerializer.Deserialize<KrakenAssetResultWrapper>(json, this._serializerSettings);
+
+                    if (items.Result != null)
+                    {
+                        foreach (KeyValuePair<string, KrakenAsset> item in items.Result)
+                        {
+                            item.Value.Id = item.Key;
+                        }
+                    }
+
+                    return items.Result?.Values.ToArray() ?? Array.Empty<KrakenAsset>();
+                }
+                catch (Exception exception)
+                {
+                    this.Logger.LogError(new EventId(exception.HResult), exception, message: "Failed to deserialise");
+
                     return Array.Empty<KrakenAsset>();
                 }
-
-                return jObject.GetValue(propertyName: "result")
-                              .RemoveNulls()
-                              .Children()
-                              .Cast<JProperty>()
-                              .Select(selector: property =>
-                                                {
-                                                    KrakenAsset? asset = JsonConvert.DeserializeObject<KrakenAsset>(property.Value.ToString(), this._serializerSettings);
-
-                                                    if (asset == null)
-                                                    {
-                                                        return null;
-                                                    }
-
-                                                    asset.Id = property.Name;
-
-                                                    return asset;
-                                                })
-                              .RemoveNulls()
-                              .ToArray();
             }
         }
 
@@ -198,32 +193,29 @@ namespace CoinBot.Clients.Kraken
                 response.EnsureSuccessStatusCode();
 
                 string json = await response.Content.ReadAsStringAsync();
-                JObject? jResponse = JObject.Parse(json);
 
-                if (jResponse == null)
+                try
                 {
+                    KrakenPairWrapper items = JsonSerializer.Deserialize<KrakenPairWrapper>(json, this._serializerSettings);
+
+                    if (items.Result == null)
+                    {
+                        return Array.Empty<KrakenPair>();
+                    }
+
+                    foreach (KeyValuePair<string, KrakenPair> item in items.Result)
+                    {
+                        item.Value.PairId = item.Key;
+                    }
+
+                    return items.Result.Values.ToArray();
+                }
+                catch (Exception exception)
+                {
+                    this.Logger.LogError(new EventId(exception.HResult), exception, message: "Failed to deserialize");
+
                     return Array.Empty<KrakenPair>();
                 }
-
-                return jResponse.GetValue(propertyName: "result")
-                                .RemoveNulls()
-                                .Children()
-                                .Cast<JProperty>()
-                                .Select(selector: property =>
-                                                  {
-                                                      KrakenPair? pair = JsonConvert.DeserializeObject<KrakenPair>(property.Value.ToString());
-
-                                                      if (pair == null)
-                                                      {
-                                                          return null;
-                                                      }
-
-                                                      pair.PairId = property.Name;
-
-                                                      return pair;
-                                                  })
-                                .RemoveNulls()
-                                .ToList();
             }
         }
 
@@ -242,38 +234,27 @@ namespace CoinBot.Clients.Kraken
                     response.EnsureSuccessStatusCode();
 
                     string json = await response.Content.ReadAsStringAsync();
-                    JObject? jObject = JObject.Parse(json);
 
-                    if (jObject == null)
+                    try
                     {
+                        KrakenTickerWrapper item = JsonSerializer.Deserialize<KrakenTickerWrapper>(json, this._serializerSettings);
+
+                        if (item.Result == null)
+                        {
+                            return null;
+                        }
+
+                        item.Result.BaseCurrency = pair.BaseCurrency;
+                        item.Result.QuoteCurrency = pair.QuoteCurrency;
+
+                        return item.Result;
+                    }
+                    catch (Exception exception)
+                    {
+                        this.Logger.LogError(new EventId(exception.HResult), exception, message: "Failed to deserialize");
+
                         return null;
                     }
-
-                    JToken? result = jObject[propertyName: "result"];
-
-                    if (result == null)
-                    {
-                        return null;
-                    }
-
-                    JToken? pairItem = result[pair.PairId];
-
-                    if (pairItem == null)
-                    {
-                        return null;
-                    }
-
-                    KrakenTicker? ticker = JsonConvert.DeserializeObject<KrakenTicker>(pairItem.ToString(), this._serializerSettings);
-
-                    if (ticker == null)
-                    {
-                        return null;
-                    }
-
-                    ticker.BaseCurrency = pair.BaseCurrency;
-                    ticker.QuoteCurrency = pair.QuoteCurrency;
-
-                    return ticker;
                 }
             }
             catch (Exception exception)
@@ -289,6 +270,27 @@ namespace CoinBot.Clients.Kraken
             services.AddSingleton<IMarketClient, KrakenClient>();
 
             AddHttpClientFactorySupport(services, HTTP_CLIENT_NAME, Endpoint);
+        }
+
+        [SuppressMessage(category: "Microsoft.Performance", checkId: "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Used as data packet")]
+        private sealed class KrakenPairWrapper
+        {
+            [JsonPropertyName(name: @"result")]
+            public Dictionary<string, KrakenPair>? Result { get; set; }
+        }
+
+        [SuppressMessage(category: "Microsoft.Performance", checkId: "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Used as data packet")]
+        private sealed class KrakenTickerWrapper
+        {
+            [JsonPropertyName(name: @"result")]
+            public KrakenTicker? Result { get; set; }
+        }
+
+        [SuppressMessage(category: "Microsoft.Performance", checkId: "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Used as data packet")]
+        private sealed class KrakenAssetResultWrapper
+        {
+            [JsonPropertyName(name: @"result")]
+            public Dictionary<string, KrakenAsset>? Result { get; set; }
         }
     }
 }
