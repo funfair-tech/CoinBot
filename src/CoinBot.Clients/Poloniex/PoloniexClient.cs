@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using CoinBot.Core;
 using CoinBot.Core.Extensions;
+using CoinBot.Core.JsonConverters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace CoinBot.Clients.Poloniex
 {
@@ -27,22 +27,21 @@ namespace CoinBot.Clients.Poloniex
         private readonly CurrencyManager _currencyManager;
 
         /// <summary>
-        ///     The <see cref="JsonSerializerSettings" />.
+        ///     The <see cref="JsonSerializerOptions" />.
         /// </summary>
-        private readonly JsonSerializerSettings _serializerSettings;
+        private readonly JsonSerializerOptions _serializerSettings;
 
         public PoloniexClient(IHttpClientFactory httpClientFactory, ILogger<PoloniexClient> logger, CurrencyManager currencyManager)
             : base(httpClientFactory, HTTP_CLIENT_NAME, logger)
         {
             this._currencyManager = currencyManager ?? throw new ArgumentNullException(nameof(currencyManager));
 
-            this._serializerSettings = new JsonSerializerSettings
+            this._serializerSettings = new JsonSerializerOptions
                                        {
-                                           Error = (sender, args) =>
-                                                   {
-                                                       Exception ex = args.ErrorContext.Error.GetBaseException();
-                                                       this.Logger.LogError(new EventId(args.ErrorContext.Error.HResult), ex, ex.Message);
-                                                   }
+                                           IgnoreNullValues = true,
+                                           PropertyNameCaseInsensitive = false,
+                                           PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                                           Converters = {new DecimalAsStringConverter()}
                                        };
         }
 
@@ -56,7 +55,7 @@ namespace CoinBot.Clients.Poloniex
         {
             try
             {
-                List<PoloniexTicker> tickers = await this.GetTickersAsync();
+                IReadOnlyList<PoloniexTicker> tickers = await this.GetTickersAsync();
 
                 return tickers.Select(this.CreateMarketSummaryDto)
                               .RemoveNulls()
@@ -98,7 +97,7 @@ namespace CoinBot.Clients.Poloniex
         ///     Get the market summaries.
         /// </summary>
         /// <returns></returns>
-        private async Task<List<PoloniexTicker>> GetTickersAsync()
+        private async Task<IReadOnlyList<PoloniexTicker>> GetTickersAsync()
         {
             HttpClient httpClient = this.CreateHttpClient();
 
@@ -107,27 +106,24 @@ namespace CoinBot.Clients.Poloniex
                 response.EnsureSuccessStatusCode();
 
                 string json = await response.Content.ReadAsStringAsync();
-                JObject jResponse = JObject.Parse(json);
-                List<PoloniexTicker> tickers = new List<PoloniexTicker>();
 
-                foreach (KeyValuePair<string, JToken?> jToken in jResponse)
+                try
                 {
-                    if (jToken.Value == null)
+                    Dictionary<string, PoloniexTicker> tickers = JsonSerializer.Deserialize<Dictionary<string, PoloniexTicker>>(json, this._serializerSettings);
+
+                    foreach (KeyValuePair<string, PoloniexTicker> item in tickers)
                     {
-                        continue;
+                        item.Value.Pair = item.Key;
                     }
 
-                    JObject obj = JObject.Parse(jToken.Value.ToString());
-                    PoloniexTicker? ticker = JsonConvert.DeserializeObject<PoloniexTicker>(obj.ToString(), this._serializerSettings);
-
-                    if (ticker != null)
-                    {
-                        ticker.Pair = jToken.Key;
-                        tickers.Add(ticker);
-                    }
+                    return tickers.Values.ToArray();
                 }
+                catch (Exception exception)
+                {
+                    this.Logger.LogError(new EventId(exception.HResult), exception, message: "Failed to deserialize");
 
-                return tickers;
+                    return Array.Empty<PoloniexTicker>();
+                }
             }
         }
 
