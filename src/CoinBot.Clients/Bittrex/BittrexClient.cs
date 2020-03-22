@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using CoinBot.Core;
 using CoinBot.Core.Extensions;
+using CoinBot.Core.JsonConverters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace CoinBot.Clients.Bittrex
 {
@@ -28,20 +31,19 @@ namespace CoinBot.Clients.Bittrex
         /// <summary>
         ///     The <see cref="JsonSerializerSettings" />.
         /// </summary>
-        private readonly JsonSerializerSettings _serializerSettings;
+        private readonly JsonSerializerOptions _serializerSettings;
 
         public BittrexClient(IHttpClientFactory httpClientFactory, ILogger<BittrexClient> logger, CurrencyManager currencyManager)
             : base(httpClientFactory, HTTP_CLIENT_NAME, logger)
         {
             this._currencyManager = currencyManager ?? throw new ArgumentNullException(nameof(currencyManager));
 
-            this._serializerSettings = new JsonSerializerSettings
+            this._serializerSettings = new JsonSerializerOptions
                                        {
-                                           Error = (sender, args) =>
-                                                   {
-                                                       Exception ex = args.ErrorContext.Error.GetBaseException();
-                                                       this.Logger.LogError(new EventId(args.ErrorContext.Error.HResult), ex, ex.Message);
-                                                   }
+                                           IgnoreNullValues = true,
+                                           PropertyNameCaseInsensitive = false,
+                                           PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                                           Converters = {new DecimalAsStringConverter()}
                                        };
         }
 
@@ -107,11 +109,20 @@ namespace CoinBot.Clients.Bittrex
 
                 string content = await response.Content.ReadAsStringAsync();
 
-                BittrexMarketSummariesDto? summaries = JsonConvert.DeserializeObject<BittrexMarketSummariesDto>(content, this._serializerSettings);
+                try
+                {
+                    BittrexMarketSummariesDto summaries = JsonSerializer.Deserialize<BittrexMarketSummariesDto>(content, this._serializerSettings);
 
-                IReadOnlyList<BittrexMarketSummaryDto>? items = summaries?.Result;
+                    IReadOnlyList<BittrexMarketSummaryDto>? items = summaries.Result;
 
-                return items ?? Array.Empty<BittrexMarketSummaryDto>();
+                    return items ?? Array.Empty<BittrexMarketSummaryDto>();
+                }
+                catch (Exception exception)
+                {
+                    this.Logger.LogError(new EventId(exception.HResult), exception, message: "Failed to deserialize");
+
+                    return Array.Empty<BittrexMarketSummaryDto>();
+                }
             }
         }
 
