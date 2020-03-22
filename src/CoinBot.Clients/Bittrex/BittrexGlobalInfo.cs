@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using CoinBot.Core;
 using Newtonsoft.Json;
 
@@ -9,32 +10,32 @@ namespace CoinBot.Clients.Bittrex
     public sealed class BittrexGlobalInfo : IGlobalInfo
     {
         /// <inheritdoc />
-        [JsonProperty(propertyName: "total_market_cap_usd")]
+        [JsonPropertyName(name: @"total_market_cap_usd")]
         public double? MarketCap { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty(propertyName: "total_24h_volume_usd")]
+        [JsonPropertyName(name: @"total_24h_volume_usd")]
         public double? Volume { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty(propertyName: "bitcoin_percentage_of_market_cap")]
+        [JsonPropertyName(name: @"bitcoin_percentage_of_market_cap")]
         public double? BtcDominance { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty(propertyName: "active_currencies")]
+        [JsonPropertyName(name: @"active_currencies")]
         public int? Currencies { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty(propertyName: "active_assets")]
+        [JsonPropertyName(name: @"active_assets")]
         public int? Assets { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty(propertyName: "active_markets")]
+        [JsonPropertyName(name: @"active_markets")]
         public int? Markets { get; set; }
 
         /// <inheritdoc />
-        [JsonProperty(propertyName: "last_updated")]
-        [JsonConverter(typeof(UnixTimeConverter))]
+        [JsonPropertyName(name: @"last_updated")]
+        [Newtonsoft.Json.JsonConverter(typeof(UnixTimeConverter))]
         public DateTime? LastUpdated { get; set; }
     }
 }

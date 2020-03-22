@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace CoinBot.Clients.Gdax
 {
@@ -10,31 +10,31 @@ namespace CoinBot.Clients.Gdax
         // ReSharper disable once RedundantDefaultMemberInitializer
         public string ProductId { get; set; } = default!;
 
-        [JsonProperty(propertyName: "ask")]
+        [JsonPropertyName(name: @"ask")]
 
         // ReSharper disable once RedundantDefaultMemberInitializer
         public string Ask { get; set; } = default!;
 
-        [JsonProperty(propertyName: "bid")]
+        [JsonPropertyName(name: @"bid")]
 
         // ReSharper disable once RedundantDefaultMemberInitializer
         public string Bid { get; set; } = default!;
 
-        [JsonProperty(propertyName: "price")]
+        [JsonPropertyName(name: @"price")]
         public decimal? Price { get; set; }
 
-        [JsonProperty(propertyName: "size")]
+        [JsonPropertyName(name: @"size")]
 
         // ReSharper disable once RedundantDefaultMemberInitializer
         public string Size { get; set; } = default!;
 
-        [JsonProperty(propertyName: "time")]
+        [JsonPropertyName(name: @"time")]
         public DateTime? Time { get; set; }
 
-        [JsonProperty(propertyName: "trade_id")]
+        [JsonPropertyName(name: @"trade_id")]
         public long TradeId { get; set; }
 
-        [JsonProperty(propertyName: "volume")]
+        [JsonPropertyName(name: @"volume")]
         public decimal? Volume { get; set; }
     }
 }
