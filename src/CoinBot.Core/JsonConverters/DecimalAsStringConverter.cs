@@ -9,19 +9,24 @@ namespace CoinBot.Core.JsonConverters
     {
         public override decimal Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            if (reader.TokenType != JsonTokenType.String)
+            if (reader.TokenType == JsonTokenType.Number)
             {
-                throw new JsonException($"{typeof(decimal).Name} parameters must be passed as strings");
+                return reader.GetDecimal();
             }
 
-            string s = reader.GetString();
-
-            if (!decimal.TryParse(s, out decimal converted))
+            if (reader.TokenType == JsonTokenType.String)
             {
-                throw new JsonException($"Can't convert {s} to {typeof(decimal).Name}");
+                string s = reader.GetString();
+
+                if (!decimal.TryParse(s, out decimal converted))
+                {
+                    throw new JsonException($"Can't convert {s} to {typeof(decimal).Name}");
+                }
+
+                return converted;
             }
 
-            return converted;
+            throw new JsonException($"{typeof(decimal).Name} parameters must be passed as strings");
         }
 
         public override void Write(Utf8JsonWriter writer, decimal value, JsonSerializerOptions options)

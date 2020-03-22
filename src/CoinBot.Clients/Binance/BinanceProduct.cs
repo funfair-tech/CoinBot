@@ -1,118 +1,118 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace CoinBot.Clients.Binance
 {
     [SuppressMessage(category: "Microsoft.Performance", checkId: "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Used as data packet")]
     internal sealed class BinanceProduct
     {
-        [JsonProperty(propertyName: "symbol")]
+        [JsonPropertyName(name: @"symbol")]
 
         // ReSharper disable once RedundantDefaultMemberInitializer
         public string Symbol { get; set; } = default!;
 
-        [JsonProperty(propertyName: "quoteAssetName")]
+        [JsonPropertyName(name: @"quoteAssetName")]
 
         // ReSharper disable once RedundantDefaultMemberInitializer
         public string QuoteAssetName { get; set; } = default!;
 
-        [JsonProperty(propertyName: "tradedMoney")]
+        [JsonPropertyName(name: @"tradedMoney")]
         public double TradedMoney { get; set; }
 
-        [JsonProperty(propertyName: "baseAssetUnit")]
+        [JsonPropertyName(name: @"baseAssetUnit")]
 
         // ReSharper disable once RedundantDefaultMemberInitializer
         public string BaseAssetUnit { get; set; } = default!;
 
-        [JsonProperty(propertyName: "baseAssetName")]
+        [JsonPropertyName(name: @"baseAssetName")]
 
         // ReSharper disable once RedundantDefaultMemberInitializer
         public string BaseAssetName { get; set; } = default!;
 
-        [JsonProperty(propertyName: "baseAsset")]
+        [JsonPropertyName(name: @"baseAsset")]
 
         // ReSharper disable once RedundantDefaultMemberInitializer
         public string BaseAsset { get; set; } = default!;
 
-        [JsonProperty(propertyName: "tickSize")]
+        [JsonPropertyName(name: @"tickSize")]
 
         // ReSharper disable once RedundantDefaultMemberInitializer
         public string TickSize { get; set; } = default!;
 
-        [JsonProperty(propertyName: "prevClose")]
+        [JsonPropertyName(name: @"prevClose")]
         public decimal? PrevClose { get; set; }
 
-        [JsonProperty(propertyName: "activeBuy")]
-        public long ActiveBuy { get; set; }
+        [JsonPropertyName(name: @"activeBuy")]
+        public decimal ActiveBuy { get; set; }
 
-        [JsonProperty(propertyName: "high")]
+        [JsonPropertyName(name: @"high")]
 
         // ReSharper disable once RedundantDefaultMemberInitializer
         public string High { get; set; } = default!;
 
-        [JsonProperty(propertyName: "lastAggTradeId")]
+        [JsonPropertyName(name: @"lastAggTradeId")]
         public long LastAggTradeId { get; set; }
 
-        [JsonProperty(propertyName: "low")]
+        [JsonPropertyName(name: @"low")]
 
         // ReSharper disable once RedundantDefaultMemberInitializer
         public string Low { get; set; } = default!;
 
-        [JsonProperty(propertyName: "matchingUnitType")]
+        [JsonPropertyName(name: @"matchingUnitType")]
 
         // ReSharper disable once RedundantDefaultMemberInitializer
         public string MatchingUnitType { get; set; } = default!;
 
-        [JsonProperty(propertyName: "close")]
+        [JsonPropertyName(name: @"close")]
 
         // ReSharper disable once RedundantDefaultMemberInitializer
         public string Close { get; set; } = default!;
 
-        [JsonProperty(propertyName: "quoteAsset")]
+        [JsonPropertyName(name: @"quoteAsset")]
 
         // ReSharper disable once RedundantDefaultMemberInitializer
         public string QuoteAsset { get; set; } = default!;
 
-        [JsonProperty(propertyName: "active")]
+        [JsonPropertyName(name: @"active")]
         public bool Active { get; set; }
 
-        [JsonProperty(propertyName: "minTrade")]
+        [JsonPropertyName(name: @"minTrade")]
 
         // ReSharper disable once RedundantDefaultMemberInitializer
-        public string MinTrade { get; set; } = default!;
+        public decimal MinTrade { get; set; }
 
-        [JsonProperty(propertyName: "activeSell")]
+        [JsonPropertyName(name: @"activeSell")]
         public double ActiveSell { get; set; }
 
-        [JsonProperty(propertyName: "withdrawFee")]
+        [JsonPropertyName(name: @"withdrawFee")]
 
         // ReSharper disable once RedundantDefaultMemberInitializer
         public string WithdrawFee { get; set; } = default!;
 
-        [JsonProperty(propertyName: "volume")]
-        public decimal? Volume { get; set; }
+        [JsonPropertyName(name: @"volume")]
+        public decimal Volume { get; set; }
 
-        [JsonProperty(propertyName: "decimalPlaces")]
+        [JsonPropertyName(name: @"decimalPlaces")]
         public long DecimalPlaces { get; set; }
 
-        [JsonProperty(propertyName: "quoteAssetUnit")]
+        [JsonPropertyName(name: @"quoteAssetUnit")]
 
         // ReSharper disable once RedundantDefaultMemberInitializer
         public string QuoteAssetUnit { get; set; } = default!;
 
-        [JsonProperty(propertyName: "open")]
+        [JsonPropertyName(name: @"open")]
 
         // ReSharper disable once RedundantDefaultMemberInitializer
         public string Open { get; set; } = default!;
 
-        [JsonProperty(propertyName: "status")]
+        [JsonPropertyName(name: @"status")]
 
         // ReSharper disable once RedundantDefaultMemberInitializer
         public string Status { get; set; } = default!;
 
-        [JsonProperty(propertyName: "minQty")]
+        [JsonPropertyName(name: @"minQty")]
 
         // ReSharper disable once RedundantDefaultMemberInitializer
-        public string MinQty { get; set; } = default!;
+        public double MinQty { get; set; } = default!;
     }
 }
