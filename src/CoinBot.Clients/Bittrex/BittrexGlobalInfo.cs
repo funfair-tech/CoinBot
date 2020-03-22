@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 using CoinBot.Core;
-using Newtonsoft.Json;
 
 namespace CoinBot.Clients.Bittrex
 {
     /// <inheritdoc />
-    [JsonObject]
     public sealed class BittrexGlobalInfo : IGlobalInfo
     {
         /// <inheritdoc />
@@ -35,7 +33,6 @@ namespace CoinBot.Clients.Bittrex
 
         /// <inheritdoc />
         [JsonPropertyName(name: @"last_updated")]
-        [Newtonsoft.Json.JsonConverter(typeof(UnixTimeConverter))]
         public DateTime? LastUpdated { get; set; }
     }
 }
