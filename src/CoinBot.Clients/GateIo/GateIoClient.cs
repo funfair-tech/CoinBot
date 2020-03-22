@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using CoinBot.Core;
 using CoinBot.Core.Extensions;
+using CoinBot.Core.JsonConverters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace CoinBot.Clients.GateIo
 {
@@ -31,20 +33,19 @@ namespace CoinBot.Clients.GateIo
         /// <summary>
         ///     The <see cref="JsonSerializerSettings" />.
         /// </summary>
-        private readonly JsonSerializerSettings _serializerSettings;
+        private readonly JsonSerializerOptions _serializerSettings;
 
         public GateIoClient(IHttpClientFactory httpClientFactory, ILogger<GateIoClient> logger, CurrencyManager currencyManager)
             : base(httpClientFactory, HTTP_CLIENT_NAME, logger)
         {
             this._currencyManager = currencyManager ?? throw new ArgumentNullException(nameof(currencyManager));
 
-            this._serializerSettings = new JsonSerializerSettings
+            this._serializerSettings = new JsonSerializerOptions
                                        {
-                                           Error = (sender, args) =>
-                                                   {
-                                                       Exception ex = args.ErrorContext.Error.GetBaseException();
-                                                       this.Logger.LogError(new EventId(args.ErrorContext.Error.HResult), ex, ex.Message);
-                                                   }
+                                           IgnoreNullValues = true,
+                                           PropertyNameCaseInsensitive = false,
+                                           PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                                           Converters = {new DecimalAsStringConverter()}
                                        };
         }
 
@@ -58,7 +59,7 @@ namespace CoinBot.Clients.GateIo
         {
             try
             {
-                List<GateIoTicker> tickers = await this.GetTickersAsync();
+                IReadOnlyList<GateIoTicker> tickers = await this.GetTickersAsync();
 
                 return tickers.Select(this.CreateMarketSummaryDto)
                               .RemoveNulls()
@@ -100,7 +101,7 @@ namespace CoinBot.Clients.GateIo
         ///     Get the market summaries.
         /// </summary>
         /// <returns></returns>
-        private async Task<List<GateIoTicker>> GetTickersAsync()
+        private async Task<IReadOnlyList<GateIoTicker>> GetTickersAsync()
         {
             HttpClient httpClient = this.CreateHttpClient();
 
@@ -109,33 +110,24 @@ namespace CoinBot.Clients.GateIo
                 response.EnsureSuccessStatusCode();
 
                 string json = await response.Content.ReadAsStringAsync();
-                JObject jResponse = JObject.Parse(json);
-                List<GateIoTicker> tickers = new List<GateIoTicker>();
 
-                foreach (KeyValuePair<string, JToken?> jToken in jResponse)
+                try
                 {
-                    if (jToken.Value == null)
+                    Dictionary<string, GateIoTicker> items = JsonSerializer.Deserialize<Dictionary<string, GateIoTicker>>(json, this._serializerSettings);
+
+                    foreach (KeyValuePair<string, GateIoTicker> item in items)
                     {
-                        continue;
+                        item.Value.Pair = item.Key;
                     }
 
-                    JObject? obj = JObject.Parse(jToken.Value.ToString());
-
-                    if (obj == null)
-                    {
-                        continue;
-                    }
-
-                    GateIoTicker? ticker = JsonConvert.DeserializeObject<GateIoTicker>(obj.ToString(), this._serializerSettings);
-
-                    if (ticker != null)
-                    {
-                        ticker.Pair = jToken.Key;
-                        tickers.Add(ticker);
-                    }
+                    return items.Values.ToArray();
                 }
+                catch (Exception exception)
+                {
+                    this.Logger.LogError(new EventId(exception.HResult), exception, message: "Could not deserialise");
 
-                return tickers;
+                    return Array.Empty<GateIoTicker>();
+                }
             }
         }
 

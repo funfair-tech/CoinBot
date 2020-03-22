@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace CoinBot.Clients.GateIo
 {
@@ -7,33 +7,33 @@ namespace CoinBot.Clients.GateIo
         // ReSharper disable once RedundantDefaultMemberInitializer
         public string Pair { get; set; } = default!;
 
-        [JsonProperty(propertyName: "result")]
+        [JsonPropertyName(name: @"result")]
 
         // ReSharper disable once RedundantDefaultMemberInitializer
         public string Result { get; set; } = default!;
 
-        [JsonProperty(propertyName: "last")]
+        [JsonPropertyName(name: @"last")]
         public decimal? Last { get; set; }
 
-        [JsonProperty(propertyName: "lowestAsk")]
+        [JsonPropertyName(name: @"lowestAsk")]
         public decimal? LowestAsk { get; set; }
 
-        [JsonProperty(propertyName: "highestBid")]
+        [JsonPropertyName(name: @"highestBid")]
         public decimal? HighestBid { get; set; }
 
-        [JsonProperty(propertyName: "percentChange")]
+        [JsonPropertyName(name: @"percentChange")]
         public decimal? PercentChange { get; set; }
 
-        [JsonProperty(propertyName: "baseVolume")]
+        [JsonPropertyName(name: @"baseVolume")]
         public decimal? BaseVolume { get; set; }
 
-        [JsonProperty(propertyName: "quoteVolume")]
+        [JsonPropertyName(name: @"quoteVolume")]
         public decimal? QuoteVolume { get; set; }
 
-        [JsonProperty(propertyName: "high24hr")]
+        [JsonPropertyName(name: @"high24hr")]
         public decimal? High24Hr { get; set; }
 
-        [JsonProperty(propertyName: "low24hr")]
+        [JsonPropertyName(name: @"low24hr")]
         public decimal? Low24Hr { get; set; }
     }
 }
