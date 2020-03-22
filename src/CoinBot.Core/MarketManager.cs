@@ -166,7 +166,7 @@ namespace CoinBot.Core
 
         private async Task UpdateOneClientAsync(IMarketClient client)
         {
-            if (this._exchanges.TryGetValue(client.Name, out Exchange exchange))
+            if (this._exchanges.TryGetValue(client.Name, out Exchange? exchange))
             {
                 this.Logger.LogInformation($"Start updating exchange '{client.Name}'.");
                 Stopwatch watch = new Stopwatch();

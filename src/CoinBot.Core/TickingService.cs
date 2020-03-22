@@ -47,7 +47,7 @@ namespace CoinBot.Core
 
         protected abstract Task TickAsync();
 
-        private void QueueTick(object state)
+        private void QueueTick(object? state)
         {
             try
             {
