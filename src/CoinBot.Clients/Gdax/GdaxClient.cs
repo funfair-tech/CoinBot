@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using CoinBot.Core;
 using CoinBot.Core.Extensions;
+using CoinBot.Core.JsonConverters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
 namespace CoinBot.Clients.Gdax
 {
@@ -26,22 +27,21 @@ namespace CoinBot.Clients.Gdax
         private readonly CurrencyManager _currencyManager;
 
         /// <summary>
-        ///     The <see cref="JsonSerializerSettings" />.
+        ///     The <see cref="JsonSerializerOptions" />.
         /// </summary>
-        private readonly JsonSerializerSettings _serializerSettings;
+        private readonly JsonSerializerOptions _serializerSettings;
 
         public GdaxClient(IHttpClientFactory httpClientFactory, ILogger<GdaxClient> logger, CurrencyManager currencyManager)
             : base(httpClientFactory, HTTP_CLIENT_NAME, logger)
         {
             this._currencyManager = currencyManager ?? throw new ArgumentNullException(nameof(currencyManager));
 
-            this._serializerSettings = new JsonSerializerSettings
+            this._serializerSettings = new JsonSerializerOptions
                                        {
-                                           Error = (sender, args) =>
-                                                   {
-                                                       Exception ex = args.ErrorContext.Error.GetBaseException();
-                                                       this.Logger.LogError(new EventId(args.ErrorContext.Error.HResult), ex, ex.Message);
-                                                   }
+                                           IgnoreNullValues = true,
+                                           PropertyNameCaseInsensitive = false,
+                                           PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                                           Converters = {new DecimalAsStringConverter()}
                                        };
         }
 
@@ -105,16 +105,22 @@ namespace CoinBot.Clients.Gdax
                 {
                     response.EnsureSuccessStatusCode();
 
-                    GdaxTicker? ticker = JsonConvert.DeserializeObject<GdaxTicker>(await response.Content.ReadAsStringAsync(), this._serializerSettings);
+                    string json = await response.Content.ReadAsStringAsync();
 
-                    if (ticker == null)
+                    try
                     {
+                        GdaxTicker? ticker = JsonSerializer.Deserialize<GdaxTicker>(json, this._serializerSettings);
+
+                        ticker.ProductId = productId;
+
+                        return ticker;
+                    }
+                    catch (Exception exception)
+                    {
+                        this.Logger.LogError(new EventId(exception.HResult), exception, message: "Failed to Deserialize");
+
                         return null;
                     }
-
-                    ticker.ProductId = productId;
-
-                    return ticker;
                 }
             }
             catch (Exception exception)
@@ -139,9 +145,18 @@ namespace CoinBot.Clients.Gdax
 
                 string json = await response.Content.ReadAsStringAsync();
 
-                IReadOnlyList<GdaxProduct>? items = JsonConvert.DeserializeObject<List<GdaxProduct>>(json, this._serializerSettings);
+                try
+                {
+                    IReadOnlyList<GdaxProduct>? items = JsonSerializer.Deserialize<List<GdaxProduct>>(json, this._serializerSettings);
 
-                return items ?? Array.Empty<GdaxProduct>();
+                    return items ?? Array.Empty<GdaxProduct>();
+                }
+                catch (Exception exception)
+                {
+                    this.Logger.LogError(new EventId(exception.HResult), exception, message: "Failed to deserialize");
+
+                    return Array.Empty<GdaxProduct>();
+                }
             }
         }
 
