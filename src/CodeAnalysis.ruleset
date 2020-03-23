@@ -193,6 +193,9 @@
         <Rule Id="S4275" Action="None"/>
         <Rule Id="S4457" Action="None"/>
     </Rules>
+    <Rules AnalyzerId="Roslynator.Analyzers" RuleNamespace="Roslynator.Analyzers">
+        <Rule Id="RCS1090" Action="None"/>
+    </Rules>
     <Rules AnalyzerId="FunFair.CodeAnalysis" RuleNamespace="FunFair.CodeAnalysis">
         <Rule Id="FFS0001" Action="Error"/>
         <Rule Id="FFS0002" Action="Error"/>
