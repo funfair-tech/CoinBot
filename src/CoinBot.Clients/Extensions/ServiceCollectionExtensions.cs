@@ -4,7 +4,6 @@ using CoinBot.Clients.FunFair;
 using CoinBot.Clients.GateIo;
 using CoinBot.Clients.Gdax;
 using CoinBot.Clients.Kraken;
-using CoinBot.Clients.Liqui;
 using CoinBot.Clients.Poloniex;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,7 +32,6 @@ namespace CoinBot.Clients.Extensions
             GdaxClient.Register(services);
             GateIoClient.Register(services);
             KrakenClient.Register(services);
-            LiquiClient.Register(services);
             PoloniexClient.Register(services);
 
             FunFairClientBase.Register(services,

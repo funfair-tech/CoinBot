@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using CoinBot.Core;
+using CoinBot.Core.JsonConverters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
 namespace CoinBot.Clients.CoinMarketCap
 {
@@ -19,20 +20,19 @@ namespace CoinBot.Clients.CoinMarketCap
         private static readonly Uri Endpoint = new Uri(uriString: "https://api.coinmarketcap.com/v1/", UriKind.Absolute);
 
         /// <summary>
-        ///     The <see cref="JsonSerializerSettings" />.
+        ///     The <see cref="JsonSerializerOptions" />.
         /// </summary>
-        private readonly JsonSerializerSettings _serializerSettings;
+        private readonly JsonSerializerOptions _serializerSettings;
 
         public CoinMarketCapClient(IHttpClientFactory httpClientFactory, ILogger<CoinMarketCapClient> logger)
             : base(httpClientFactory, HTTP_CLIENT_NAME, logger)
         {
-            this._serializerSettings = new JsonSerializerSettings
+            this._serializerSettings = new JsonSerializerOptions
                                        {
-                                           Error = (sender, args) =>
-                                                   {
-                                                       Exception ex = args.ErrorContext.Error.GetBaseException();
-                                                       this.Logger.LogError(new EventId(args.ErrorContext.Error.HResult), ex, ex.Message);
-                                                   }
+                                           IgnoreNullValues = true,
+                                           PropertyNameCaseInsensitive = false,
+                                           PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                                           Converters = {new DecimalAsStringConverter()}
                                        };
         }
 
@@ -53,7 +53,7 @@ namespace CoinBot.Clients.CoinMarketCap
 
                     string json = await response.Content.ReadAsStringAsync();
 
-                    return JsonConvert.DeserializeObject<List<CoinMarketCapCoin>>(json, this._serializerSettings) ?? new List<CoinMarketCapCoin>();
+                    return JsonSerializer.Deserialize<List<CoinMarketCapCoin>>(json, this._serializerSettings) ?? new List<CoinMarketCapCoin>();
                 }
             }
             catch (Exception e)
@@ -79,7 +79,9 @@ namespace CoinBot.Clients.CoinMarketCap
                 {
                     response.EnsureSuccessStatusCode();
 
-                    return JsonConvert.DeserializeObject<CoinMarketCapGlobalInfo>(await response.Content.ReadAsStringAsync(), this._serializerSettings);
+                    string json = await response.Content.ReadAsStringAsync();
+
+                    return JsonSerializer.Deserialize<CoinMarketCapGlobalInfo>(json, this._serializerSettings);
                 }
             }
             catch (Exception e)

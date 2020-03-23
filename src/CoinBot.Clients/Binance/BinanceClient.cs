@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using CoinBot.Core;
 using CoinBot.Core.Extensions;
+using CoinBot.Core.JsonConverters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
 namespace CoinBot.Clients.Binance
 {
@@ -27,22 +29,21 @@ namespace CoinBot.Clients.Binance
         private readonly CurrencyManager _currencyManager;
 
         /// <summary>
-        ///     The <see cref="JsonSerializerSettings" />.
+        ///     The <see cref="JsonSerializerOptions" />.
         /// </summary>
-        private readonly JsonSerializerSettings _serializerSettings;
+        private readonly JsonSerializerOptions _serializerSettings;
 
         public BinanceClient(IHttpClientFactory httpClientFactory, ILogger<BinanceClient> logger, CurrencyManager currencyManager)
             : base(httpClientFactory, HTTP_CLIENT_NAME, logger)
         {
             this._currencyManager = currencyManager ?? throw new ArgumentNullException(nameof(currencyManager));
 
-            this._serializerSettings = new JsonSerializerSettings
+            this._serializerSettings = new JsonSerializerOptions
                                        {
-                                           Error = (sender, args) =>
-                                                   {
-                                                       Exception ex = args.ErrorContext.Error.GetBaseException();
-                                                       this.Logger.LogError(new EventId(args.ErrorContext.Error.HResult), ex, ex.Message);
-                                                   }
+                                           IgnoreNullValues = true,
+                                           PropertyNameCaseInsensitive = false,
+                                           PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                                           Converters = {new DecimalAsStringConverter()}
                                        };
         }
 
@@ -116,28 +117,28 @@ namespace CoinBot.Clients.Binance
 
                 string json = await response.Content.ReadAsStringAsync();
 
-                Wrapper? packet = JsonConvert.DeserializeObject<Wrapper>(json, this._serializerSettings);
+                try
+                {
+                    Wrapper packet = JsonSerializer.Deserialize<Wrapper>(json, this._serializerSettings);
 
-                return (IReadOnlyList<BinanceProduct>?) packet?.Data ?? Array.Empty<BinanceProduct>();
+                    return packet.Data ?? Array.Empty<BinanceProduct>();
+                }
+                catch (Exception exception)
+                {
+                    this.Logger.LogCritical(new EventId(exception.HResult), exception, message: "Could not convert packet");
 
-                // WAS:
-#if OLD
-                       JObject jObject = JObject.Parse(json);
-
-                return JsonConvert.DeserializeObject<List<BinanceProduct>>(jObject[propertyName: "data"]
-                                                                               .ToString(),
-                                                                           this._serializerSettings);
-#endif
+                    return Array.Empty<BinanceProduct>();
+                }
             }
         }
 
         [SuppressMessage(category: "Microsoft.Performance", checkId: "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Used as data packet")]
         private sealed class Wrapper
         {
-            [JsonProperty(propertyName: "data")]
+            [JsonPropertyName(name: @"data")]
 
-            // ReSharper disable once RedundantDefaultMemberInitializer
-            public List<BinanceProduct> Data { get; set; } = default!;
+            // ReSharper disable once UnusedAutoPropertyAccessor.Local
+            public BinanceProduct[]? Data { get; set; }
         }
     }
 }
