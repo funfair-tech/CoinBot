@@ -24,7 +24,19 @@ jobs:
     - name: Install MoreUtils
       run: |
         sudo apt-get install moreutils
-    - name: Convert tabs to spaces
+   - name: Install Nuget
+      run: |
+        sudo apt-get install nuget
+    - name: Get TSQL Formatter
+      run: |
+        curl http://architectshack.com/GetFile.aspx?Page=PoorMansTSqlFormatter\&File=SqlFormatter.1.6.10.zip --output sqlformatter.zip 
+        ls
+        unzip sqlformatter.zip *.exe -d sqlformatter
+        chmod +x sqlformatter/SqlFormatter.exe
+    - name: Reformat
+      run: |
+        find ./ -iname '*.sql' -type f -exec bash -c 'sqlformatter/SqlFormatter.exe "$0" /is:"    " /tc /sk /r /sac /mw:120 /b- /bjo /cb:1 /st:4 /eil- /ecs- /ecl /uk /sb:2 /ebc /ebe' {} \;
+     - name: Convert tabs to spaces
       run: |
         find ./ -iname '*.sql' -type f -exec bash -c 'expand -t 4 "$0" | sponge "$0"' {} \;
     - name: Commit files
