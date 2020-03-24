@@ -1,4 +1,4 @@
-name: Convert Tabs to spaces on SQL files
+name: Standardise MSSQL Format [FF-2107]
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     - "hotfix/*"
 
 jobs:
-  tabs-to-spaces:
+  standardise-tsql-files:
 
     runs-on: ubuntu-latest
 
@@ -42,7 +42,7 @@ jobs:
     - name: Commit files
       run: |
         git status
-        git commit --all -m"Converted Tabs to spaces" || true
+        git commit --all -m"[FF-2107] Reformat SQL Files to common format." || true
     - name: Push
       run: |
         git push "https://${{github.actor}}:${{secrets.GITHUB_PUSH_TOKEN}}@github.com/${{github.repository}}.git" "HEAD:${{ env.GIT_BRANCH }}"
