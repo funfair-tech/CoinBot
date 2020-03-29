@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using CoinBot.Core;
+using CoinBot.Core.Helpers;
 using CoinBot.Core.JsonConverters;
 
 namespace CoinBot.Clients.CoinMarketCap
@@ -27,8 +28,8 @@ namespace CoinBot.Clients.CoinMarketCap
 
         [SuppressMessage(category: "Microsoft.Design", checkId: "CA1056:UriPropertiesShouldNotBeStrings", Justification = "Model for serialization")]
         public string ImageUrl =>
-            Helpers.CurrencyImageUrl(this.Symbol)
-                   .ToString();
+            Images.CurrencyImageUrl(this.Symbol)
+                  .ToString();
 
         [JsonPropertyName(name: @"name")]
 

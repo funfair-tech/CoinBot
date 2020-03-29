@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace CoinBot.Clients.CoinMarketCap
+namespace CoinBot.Core.Helpers
 {
-    public static class Helpers
+    public static class Images
     {
         public static Uri CurrencyImageUrl(string symbol)
         {

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CoinBot.Clients.CoinMarketCap;
 using CoinBot.Core;
+using CoinBot.Core.Helpers;
 
 namespace CoinBot.Discord.Commands
 {
@@ -22,8 +22,8 @@ namespace CoinBot.Discord.Commands
         public string Id { get; }
 
         public string ImageUrl =>
-            Helpers.CurrencyImageUrl(this.Symbol)
-                   .ToString();
+            Images.CurrencyImageUrl(this.Symbol)
+                  .ToString();
 
         public string Name { get; }
 

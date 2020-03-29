@@ -8,6 +8,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using CoinBot.Core;
 using CoinBot.Core.Extensions;
+using CoinBot.Core.Helpers;
 using CoinBot.Core.JsonConverters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -51,16 +52,51 @@ namespace CoinBot.Clients.Kraken
             try
             {
                 IReadOnlyList<KrakenAsset> assets = await this.GetAssetsAsync();
-                IReadOnlyList<KrakenPair> pairs = await this.GetPairsAsync();
 
-                static bool IsValid(KrakenPair pair)
+                bool IsValid(KrakenPair pair)
                 {
                     // todo: can't get kraken details on these markets
-                    return !pair.PairId.EndsWith(value: ".d", StringComparison.Ordinal);
+                    if (pair.PairId.EndsWith(value: ".d", StringComparison.Ordinal))
+                    {
+                        return false;
+                    }
+
+                    string? bc = FindCurrency(assets, pair.BaseCurrency);
+
+                    if (bc == null)
+                    {
+                        return false;
+                    }
+
+                    string? qc = FindCurrency(assets, pair.QuoteCurrency);
+
+                    if (qc == null)
+                    {
+                        return false;
+                    }
+
+                    Currency? baseCurrency = builder.Get(bc);
+
+                    if (baseCurrency == null)
+                    {
+                        return false;
+                    }
+
+                    Currency? quoteCurrency = builder.Get(qc);
+
+                    if (quoteCurrency == null)
+                    {
+                        return false;
+                    }
+
+                    return true;
                 }
 
-                KrakenTicker?[] tickers = await Task.WhenAll(pairs.Where(IsValid)
-                                                                  .Select(this.GetTickerAsync));
+                IReadOnlyList<KrakenPair> pairs = await this.GetPairsAsync();
+
+                IReadOnlyList<KrakenTicker?> tickers = await Batched.WhenAllAsync(concurrent: 5,
+                                                                                  pairs.Where(IsValid)
+                                                                                       .Select(this.GetTickerAsync));
 
                 return tickers.RemoveNulls()
                               .Select(selector: m => this.CreateMarketSummaryDto(assets, m, builder))
@@ -77,6 +113,11 @@ namespace CoinBot.Clients.Kraken
 
         private MarketSummaryDto? CreateMarketSummaryDto(IReadOnlyList<KrakenAsset> assets, KrakenTicker ticker, ICoinBuilder builder)
         {
+            if (ticker.Last == null || ticker.Volume == null)
+            {
+                return null;
+            }
+
             string? baseCurrencySymbol = FindCurrency(assets, ticker.BaseCurrency);
 
             if (baseCurrencySymbol == null)
@@ -239,10 +280,15 @@ namespace CoinBot.Clients.Kraken
                             return null;
                         }
 
-                        item.Result.BaseCurrency = pair.BaseCurrency;
-                        item.Result.QuoteCurrency = pair.QuoteCurrency;
+                        if (item.Result.TryGetValue(pair.PairId, out KrakenTicker? ticker))
+                        {
+                            ticker.BaseCurrency = pair.BaseCurrency;
+                            ticker.QuoteCurrency = pair.QuoteCurrency;
 
-                        return item.Result;
+                            return ticker;
+                        }
+
+                        return null;
                     }
                     catch (Exception exception)
                     {
@@ -278,7 +324,7 @@ namespace CoinBot.Clients.Kraken
         private sealed class KrakenTickerWrapper
         {
             [JsonPropertyName(name: @"result")]
-            public KrakenTicker? Result { get; set; }
+            public Dictionary<string, KrakenTicker>? Result { get; set; }
         }
 
         [SuppressMessage(category: "Microsoft.Performance", checkId: "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Used as data packet")]

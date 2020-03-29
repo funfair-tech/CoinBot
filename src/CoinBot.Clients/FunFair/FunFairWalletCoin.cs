@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using CoinBot.Clients.CoinMarketCap;
 using CoinBot.Core;
+using CoinBot.Core.Helpers;
 
 namespace CoinBot.Clients.FunFair
 {
@@ -20,8 +20,8 @@ namespace CoinBot.Clients.FunFair
 
         [SuppressMessage(category: "Microsoft.Design", checkId: "CA1056:UriPropertiesShouldNotBeStrings", Justification = "Model for serialization")]
         public string ImageUrl =>
-            Helpers.CurrencyImageUrl(this.Symbol)
-                   .ToString();
+            Images.CurrencyImageUrl(this.Symbol)
+                  .ToString();
 
         public string Name { get; }
 

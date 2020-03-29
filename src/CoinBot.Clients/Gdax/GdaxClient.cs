@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using CoinBot.Core;
 using CoinBot.Core.Extensions;
+using CoinBot.Core.Helpers;
 using CoinBot.Core.JsonConverters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -46,7 +47,7 @@ namespace CoinBot.Clients.Gdax
             try
             {
                 IReadOnlyList<GdaxProduct> products = await this.GetProductsAsync();
-                GdaxTicker?[] tickers = await Task.WhenAll(products.Select(selector: product => this.GetTickerAsync(product.Id)));
+                IReadOnlyList<GdaxTicker?> tickers = await Batched.WhenAllAsync(concurrent: 2, products.Select(selector: product => this.GetTickerAsync(product.Id)));
 
                 return tickers.RemoveNulls()
                               .Select(selector: ticker => this.CreateMarketSummaryDto(ticker, builder))
