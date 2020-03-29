@@ -63,12 +63,7 @@ namespace CoinBot.Discord.Commands
                         }
                         else
                         {
-                            ICoinInfo? walletDetails = currency.Getdetails<FunFairWalletCoin>() ?? (ICoinInfo) new InterpretedCoinInfo(
-                                currency,
-                                this._marketManager,
-                                this._currencyManager.Get(nameOrSymbol: @"USD"),
-                                this._currencyManager.Get(nameOrSymbol: @"ETH"),
-                                this._currencyManager.Get(nameOrSymbol: @"BTC"));
+                            ICoinInfo walletDetails = this.GetCoinInfo(currency);
 
                             AddAuthor(builder);
 
@@ -95,6 +90,18 @@ namespace CoinBot.Discord.Commands
                     await this.ReplyAsync(message: "oops, something went wrong, sorry!");
                 }
             }
+        }
+
+        private ICoinInfo GetCoinInfo(Currency currency)
+        {
+            ICoinInfo? walletDetails = currency.Getdetails<FunFairWalletCoin>() ?? (ICoinInfo) new InterpretedCoinInfo(
+                currency,
+                this._marketManager,
+                this._currencyManager.Get(nameOrSymbol: @"USD"),
+                this._currencyManager.Get(nameOrSymbol: @"ETH"),
+                this._currencyManager.Get(nameOrSymbol: @"BTC"));
+
+            return walletDetails;
         }
 
         [Command(text: "snapshot")]
