@@ -16,11 +16,13 @@ namespace CoinBot.Discord.Commands
     public sealed class CoinCommands : CommandBase
     {
         private readonly CurrencyManager _currencyManager;
-        private readonly ILogger _logger;
+        private readonly ILogger<CoinCommands> _logger;
+        private readonly MarketManager _marketManager;
 
-        public CoinCommands(CurrencyManager currencyManager, ILogger logger)
+        public CoinCommands(CurrencyManager currencyManager, MarketManager marketManager, ILogger<CoinCommands> logger)
         {
             this._currencyManager = currencyManager;
+            this._marketManager = marketManager;
             this._logger = logger;
         }
 
@@ -35,7 +37,7 @@ namespace CoinBot.Discord.Commands
                 {
                     Currency? currency = this._currencyManager.Get(symbol);
 
-                    if (currency != null)
+                    if (currency != null && !currency.IsFiat)
                     {
                         EmbedBuilder builder = new EmbedBuilder();
                         builder.WithTitle(currency.GetTitle());
@@ -61,21 +63,23 @@ namespace CoinBot.Discord.Commands
                         }
                         else
                         {
-                            FunFairWalletCoin? walletDetails = currency.Getdetails<FunFairWalletCoin>();
+                            ICoinInfo? walletDetails = currency.Getdetails<FunFairWalletCoin>() ?? (ICoinInfo) new InterpretedCoinInfo(
+                                currency,
+                                this._marketManager,
+                                this._currencyManager.Get(nameOrSymbol: @"USD"),
+                                this._currencyManager.Get(nameOrSymbol: @"ETH"),
+                                this._currencyManager.Get(nameOrSymbol: @"BTC"));
 
-                            if (walletDetails != null)
+                            AddAuthor(builder);
+
+                            if (currency.ImageUrl != null)
                             {
-                                AddAuthor(builder);
-
-                                if (currency.ImageUrl != null)
-                                {
-                                    builder.WithThumbnailUrl(currency.ImageUrl);
-                                }
-
-                                builder.AddField(name: "Price", walletDetails.GetPrice());
-
-                                AddFooter(builder, walletDetails.LastUpdated);
+                                builder.WithThumbnailUrl(currency.ImageUrl);
                             }
+
+                            builder.AddField(name: "Price", walletDetails.GetPrice());
+
+                            AddFooter(builder, walletDetails.LastUpdated);
                         }
 
                         await this.ReplyAsync(string.Empty, isTTS: false, builder.Build());

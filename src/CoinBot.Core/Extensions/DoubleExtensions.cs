@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 
 namespace CoinBot.Core.Extensions
 {
@@ -16,6 +17,24 @@ namespace CoinBot.Core.Extensions
         ///     The US <see cref="CultureInfo" />.
         /// </summary>
         private static readonly CultureInfo UsdCulture = new CultureInfo(name: "en-US");
+
+        /// <summary>
+        ///     Formats the <paramref name="d" /> as a USD currency.
+        /// </summary>
+        /// <param name="d">The value to format.</param>
+        /// <param name="precision">The precision to use.</param>
+        /// <returns></returns>
+        public static string AsUsdPrice(this decimal? d, int? precision = null)
+        {
+            double? dbl = null;
+
+            if (d != null)
+            {
+                dbl = Convert.ToDouble(d.Value);
+            }
+
+            return dbl.AsUsdPrice(precision);
+        }
 
         /// <summary>
         ///     Formats the <paramref name="d" /> as a USD currency.

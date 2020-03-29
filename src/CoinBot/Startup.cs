@@ -56,13 +56,7 @@ namespace CoinBot
                                                   .CreateLogger();
 
             services.AddOptions()
-                    .AddSingleton(implementationFactory: provider =>
-                                                         {
-                                                             // set up an ILogger
-                                                             ILoggerFactory loggerFactory = new LoggerFactory().AddSerilog();
-
-                                                             return loggerFactory.CreateLogger(nameof(CoinBot));
-                                                         })
+                    .AddLogging()
                     .AddMemoryCache()
                     .AddClients(this._configuration)
                     .AddCore(this._configuration)
@@ -76,6 +70,10 @@ namespace CoinBot
         /// <returns></returns>
         private static async Task RunAsync(IServiceProvider provider)
         {
+            ILoggerFactory loggerFactory = provider.GetRequiredService<ILoggerFactory>();
+
+            loggerFactory.AddSerilog();
+
             //set up a task completion source so we can quit on CTRL+C
             TaskCompletionSource<bool> exitSource = new TaskCompletionSource<bool>();
             Console.CancelKeyPress += (sender, eventArgs) =>

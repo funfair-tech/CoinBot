@@ -42,6 +42,8 @@ namespace CoinBot.Core
         [SuppressMessage(category: "Microsoft.Design", checkId: "CA1056:UriPropertiesShouldNotBeStrings", Justification = "Model for serialization")]
         public string? ImageUrl { get; set; }
 
+        public bool IsFiat { get; set; }
+
         public void AddDetails(ICoinInfo details)
         {
             this._details.Add(details);

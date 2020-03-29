@@ -12,9 +12,9 @@ namespace CoinBot.Discord.Commands
     public sealed class PriceCommands : CommandBase
     {
         private readonly CurrencyManager _currencyManager;
-        private readonly ILogger _logger;
+        private readonly ILogger<PriceCommands> _logger;
 
-        public PriceCommands(CurrencyManager currencyManager, ILogger logger)
+        public PriceCommands(CurrencyManager currencyManager, ILogger<PriceCommands> logger)
         {
             this._currencyManager = currencyManager;
             this._logger = logger;
