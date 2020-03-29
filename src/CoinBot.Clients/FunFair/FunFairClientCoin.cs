@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using CoinBot.Core;
+using CoinBot.Core.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace CoinBot.Clients.FunFair
@@ -18,9 +19,10 @@ namespace CoinBot.Clients.FunFair
         /// <inheritdoc />
         public async Task<IReadOnlyCollection<ICoinInfo>> GetCoinInfoAsync()
         {
-            IReadOnlyCollection<FunFairWalletPriceResultPairDto> source = await this.GetBasePricesAsync();
+            IReadOnlyCollection<FunFairWalletPriceResultPairDto?> source = await this.GetBasePricesAsync();
 
-            return source.Where(predicate: price => price.FiatCurrencySymbol == @"USD")
+            return source.RemoveNulls()
+                         .Where(predicate: price => price.FiatCurrencySymbol == @"USD")
                          .Select(this.CreateCoinInfo)
                          .ToList();
         }

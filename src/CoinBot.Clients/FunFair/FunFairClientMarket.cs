@@ -25,9 +25,10 @@ namespace CoinBot.Clients.FunFair
         /// <inheritdoc />
         public async Task<IReadOnlyCollection<MarketSummaryDto>> GetAsync()
         {
-            IReadOnlyCollection<FunFairWalletPriceResultPairDto> products = await this.GetBasePricesAsync();
+            IReadOnlyCollection<FunFairWalletPriceResultPairDto?> products = await this.GetBasePricesAsync();
 
-            return products.Select(this.CreateMarketSummaryDto)
+            return products.RemoveNulls()
+                           .Select(this.CreateMarketSummaryDto)
                            .RemoveNulls()
                            .ToList();
         }

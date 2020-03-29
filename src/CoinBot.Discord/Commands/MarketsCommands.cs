@@ -142,7 +142,7 @@ namespace CoinBot.Discord.Commands
             builder.Append(value: "```");
         }
 
-        private bool GetCurrencies(string input, [NotNullWhen(returnValue: true)] out Currency? primaryCurrency, [NotNullWhen(returnValue: true)] out Currency? secondaryCurrency)
+        private bool GetCurrencies(string input, [NotNullWhen(returnValue: true)] out Currency? primaryCurrency, out Currency? secondaryCurrency)
         {
             primaryCurrency = null;
             secondaryCurrency = null;
@@ -165,7 +165,7 @@ namespace CoinBot.Discord.Commands
                 secondaryCurrency = this._currencyManager.Get(second);
             }
 
-            return true;
+            return primaryCurrency != null;
         }
     }
 }

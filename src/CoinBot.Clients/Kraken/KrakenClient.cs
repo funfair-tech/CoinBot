@@ -66,10 +66,11 @@ namespace CoinBot.Clients.Kraken
                     return !pair.PairId.EndsWith(value: ".d", StringComparison.Ordinal);
                 }
 
-                KrakenTicker[] tickers = await Task.WhenAll(pairs.Where(IsValid)
-                                                                 .Select(this.GetTickerAsync));
+                KrakenTicker?[] tickers = await Task.WhenAll(pairs.Where(IsValid)
+                                                                  .Select(this.GetTickerAsync));
 
-                return tickers.Select(selector: m => this.CreateMarketSummaryDto(assets, m))
+                return tickers.RemoveNulls()
+                              .Select(selector: m => this.CreateMarketSummaryDto(assets, m))
                               .RemoveNulls()
                               .ToList();
             }

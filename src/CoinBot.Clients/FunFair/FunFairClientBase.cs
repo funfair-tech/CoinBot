@@ -39,7 +39,7 @@ namespace CoinBot.Clients.FunFair
                                            };
         }
 
-        internal async Task<IReadOnlyCollection<FunFairWalletPriceResultPairDto>> GetBasePricesAsync()
+        internal async Task<IReadOnlyCollection<FunFairWalletPriceResultPairDto?>> GetBasePricesAsync()
         {
             List<(string cryptoSymbol, string fiatSymbol)> symbols =
                 (from cryptoSymbol in this._cryptoSymbols from fiatSymbol in this._fiatSymbols select (cryptoSymbol, fiatSymbol)).ToList();
