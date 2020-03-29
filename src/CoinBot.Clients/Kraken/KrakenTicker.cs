@@ -17,7 +17,7 @@ namespace CoinBot.Clients.Kraken
 
         // ReSharper disable once RedundantDefaultMemberInitializer
         // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Global
-        public decimal?[] Last { get; set; } = default!;
+        public decimal[]? Last { get; set; } = default!;
 
         /// <summary>
         ///     24 Hour volume array(today, last 24 hours)
@@ -26,6 +26,6 @@ namespace CoinBot.Clients.Kraken
 
         // ReSharper disable once RedundantDefaultMemberInitializer
         // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Global
-        public decimal?[] Volume { get; set; } = default!;
+        public decimal[]? Volume { get; set; } = default!;
     }
 }

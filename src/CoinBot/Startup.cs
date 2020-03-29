@@ -56,13 +56,7 @@ namespace CoinBot
                                                   .CreateLogger();
 
             services.AddOptions()
-                    .AddSingleton(implementationFactory: provider =>
-                                                         {
-                                                             // set up an ILogger
-                                                             ILoggerFactory loggerFactory = new LoggerFactory().AddSerilog();
-
-                                                             return loggerFactory.CreateLogger(nameof(CoinBot));
-                                                         })
+                    .AddLogging()
                     .AddMemoryCache()
                     .AddClients(this._configuration)
                     .AddCore(this._configuration)
@@ -76,6 +70,10 @@ namespace CoinBot
         /// <returns></returns>
         private static async Task RunAsync(IServiceProvider provider)
         {
+            ILoggerFactory loggerFactory = provider.GetRequiredService<ILoggerFactory>();
+
+            loggerFactory.AddSerilog();
+
             //set up a task completion source so we can quit on CTRL+C
             TaskCompletionSource<bool> exitSource = new TaskCompletionSource<bool>();
             Console.CancelKeyPress += (sender, eventArgs) =>
@@ -85,7 +83,6 @@ namespace CoinBot
                                       };
             await provider.AddCommandsAsync();
 
-            CurrencyManager coinManager = provider.GetRequiredService<CurrencyManager>();
             MarketManager marketManager = provider.GetRequiredService<MarketManager>();
             DiscordBot bot = provider.GetRequiredService<DiscordBot>();
 
@@ -96,7 +93,6 @@ namespace CoinBot
 
             // Start the bot & coinSource
             await bot.StartAsync();
-            coinManager.Start();
             marketManager.Start();
 
             // Keep the application alive until the exitSource task is completed.
@@ -104,7 +100,6 @@ namespace CoinBot
 
             // Stop the bot & coinSource
             await bot.LogoutAsync();
-            coinManager.Stop();
             marketManager.Stop();
         }
     }

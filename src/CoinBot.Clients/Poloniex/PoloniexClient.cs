@@ -22,20 +22,13 @@ namespace CoinBot.Clients.Poloniex
         private static readonly Uri Endpoint = new Uri(uriString: "https://poloniex.com/", UriKind.Absolute);
 
         /// <summary>
-        ///     The <see cref="CurrencyManager" />.
-        /// </summary>
-        private readonly CurrencyManager _currencyManager;
-
-        /// <summary>
         ///     The <see cref="JsonSerializerOptions" />.
         /// </summary>
         private readonly JsonSerializerOptions _serializerSettings;
 
-        public PoloniexClient(IHttpClientFactory httpClientFactory, ILogger<PoloniexClient> logger, CurrencyManager currencyManager)
+        public PoloniexClient(IHttpClientFactory httpClientFactory, ILogger<PoloniexClient> logger)
             : base(httpClientFactory, HTTP_CLIENT_NAME, logger)
         {
-            this._currencyManager = currencyManager ?? throw new ArgumentNullException(nameof(currencyManager));
-
             this._serializerSettings = new JsonSerializerOptions
                                        {
                                            IgnoreNullValues = true,
@@ -51,13 +44,13 @@ namespace CoinBot.Clients.Poloniex
         public string Name => "Poloniex";
 
         /// <inheritdoc />
-        public async Task<IReadOnlyCollection<MarketSummaryDto>> GetAsync()
+        public async Task<IReadOnlyCollection<MarketSummaryDto>> GetAsync(ICoinBuilder builder)
         {
             try
             {
                 IReadOnlyList<PoloniexTicker> tickers = await this.GetTickersAsync();
 
-                return tickers.Select(this.CreateMarketSummaryDto)
+                return tickers.Select(selector: ticker => this.CreateMarketSummaryDto(ticker, builder))
                               .RemoveNulls()
                               .ToList();
             }
@@ -69,16 +62,16 @@ namespace CoinBot.Clients.Poloniex
             }
         }
 
-        private MarketSummaryDto? CreateMarketSummaryDto(PoloniexTicker ticker)
+        private MarketSummaryDto? CreateMarketSummaryDto(PoloniexTicker ticker, ICoinBuilder builder)
         {
-            Currency? baseCurrency = this._currencyManager.Get(ticker.Pair.Substring(startIndex: 0, ticker.Pair.IndexOf(value: '_')));
+            Currency? baseCurrency = builder.Get(ticker.Pair.Substring(startIndex: 0, ticker.Pair.IndexOf(value: '_')));
 
             if (baseCurrency == null)
             {
                 return null;
             }
 
-            Currency? marketCurrency = this._currencyManager.Get(ticker.Pair.Substring(ticker.Pair.IndexOf(value: '_') + 1));
+            Currency? marketCurrency = builder.Get(ticker.Pair.Substring(ticker.Pair.IndexOf(value: '_') + 1));
 
             if (marketCurrency == null)
             {

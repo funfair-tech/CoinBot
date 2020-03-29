@@ -8,6 +8,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using CoinBot.Core;
 using CoinBot.Core.Extensions;
+using CoinBot.Core.Helpers;
 using CoinBot.Core.JsonConverters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -24,20 +25,13 @@ namespace CoinBot.Clients.Kraken
         private static readonly Uri Endpoint = new Uri(uriString: "https://api.kraken.com/0/public/", UriKind.Absolute);
 
         /// <summary>
-        ///     The <see cref="CurrencyManager" />.
-        /// </summary>
-        private readonly CurrencyManager _currencyManager;
-
-        /// <summary>
         ///     The <see cref="JsonSerializerOptions" />.
         /// </summary>
         private readonly JsonSerializerOptions _serializerSettings;
 
-        public KrakenClient(IHttpClientFactory httpClientFactory, ILogger<KrakenClient> logger, CurrencyManager currencyManager)
+        public KrakenClient(IHttpClientFactory httpClientFactory, ILogger<KrakenClient> logger)
             : base(httpClientFactory, HTTP_CLIENT_NAME, logger)
         {
-            this._currencyManager = currencyManager ?? throw new ArgumentNullException(nameof(currencyManager));
-
             this._serializerSettings = new JsonSerializerOptions
                                        {
                                            IgnoreNullValues = true,
@@ -53,24 +47,59 @@ namespace CoinBot.Clients.Kraken
         public string Name => "Kraken";
 
         /// <inheritdoc />
-        public async Task<IReadOnlyCollection<MarketSummaryDto>> GetAsync()
+        public async Task<IReadOnlyCollection<MarketSummaryDto>> GetAsync(ICoinBuilder builder)
         {
             try
             {
                 IReadOnlyList<KrakenAsset> assets = await this.GetAssetsAsync();
-                IReadOnlyList<KrakenPair> pairs = await this.GetPairsAsync();
 
-                static bool IsValid(KrakenPair pair)
+                bool IsValid(KrakenPair pair)
                 {
                     // todo: can't get kraken details on these markets
-                    return !pair.PairId.EndsWith(value: ".d", StringComparison.Ordinal);
+                    if (pair.PairId.EndsWith(value: ".d", StringComparison.Ordinal))
+                    {
+                        return false;
+                    }
+
+                    string? bc = FindCurrency(assets, pair.BaseCurrency);
+
+                    if (bc == null)
+                    {
+                        return false;
+                    }
+
+                    string? qc = FindCurrency(assets, pair.QuoteCurrency);
+
+                    if (qc == null)
+                    {
+                        return false;
+                    }
+
+                    Currency? baseCurrency = builder.Get(bc);
+
+                    if (baseCurrency == null)
+                    {
+                        return false;
+                    }
+
+                    Currency? quoteCurrency = builder.Get(qc);
+
+                    if (quoteCurrency == null)
+                    {
+                        return false;
+                    }
+
+                    return true;
                 }
 
-                KrakenTicker?[] tickers = await Task.WhenAll(pairs.Where(IsValid)
-                                                                  .Select(this.GetTickerAsync));
+                IReadOnlyList<KrakenPair> pairs = await this.GetPairsAsync();
+
+                IReadOnlyList<KrakenTicker?> tickers = await Batched.WhenAllAsync(concurrent: 5,
+                                                                                  pairs.Where(IsValid)
+                                                                                       .Select(this.GetTickerAsync));
 
                 return tickers.RemoveNulls()
-                              .Select(selector: m => this.CreateMarketSummaryDto(assets, m))
+                              .Select(selector: m => this.CreateMarketSummaryDto(assets, m, builder))
                               .RemoveNulls()
                               .ToList();
             }
@@ -82,8 +111,13 @@ namespace CoinBot.Clients.Kraken
             }
         }
 
-        private MarketSummaryDto? CreateMarketSummaryDto(IReadOnlyList<KrakenAsset> assets, KrakenTicker ticker)
+        private MarketSummaryDto? CreateMarketSummaryDto(IReadOnlyList<KrakenAsset> assets, KrakenTicker ticker, ICoinBuilder builder)
         {
+            if (ticker.Last == null || ticker.Volume == null)
+            {
+                return null;
+            }
+
             string? baseCurrencySymbol = FindCurrency(assets, ticker.BaseCurrency);
 
             if (baseCurrencySymbol == null)
@@ -98,16 +132,17 @@ namespace CoinBot.Clients.Kraken
                 return null;
             }
 
-            Currency? baseCurrency = this._currencyManager.Get(baseCurrencySymbol);
+            // always look at the quoted currency first as if that does not exist, then no point creating doing any more
+            Currency? marketCurrency = builder.Get(marketCurrencySymbol);
 
-            if (baseCurrency == null)
+            if (marketCurrency == null)
             {
                 return null;
             }
 
-            Currency? marketCurrency = this._currencyManager.Get(marketCurrencySymbol);
+            Currency? baseCurrency = builder.Get(baseCurrencySymbol);
 
-            if (marketCurrency == null)
+            if (baseCurrency == null)
             {
                 return null;
             }
@@ -245,10 +280,15 @@ namespace CoinBot.Clients.Kraken
                             return null;
                         }
 
-                        item.Result.BaseCurrency = pair.BaseCurrency;
-                        item.Result.QuoteCurrency = pair.QuoteCurrency;
+                        if (item.Result.TryGetValue(pair.PairId, out KrakenTicker? ticker))
+                        {
+                            ticker.BaseCurrency = pair.BaseCurrency;
+                            ticker.QuoteCurrency = pair.QuoteCurrency;
 
-                        return item.Result;
+                            return ticker;
+                        }
+
+                        return null;
                     }
                     catch (Exception exception)
                     {
@@ -284,7 +324,7 @@ namespace CoinBot.Clients.Kraken
         private sealed class KrakenTickerWrapper
         {
             [JsonPropertyName(name: @"result")]
-            public KrakenTicker? Result { get; set; }
+            public Dictionary<string, KrakenTicker>? Result { get; set; }
         }
 
         [SuppressMessage(category: "Microsoft.Performance", checkId: "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Used as data packet")]

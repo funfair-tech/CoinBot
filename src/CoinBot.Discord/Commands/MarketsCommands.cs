@@ -17,12 +17,12 @@ namespace CoinBot.Discord.Commands
     public sealed class MarketsCommands : CommandBase
     {
         private readonly CurrencyManager _currencyManager;
-        private readonly ILogger _logger;
+        private readonly ILogger<MarketsCommands> _logger;
         private readonly MarketManager _marketManager;
 
         private readonly char[] _separators = {'-', '/', '\\', ','};
 
-        public MarketsCommands(CurrencyManager currencyManager, MarketManager marketManager, ILogger logger)
+        public MarketsCommands(CurrencyManager currencyManager, MarketManager marketManager, ILogger<MarketsCommands> logger)
         {
             this._currencyManager = currencyManager ?? throw new ArgumentNullException(nameof(currencyManager));
             this._marketManager = marketManager ?? throw new ArgumentNullException(nameof(marketManager));

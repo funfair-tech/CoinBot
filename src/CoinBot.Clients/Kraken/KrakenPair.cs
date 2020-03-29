@@ -1,7 +1,9 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Diagnostics;
+using System.Text.Json.Serialization;
 
 namespace CoinBot.Clients.Kraken
 {
+    [DebuggerDisplay(value: "{BaseCurrency} > {QuoteCurrency} : ID: {PairId}")]
     public sealed class KrakenPair
     {
         // ReSharper disable once RedundantDefaultMemberInitializer

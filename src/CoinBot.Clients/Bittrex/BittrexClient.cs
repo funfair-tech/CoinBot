@@ -22,20 +22,13 @@ namespace CoinBot.Clients.Bittrex
         private static readonly Uri Endpoint = new Uri(uriString: "https://bittrex.com/api/v1.1/public/", UriKind.Absolute);
 
         /// <summary>
-        ///     The <see cref="CurrencyManager" />.
-        /// </summary>
-        private readonly CurrencyManager _currencyManager;
-
-        /// <summary>
         ///     The <see cref="JsonSerializerOptions" />.
         /// </summary>
         private readonly JsonSerializerOptions _serializerSettings;
 
-        public BittrexClient(IHttpClientFactory httpClientFactory, ILogger<BittrexClient> logger, CurrencyManager currencyManager)
+        public BittrexClient(IHttpClientFactory httpClientFactory, ILogger<BittrexClient> logger)
             : base(httpClientFactory, HTTP_CLIENT_NAME, logger)
         {
-            this._currencyManager = currencyManager ?? throw new ArgumentNullException(nameof(currencyManager));
-
             this._serializerSettings = new JsonSerializerOptions
                                        {
                                            IgnoreNullValues = true,
@@ -51,13 +44,25 @@ namespace CoinBot.Clients.Bittrex
         public string Name => "Bittrex";
 
         /// <inheritdoc />
-        public async Task<IReadOnlyCollection<MarketSummaryDto>> GetAsync()
+        public async Task<IReadOnlyCollection<MarketSummaryDto>> GetAsync(ICoinBuilder builder)
         {
             try
             {
+                IReadOnlyList<BittrexCurrencyDto> currencies = await this.GetCurrenciesAsync();
+
+                if (!currencies.Any())
+                {
+                    return Array.Empty<MarketSummaryDto>();
+                }
+
+                foreach (BittrexCurrencyDto currency in currencies.Where(predicate: c => c.IsActive && !c.IsRestricted))
+                {
+                    builder.Get(currency.Symbol, currency.Name);
+                }
+
                 IReadOnlyList<BittrexMarketSummaryDto> summaries = await this.GetMarketSummariesAsync();
 
-                return summaries.Select(this.CreateMarketSummaryDto)
+                return summaries.Select(selector: summary => this.CreateMarketSummaryDto(summary, builder))
                                 .RemoveNulls()
                                 .ToList();
             }
@@ -69,18 +74,46 @@ namespace CoinBot.Clients.Bittrex
             }
         }
 
-        private MarketSummaryDto? CreateMarketSummaryDto(BittrexMarketSummaryDto marketSummary)
+        private async Task<IReadOnlyList<BittrexCurrencyDto>> GetCurrenciesAsync()
         {
-            Currency? baseCurrency = this._currencyManager.Get(marketSummary.MarketName.Substring(startIndex: 0, marketSummary.MarketName.IndexOf(value: '-')));
+            HttpClient httpClient = this.CreateHttpClient();
 
-            if (baseCurrency == null)
+            using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "getcurrencies", UriKind.Relative)))
+            {
+                response.EnsureSuccessStatusCode();
+
+                string content = await response.Content.ReadAsStringAsync();
+
+                try
+                {
+                    BittrexCurrenciesDto summaries = JsonSerializer.Deserialize<BittrexCurrenciesDto>(content, this._serializerSettings);
+
+                    IReadOnlyList<BittrexCurrencyDto>? items = summaries.Result;
+
+                    return items ?? Array.Empty<BittrexCurrencyDto>();
+                }
+                catch (Exception exception)
+                {
+                    this.Logger.LogError(new EventId(exception.HResult), exception, message: "Failed to deserialize");
+
+                    return Array.Empty<BittrexCurrencyDto>();
+                }
+            }
+        }
+
+        private MarketSummaryDto? CreateMarketSummaryDto(BittrexMarketSummaryDto marketSummary, ICoinBuilder builder)
+        {
+            // always look at the quoted currency first as if that does not exist, then no point creating doing any more
+            Currency? marketCurrency = builder.Get(marketSummary.MarketName.Substring(marketSummary.MarketName.IndexOf(value: '-') + 1));
+
+            if (marketCurrency == null)
             {
                 return null;
             }
 
-            Currency? marketCurrency = this._currencyManager.Get(marketSummary.MarketName.Substring(marketSummary.MarketName.IndexOf(value: '-') + 1));
+            Currency? baseCurrency = builder.Get(marketSummary.MarketName.Substring(startIndex: 0, marketSummary.MarketName.IndexOf(value: '-')));
 
-            if (marketCurrency == null)
+            if (baseCurrency == null)
             {
                 return null;
             }

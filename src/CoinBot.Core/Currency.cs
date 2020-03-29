@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
@@ -7,6 +8,7 @@ namespace CoinBot.Core
     /// <summary>
     ///     Coin information.
     /// </summary>
+    [DebuggerDisplay(value: "{Symbol}: {Name}")]
     public sealed class Currency
     {
         /// <summary>
@@ -41,6 +43,8 @@ namespace CoinBot.Core
         /// </summary>
         [SuppressMessage(category: "Microsoft.Design", checkId: "CA1056:UriPropertiesShouldNotBeStrings", Justification = "Model for serialization")]
         public string? ImageUrl { get; set; }
+
+        public bool IsFiat { get; set; }
 
         public void AddDetails(ICoinInfo details)
         {

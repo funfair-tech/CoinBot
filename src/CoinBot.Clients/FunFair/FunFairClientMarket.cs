@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -11,40 +10,38 @@ namespace CoinBot.Clients.FunFair
 {
     public sealed class FunFairClientMarket : FunFairClientBase, IMarketClient
     {
-        private readonly CurrencyManager _currencyManager;
-
-        public FunFairClientMarket(IHttpClientFactory httpClientFactory, ILogger<FunFairClientMarket> logger, CurrencyManager currencyManager)
+        public FunFairClientMarket(IHttpClientFactory httpClientFactory, ILogger<FunFairClientMarket> logger)
             : base(httpClientFactory, logger)
         {
-            this._currencyManager = currencyManager ?? throw new ArgumentNullException(nameof(currencyManager));
         }
 
         /// <inheritdoc />
         public string Name { get; } = @"FunFair Wallet";
 
         /// <inheritdoc />
-        public async Task<IReadOnlyCollection<MarketSummaryDto>> GetAsync()
+        public async Task<IReadOnlyCollection<MarketSummaryDto>> GetAsync(ICoinBuilder builder)
         {
             IReadOnlyCollection<FunFairWalletPriceResultPairDto?> products = await this.GetBasePricesAsync();
 
             return products.RemoveNulls()
-                           .Select(this.CreateMarketSummaryDto)
+                           .Select(selector: product => this.CreateMarketSummaryDto(product, builder))
                            .RemoveNulls()
                            .ToList();
         }
 
-        private MarketSummaryDto? CreateMarketSummaryDto(FunFairWalletPriceResultPairDto pkt)
+        private MarketSummaryDto? CreateMarketSummaryDto(FunFairWalletPriceResultPairDto pkt, ICoinBuilder builder)
         {
-            Currency? baseCurrency = this._currencyManager.Get(pkt.TokenSymbol);
+            // always look at the quoted currency first as if that does not exist, then no point creating doing any more
+            Currency? marketCurrency = builder.Get(pkt.FiatCurrencySymbol);
 
-            if (baseCurrency == null)
+            if (marketCurrency == null)
             {
                 return null;
             }
 
-            Currency? marketCurrency = this._currencyManager.Get(pkt.FiatCurrencySymbol);
+            Currency? baseCurrency = builder.Get(pkt.TokenSymbol);
 
-            if (marketCurrency == null)
+            if (baseCurrency == null)
             {
                 return null;
             }

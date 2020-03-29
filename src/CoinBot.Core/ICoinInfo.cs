@@ -37,7 +37,7 @@ namespace CoinBot.Core
         /// <summary>
         ///     The USD price.
         /// </summary>
-        double? PriceUsd { get; }
+        decimal? PriceUsd { get; }
 
         /// <summary>
         ///     The BTC price.

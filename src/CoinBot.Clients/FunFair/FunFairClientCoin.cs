@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -37,7 +36,7 @@ namespace CoinBot.Clients.FunFair
 
         private ICoinInfo CreateCoinInfo(FunFairWalletPriceResultPairDto item)
         {
-            return new FunFairWalletCoin(priceUsd: Convert.ToDouble(item.Price), symbol: item.TokenSymbol, lastUpdated: item.LastUpdated);
+            return new FunFairWalletCoin(priceUsd: item.Price, symbol: item.TokenSymbol, lastUpdated: item.LastUpdated);
         }
     }
 }

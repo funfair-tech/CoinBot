@@ -24,20 +24,13 @@ namespace CoinBot.Clients.GateIo
         private static readonly Uri Endpoint = new Uri(uriString: "http://data.gate.io/api2/1/", UriKind.Absolute);
 
         /// <summary>
-        ///     The <see cref="CurrencyManager" />.
-        /// </summary>
-        private readonly CurrencyManager _currencyManager;
-
-        /// <summary>
         ///     The <see cref="JsonSerializerOptions" />.
         /// </summary>
         private readonly JsonSerializerOptions _serializerSettings;
 
-        public GateIoClient(IHttpClientFactory httpClientFactory, ILogger<GateIoClient> logger, CurrencyManager currencyManager)
+        public GateIoClient(IHttpClientFactory httpClientFactory, ILogger<GateIoClient> logger)
             : base(httpClientFactory, HTTP_CLIENT_NAME, logger)
         {
-            this._currencyManager = currencyManager ?? throw new ArgumentNullException(nameof(currencyManager));
-
             this._serializerSettings = new JsonSerializerOptions
                                        {
                                            IgnoreNullValues = true,
@@ -53,13 +46,13 @@ namespace CoinBot.Clients.GateIo
         public string Name => @"Gate.io";
 
         /// <inheritdoc />
-        public async Task<IReadOnlyCollection<MarketSummaryDto>> GetAsync()
+        public async Task<IReadOnlyCollection<MarketSummaryDto>> GetAsync(ICoinBuilder builder)
         {
             try
             {
                 IReadOnlyList<GateIoTicker> tickers = await this.GetTickersAsync();
 
-                return tickers.Select(this.CreateMarketSummaryDto)
+                return tickers.Select(selector: ticker => this.CreateMarketSummaryDto(ticker, builder))
                               .RemoveNulls()
                               .ToList();
             }
@@ -71,18 +64,19 @@ namespace CoinBot.Clients.GateIo
             }
         }
 
-        private MarketSummaryDto? CreateMarketSummaryDto(GateIoTicker marketSummary)
+        private MarketSummaryDto? CreateMarketSummaryDto(GateIoTicker marketSummary, ICoinBuilder builder)
         {
-            Currency? baseCurrency = this._currencyManager.Get(marketSummary.Pair.Substring(startIndex: 0, marketSummary.Pair.IndexOf(PAIR_SEPARATOR)));
+            // always look at the quoted currency first as if that does not exist, then no point creating doing any more
+            Currency? marketCurrency = builder.Get(marketSummary.Pair.Substring(marketSummary.Pair.IndexOf(PAIR_SEPARATOR) + 1));
 
-            if (baseCurrency == null)
+            if (marketCurrency == null)
             {
                 return null;
             }
 
-            Currency? marketCurrency = this._currencyManager.Get(marketSummary.Pair.Substring(marketSummary.Pair.IndexOf(PAIR_SEPARATOR) + 1));
+            Currency? baseCurrency = builder.Get(marketSummary.Pair.Substring(startIndex: 0, marketSummary.Pair.IndexOf(PAIR_SEPARATOR)));
 
-            if (marketCurrency == null)
+            if (baseCurrency == null)
             {
                 return null;
             }

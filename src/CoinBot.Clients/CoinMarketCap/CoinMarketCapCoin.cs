@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using CoinBot.Core;
+using CoinBot.Core.Helpers;
 using CoinBot.Core.JsonConverters;
 
 namespace CoinBot.Clients.CoinMarketCap
@@ -26,7 +27,9 @@ namespace CoinBot.Clients.CoinMarketCap
         public string Id { get; set; } = default!;
 
         [SuppressMessage(category: "Microsoft.Design", checkId: "CA1056:UriPropertiesShouldNotBeStrings", Justification = "Model for serialization")]
-        public string ImageUrl => $"https://raw.githubusercontent.com/cjdowner/cryptocurrency-icons/master/128/color/{this.Symbol.ToLowerInvariant()}.png";
+        public string ImageUrl =>
+            Images.CurrencyImageUrl(this.Symbol)
+                  .ToString();
 
         [JsonPropertyName(name: @"name")]
 
@@ -42,7 +45,7 @@ namespace CoinBot.Clients.CoinMarketCap
         public int? Rank { get; set; }
 
         [JsonPropertyName(name: @"price_usd")]
-        public double? PriceUsd { get; set; }
+        public decimal? PriceUsd { get; set; }
 
         [JsonPropertyName(name: @"price_btc")]
         public decimal? PriceBtc { get; set; }

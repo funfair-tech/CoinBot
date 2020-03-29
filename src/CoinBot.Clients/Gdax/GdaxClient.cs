@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using CoinBot.Core;
 using CoinBot.Core.Extensions;
+using CoinBot.Core.Helpers;
 using CoinBot.Core.JsonConverters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -22,20 +23,13 @@ namespace CoinBot.Clients.Gdax
         private static readonly Uri Endpoint = new Uri(uriString: "https://api.gdax.com/", UriKind.Absolute);
 
         /// <summary>
-        ///     The <see cref="CurrencyManager" />.
-        /// </summary>
-        private readonly CurrencyManager _currencyManager;
-
-        /// <summary>
         ///     The <see cref="JsonSerializerOptions" />.
         /// </summary>
         private readonly JsonSerializerOptions _serializerSettings;
 
-        public GdaxClient(IHttpClientFactory httpClientFactory, ILogger<GdaxClient> logger, CurrencyManager currencyManager)
+        public GdaxClient(IHttpClientFactory httpClientFactory, ILogger<GdaxClient> logger)
             : base(httpClientFactory, HTTP_CLIENT_NAME, logger)
         {
-            this._currencyManager = currencyManager ?? throw new ArgumentNullException(nameof(currencyManager));
-
             this._serializerSettings = new JsonSerializerOptions
                                        {
                                            IgnoreNullValues = true,
@@ -48,15 +42,15 @@ namespace CoinBot.Clients.Gdax
         public string Name => "GDAX";
 
         /// <inheritdoc />
-        public async Task<IReadOnlyCollection<MarketSummaryDto>> GetAsync()
+        public async Task<IReadOnlyCollection<MarketSummaryDto>> GetAsync(ICoinBuilder builder)
         {
             try
             {
                 IReadOnlyList<GdaxProduct> products = await this.GetProductsAsync();
-                GdaxTicker?[] tickers = await Task.WhenAll(products.Select(selector: product => this.GetTickerAsync(product.Id)));
+                IReadOnlyList<GdaxTicker?> tickers = await Batched.WhenAllAsync(concurrent: 2, products.Select(selector: product => this.GetTickerAsync(product.Id)));
 
                 return tickers.RemoveNulls()
-                              .Select(this.CreateMarketSummaryDto)
+                              .Select(selector: ticker => this.CreateMarketSummaryDto(ticker, builder))
                               .RemoveNulls()
                               .ToList();
             }
@@ -68,18 +62,19 @@ namespace CoinBot.Clients.Gdax
             }
         }
 
-        private MarketSummaryDto? CreateMarketSummaryDto(GdaxTicker ticker)
+        private MarketSummaryDto? CreateMarketSummaryDto(GdaxTicker ticker, ICoinBuilder builder)
         {
-            Currency? baseCurrency = this._currencyManager.Get(ticker.ProductId.Substring(startIndex: 0, ticker.ProductId.IndexOf(value: '-')));
+            // always look at the quoted currency first as if that does not exist, then no point creating doing any more
+            Currency? marketCurrency = builder.Get(ticker.ProductId.Substring(ticker.ProductId.IndexOf(value: '-') + 1));
 
-            if (baseCurrency == null)
+            if (marketCurrency == null)
             {
                 return null;
             }
 
-            Currency? marketCurrency = this._currencyManager.Get(ticker.ProductId.Substring(ticker.ProductId.IndexOf(value: '-') + 1));
+            Currency? baseCurrency = builder.Get(ticker.ProductId.Substring(startIndex: 0, ticker.ProductId.IndexOf(value: '-')));
 
-            if (marketCurrency == null)
+            if (baseCurrency == null)
             {
                 return null;
             }

@@ -23,7 +23,7 @@ namespace CoinBot.Discord
         /// <summary>
         ///     The <see cref="ILogger" />.
         /// </summary>
-        private readonly ILogger _logger;
+        private readonly ILogger<DiscordBot> _logger;
 
         /// <summary>
         ///     The <see cref="IServiceProvider" />.
@@ -39,7 +39,7 @@ namespace CoinBot.Discord
         public DiscordBot(IServiceProvider serviceProvider, CommandService commandService)
         {
             this._serviceProvider = serviceProvider;
-            this._logger = this._serviceProvider.GetRequiredService<ILogger>();
+            this._logger = this._serviceProvider.GetRequiredService<ILogger<DiscordBot>>();
             this.Log += this.HandleLogAsync;
 
             this._commands = commandService;

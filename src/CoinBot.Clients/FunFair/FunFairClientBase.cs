@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using CoinBot.Core;
+using CoinBot.Core.Helpers;
 using CoinBot.Core.JsonConverters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -46,7 +47,7 @@ namespace CoinBot.Clients.FunFair
 
             try
             {
-                return await Task.WhenAll(symbols.Select(this.GetCurrentPriceCommonAsync));
+                return await Batched.WhenAllAsync(10, symbols.Select(this.GetCurrentPriceCommonAsync));
             }
             catch (Exception exception)
             {

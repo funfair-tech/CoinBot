@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using CoinBot.Core;
+using CoinBot.Core.Helpers;
 
 namespace CoinBot.Clients.FunFair
 {
     public sealed class FunFairWalletCoin : ICoinInfo
     {
-        public FunFairWalletCoin(string symbol, DateTime lastUpdated, double priceUsd)
+        public FunFairWalletCoin(string symbol, DateTime lastUpdated, decimal priceUsd)
         {
             this.Id = symbol;
             this.Symbol = symbol;
@@ -18,7 +19,9 @@ namespace CoinBot.Clients.FunFair
         public string Id { get; }
 
         [SuppressMessage(category: "Microsoft.Design", checkId: "CA1056:UriPropertiesShouldNotBeStrings", Justification = "Model for serialization")]
-        public string ImageUrl => $"https://raw.githubusercontent.com/cjdowner/cryptocurrency-icons/master/128/color/{this.Symbol.ToLowerInvariant()}.png";
+        public string ImageUrl =>
+            Images.CurrencyImageUrl(this.Symbol)
+                  .ToString();
 
         public string Name { get; }
 
@@ -26,7 +29,7 @@ namespace CoinBot.Clients.FunFair
 
         public int? Rank { get; }
 
-        public double? PriceUsd { get; }
+        public decimal? PriceUsd { get; }
 
         public decimal? PriceBtc { get; }
 
