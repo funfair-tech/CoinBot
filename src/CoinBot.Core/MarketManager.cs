@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using CoinBot.Core.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -12,24 +13,36 @@ namespace CoinBot.Core
 {
     public sealed class MarketManager : TickingService
     {
+        private readonly IReadOnlyList<ICoinClient> _coinClients;
+        private readonly ICurrencyListUpdater _currencyListUpdater;
+
+        private readonly IReadOnlyDictionary<string, Exchange> _exchanges;
+
         /// <summary>
         ///     The <see cref="IMarketClient" />s.
         /// </summary>
-        private readonly List<IMarketClient> _clients;
-
-        private readonly IReadOnlyDictionary<string, Exchange> _exchanges;
+        private readonly IReadOnlyList<IMarketClient> _marketClients;
 
         /// <summary>
         ///     Constructor.
         /// </summary>
         /// <param name="settings">Settings.</param>
-        /// <param name="clients">Market Clients.</param>
+        /// <param name="coinClients"></param>
+        /// <param name="marketClients">Market Clients.</param>
+        /// <param name="currencyListUpdater">Currency list updater.</param>
         /// <param name="logger">Logging</param>
-        public MarketManager(IOptions<MarketManagerSettings> settings, IEnumerable<IMarketClient> clients, ILogger<MarketManager> logger)
+        public MarketManager(IOptions<MarketManagerSettings> settings,
+                             IEnumerable<ICoinClient> coinClients,
+                             IEnumerable<IMarketClient> marketClients,
+                             ICurrencyListUpdater currencyListUpdater,
+                             ILogger<MarketManager> logger)
             : base(TimeSpan.FromMinutes(settings.Value.RefreshInterval), logger)
         {
-            this._clients = clients?.ToList() ?? throw new ArgumentNullException(nameof(clients));
-            this._exchanges = new ReadOnlyDictionary<string, Exchange>(this._clients.ToDictionary(keySelector: client => client.Name, elementSelector: client => new Exchange()));
+            this._currencyListUpdater = currencyListUpdater;
+            this._coinClients = coinClients?.ToList() ?? throw new ArgumentNullException(nameof(coinClients));
+            this._marketClients = marketClients?.ToList() ?? throw new ArgumentNullException(nameof(marketClients));
+            this._exchanges = new ReadOnlyDictionary<string, Exchange>(
+                this._marketClients.ToDictionary(keySelector: client => client.Name, elementSelector: client => new Exchange()));
         }
 
         public IEnumerable<MarketSummaryDto> Get(Currency currency)
@@ -159,12 +172,70 @@ namespace CoinBot.Core
         ///     Updates the markets.
         /// </summary>
         /// <returns></returns>
-        private Task UpdateAsync()
+        private async Task UpdateAsync()
         {
-            return Task.WhenAll(this._clients.Select(this.UpdateOneClientAsync));
+            CoinBuilder builder = new CoinBuilder();
+
+            await this.UpdateCoinsAsync(builder);
+
+            await Task.WhenAll(this._marketClients.Select(selector: client => this.UpdateOneClientAsync(client, builder)));
+
+            IGlobalInfo? globalInfo = await this.UpdateGlobalInfoAsync();
+
+            this._currencyListUpdater.Update(builder.AllCurrencies(), globalInfo);
         }
 
-        private async Task UpdateOneClientAsync(IMarketClient client)
+        private async Task UpdateCoinsAsync(ICoinBuilder builder)
+        {
+            this.Logger.LogInformation(message: "Updating All CoinInfos");
+
+            IReadOnlyCollection<ICoinInfo>[] allCoinInfos = await Task.WhenAll(this._coinClients.Select(this.GetCoinInfoAsync));
+
+            var cryptoInfos = allCoinInfos.SelectMany(selector: ci => ci)
+                                          .GroupBy(keySelector: c => c.Symbol)
+                                          .Select(selector: c => new {Symbol = c.Key, Coins = c.ToArray()});
+
+            foreach (var cryptoInfo in cryptoInfos)
+            {
+                ICoinInfo name = cryptoInfo.Coins[0];
+
+                Currency? currency = builder.Get(cryptoInfo.Symbol, name.Name);
+
+                if (currency != null)
+                {
+                    foreach (ICoinInfo info in cryptoInfo.Coins)
+                    {
+                        currency.AddDetails(info);
+                    }
+                }
+            }
+        }
+
+        private async Task<IReadOnlyCollection<ICoinInfo>> GetCoinInfoAsync(ICoinClient client)
+        {
+            this.Logger.LogInformation($"Updating {client.GetType().Name} CoinInfo");
+
+            try
+            {
+                return await client.GetCoinInfoAsync();
+            }
+            catch (Exception exception)
+            {
+                this.Logger.LogError(new EventId(exception.HResult), exception, $"Failed to update {client.GetType().Name} CoinInfo: {exception.Message}");
+
+                return Array.Empty<ICoinInfo>();
+            }
+        }
+
+        private async Task<IGlobalInfo?> UpdateGlobalInfoAsync()
+        {
+            IGlobalInfo?[] results = await Task.WhenAll(this._coinClients.Select(selector: client => this.GetGlobalInfoAsync(client)));
+
+            return results.RemoveNulls()
+                          .FirstOrDefault();
+        }
+
+        private async Task UpdateOneClientAsync(IMarketClient client, ICoinBuilder builder)
         {
             if (this._exchanges.TryGetValue(client.Name, out Exchange? exchange))
             {
@@ -176,7 +247,7 @@ namespace CoinBot.Core
 
                 try
                 {
-                    markets = await client.GetAsync();
+                    markets = await client.GetAsync(builder);
                 }
                 catch (Exception e)
                 {
@@ -213,6 +284,20 @@ namespace CoinBot.Core
             else
             {
                 this.Logger.LogWarning(eventId: 0, $"Couldn't find exchange {client.Name}.");
+            }
+        }
+
+        private async Task<IGlobalInfo?> GetGlobalInfoAsync(ICoinClient client)
+        {
+            try
+            {
+                return await client.GetGlobalInfoAsync();
+            }
+            catch (Exception exception)
+            {
+                this.Logger.LogError(new EventId(exception.HResult), exception, $"Failed to update {client.GetType().Name} GlobalInfo: {exception.Message}");
+
+                return null;
             }
         }
 

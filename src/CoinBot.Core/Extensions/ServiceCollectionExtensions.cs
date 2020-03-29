@@ -23,6 +23,7 @@ namespace CoinBot.Core.Extensions
         {
             return services.Configure<MarketManagerSettings>(configuration.GetSection(MARKET_MANAGER_SETTINGS_SECTION))
                            .AddSingleton<CurrencyManager>()
+                           .AddSingleton<ICurrencyListUpdater>(implementationFactory: x => x.GetRequiredService<CurrencyManager>())
                            .AddSingleton<MarketManager>();
         }
     }

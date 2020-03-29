@@ -22,20 +22,13 @@ namespace CoinBot.Clients.Bittrex
         private static readonly Uri Endpoint = new Uri(uriString: "https://bittrex.com/api/v1.1/public/", UriKind.Absolute);
 
         /// <summary>
-        ///     The <see cref="CurrencyManager" />.
-        /// </summary>
-        private readonly CurrencyManager _currencyManager;
-
-        /// <summary>
         ///     The <see cref="JsonSerializerOptions" />.
         /// </summary>
         private readonly JsonSerializerOptions _serializerSettings;
 
-        public BittrexClient(IHttpClientFactory httpClientFactory, ILogger<BittrexClient> logger, CurrencyManager currencyManager)
+        public BittrexClient(IHttpClientFactory httpClientFactory, ILogger<BittrexClient> logger)
             : base(httpClientFactory, HTTP_CLIENT_NAME, logger)
         {
-            this._currencyManager = currencyManager ?? throw new ArgumentNullException(nameof(currencyManager));
-
             this._serializerSettings = new JsonSerializerOptions
                                        {
                                            IgnoreNullValues = true,
@@ -51,13 +44,13 @@ namespace CoinBot.Clients.Bittrex
         public string Name => "Bittrex";
 
         /// <inheritdoc />
-        public async Task<IReadOnlyCollection<MarketSummaryDto>> GetAsync()
+        public async Task<IReadOnlyCollection<MarketSummaryDto>> GetAsync(ICoinBuilder builder)
         {
             try
             {
                 IReadOnlyList<BittrexMarketSummaryDto> summaries = await this.GetMarketSummariesAsync();
 
-                return summaries.Select(this.CreateMarketSummaryDto)
+                return summaries.Select(selector: summary => this.CreateMarketSummaryDto(summary, builder))
                                 .RemoveNulls()
                                 .ToList();
             }
@@ -69,18 +62,19 @@ namespace CoinBot.Clients.Bittrex
             }
         }
 
-        private MarketSummaryDto? CreateMarketSummaryDto(BittrexMarketSummaryDto marketSummary)
+        private MarketSummaryDto? CreateMarketSummaryDto(BittrexMarketSummaryDto marketSummary, ICoinBuilder builder)
         {
-            Currency? baseCurrency = this._currencyManager.Get(marketSummary.MarketName.Substring(startIndex: 0, marketSummary.MarketName.IndexOf(value: '-')));
+            // always look at the quoted currency first as if that does not exist, then no point creating doing any more
+            Currency? marketCurrency = builder.Get(marketSummary.MarketName.Substring(marketSummary.MarketName.IndexOf(value: '-') + 1));
 
-            if (baseCurrency == null)
+            if (marketCurrency == null)
             {
                 return null;
             }
 
-            Currency? marketCurrency = this._currencyManager.Get(marketSummary.MarketName.Substring(marketSummary.MarketName.IndexOf(value: '-') + 1));
+            Currency? baseCurrency = builder.Get(marketSummary.MarketName.Substring(startIndex: 0, marketSummary.MarketName.IndexOf(value: '-')));
 
-            if (marketCurrency == null)
+            if (baseCurrency == null)
             {
                 return null;
             }

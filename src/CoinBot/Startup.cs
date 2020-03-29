@@ -85,7 +85,6 @@ namespace CoinBot
                                       };
             await provider.AddCommandsAsync();
 
-            CurrencyManager coinManager = provider.GetRequiredService<CurrencyManager>();
             MarketManager marketManager = provider.GetRequiredService<MarketManager>();
             DiscordBot bot = provider.GetRequiredService<DiscordBot>();
 
@@ -96,7 +95,6 @@ namespace CoinBot
 
             // Start the bot & coinSource
             await bot.StartAsync();
-            coinManager.Start();
             marketManager.Start();
 
             // Keep the application alive until the exitSource task is completed.
@@ -104,7 +102,6 @@ namespace CoinBot
 
             // Stop the bot & coinSource
             await bot.LogoutAsync();
-            coinManager.Stop();
             marketManager.Stop();
         }
     }

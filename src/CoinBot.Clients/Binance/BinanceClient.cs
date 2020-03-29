@@ -24,20 +24,13 @@ namespace CoinBot.Clients.Binance
         private static readonly Uri Endpoint = new Uri(uriString: "https://www.binance.com/exchange/public/", UriKind.Absolute);
 
         /// <summary>
-        ///     The <see cref="CurrencyManager" />.
-        /// </summary>
-        private readonly CurrencyManager _currencyManager;
-
-        /// <summary>
         ///     The <see cref="JsonSerializerOptions" />.
         /// </summary>
         private readonly JsonSerializerOptions _serializerSettings;
 
-        public BinanceClient(IHttpClientFactory httpClientFactory, ILogger<BinanceClient> logger, CurrencyManager currencyManager)
+        public BinanceClient(IHttpClientFactory httpClientFactory, ILogger<BinanceClient> logger)
             : base(httpClientFactory, HTTP_CLIENT_NAME, logger)
         {
-            this._currencyManager = currencyManager ?? throw new ArgumentNullException(nameof(currencyManager));
-
             this._serializerSettings = new JsonSerializerOptions
                                        {
                                            IgnoreNullValues = true,
@@ -53,13 +46,13 @@ namespace CoinBot.Clients.Binance
         public string Name => @"Binance";
 
         /// <inheritdoc />
-        public async Task<IReadOnlyCollection<MarketSummaryDto>> GetAsync()
+        public async Task<IReadOnlyCollection<MarketSummaryDto>> GetAsync(ICoinBuilder builder)
         {
             try
             {
                 IReadOnlyList<BinanceProduct> products = await this.GetProductsAsync();
 
-                return products.Select(this.CreateMarketSummaryDto)
+                return products.Select(selector: product => this.CreateMarketSummaryDto(product, builder))
                                .RemoveNulls()
                                .ToList();
             }
@@ -72,18 +65,19 @@ namespace CoinBot.Clients.Binance
             }
         }
 
-        private MarketSummaryDto? CreateMarketSummaryDto(BinanceProduct product)
+        private MarketSummaryDto? CreateMarketSummaryDto(BinanceProduct product, ICoinBuilder builder)
         {
-            Currency? baseCurrency = this._currencyManager.Get(product.BaseAsset);
+            // always look at the quoted currency first as if that does not exist, then no point creating doing any more
+            Currency? marketCurrency = builder.Get(product.QuoteAsset);
 
-            if (baseCurrency == null)
+            if (marketCurrency == null)
             {
                 return null;
             }
 
-            Currency? marketCurrency = this._currencyManager.Get(product.QuoteAsset);
+            Currency? baseCurrency = builder.Get(product.BaseAsset, product.BaseAssetName);
 
-            if (marketCurrency == null)
+            if (baseCurrency == null)
             {
                 return null;
             }

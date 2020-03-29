@@ -11,6 +11,6 @@ namespace CoinBot.Core
         ///     Gets the market summaries
         /// </summary>
         /// <returns></returns>
-        Task<IReadOnlyCollection<MarketSummaryDto>> GetAsync();
+        Task<IReadOnlyCollection<MarketSummaryDto>> GetAsync(ICoinBuilder builder);
     }
 }

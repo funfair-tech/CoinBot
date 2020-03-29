@@ -24,20 +24,13 @@ namespace CoinBot.Clients.Kraken
         private static readonly Uri Endpoint = new Uri(uriString: "https://api.kraken.com/0/public/", UriKind.Absolute);
 
         /// <summary>
-        ///     The <see cref="CurrencyManager" />.
-        /// </summary>
-        private readonly CurrencyManager _currencyManager;
-
-        /// <summary>
         ///     The <see cref="JsonSerializerOptions" />.
         /// </summary>
         private readonly JsonSerializerOptions _serializerSettings;
 
-        public KrakenClient(IHttpClientFactory httpClientFactory, ILogger<KrakenClient> logger, CurrencyManager currencyManager)
+        public KrakenClient(IHttpClientFactory httpClientFactory, ILogger<KrakenClient> logger)
             : base(httpClientFactory, HTTP_CLIENT_NAME, logger)
         {
-            this._currencyManager = currencyManager ?? throw new ArgumentNullException(nameof(currencyManager));
-
             this._serializerSettings = new JsonSerializerOptions
                                        {
                                            IgnoreNullValues = true,
@@ -53,7 +46,7 @@ namespace CoinBot.Clients.Kraken
         public string Name => "Kraken";
 
         /// <inheritdoc />
-        public async Task<IReadOnlyCollection<MarketSummaryDto>> GetAsync()
+        public async Task<IReadOnlyCollection<MarketSummaryDto>> GetAsync(ICoinBuilder builder)
         {
             try
             {
@@ -70,7 +63,7 @@ namespace CoinBot.Clients.Kraken
                                                                   .Select(this.GetTickerAsync));
 
                 return tickers.RemoveNulls()
-                              .Select(selector: m => this.CreateMarketSummaryDto(assets, m))
+                              .Select(selector: m => this.CreateMarketSummaryDto(assets, m, builder))
                               .RemoveNulls()
                               .ToList();
             }
@@ -82,7 +75,7 @@ namespace CoinBot.Clients.Kraken
             }
         }
 
-        private MarketSummaryDto? CreateMarketSummaryDto(IReadOnlyList<KrakenAsset> assets, KrakenTicker ticker)
+        private MarketSummaryDto? CreateMarketSummaryDto(IReadOnlyList<KrakenAsset> assets, KrakenTicker ticker, ICoinBuilder builder)
         {
             string? baseCurrencySymbol = FindCurrency(assets, ticker.BaseCurrency);
 
@@ -98,16 +91,17 @@ namespace CoinBot.Clients.Kraken
                 return null;
             }
 
-            Currency? baseCurrency = this._currencyManager.Get(baseCurrencySymbol);
+            // always look at the quoted currency first as if that does not exist, then no point creating doing any more
+            Currency? marketCurrency = builder.Get(marketCurrencySymbol);
 
-            if (baseCurrency == null)
+            if (marketCurrency == null)
             {
                 return null;
             }
 
-            Currency? marketCurrency = this._currencyManager.Get(marketCurrencySymbol);
+            Currency? baseCurrency = builder.Get(baseCurrencySymbol);
 
-            if (marketCurrency == null)
+            if (baseCurrency == null)
             {
                 return null;
             }
