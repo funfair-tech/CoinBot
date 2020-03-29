@@ -48,6 +48,18 @@ namespace CoinBot.Clients.Bittrex
         {
             try
             {
+                IReadOnlyList<BittrexCurrencyDto> currencies = await this.GetCurrenciesAsync();
+
+                if (!currencies.Any())
+                {
+                    return Array.Empty<MarketSummaryDto>();
+                }
+
+                foreach (BittrexCurrencyDto currency in currencies.Where(predicate: c => c.IsActive && !c.IsRestricted))
+                {
+                    builder.Get(currency.Symbol, currency.Name);
+                }
+
                 IReadOnlyList<BittrexMarketSummaryDto> summaries = await this.GetMarketSummariesAsync();
 
                 return summaries.Select(selector: summary => this.CreateMarketSummaryDto(summary, builder))
@@ -59,6 +71,33 @@ namespace CoinBot.Clients.Bittrex
                 this.Logger.LogError(new EventId(e.HResult), e, e.Message);
 
                 throw;
+            }
+        }
+
+        private async Task<IReadOnlyList<BittrexCurrencyDto>> GetCurrenciesAsync()
+        {
+            HttpClient httpClient = this.CreateHttpClient();
+
+            using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "getcurrencies", UriKind.Relative)))
+            {
+                response.EnsureSuccessStatusCode();
+
+                string content = await response.Content.ReadAsStringAsync();
+
+                try
+                {
+                    BittrexCurrenciesDto summaries = JsonSerializer.Deserialize<BittrexCurrenciesDto>(content, this._serializerSettings);
+
+                    IReadOnlyList<BittrexCurrencyDto>? items = summaries.Result;
+
+                    return items ?? Array.Empty<BittrexCurrencyDto>();
+                }
+                catch (Exception exception)
+                {
+                    this.Logger.LogError(new EventId(exception.HResult), exception, message: "Failed to deserialize");
+
+                    return Array.Empty<BittrexCurrencyDto>();
+                }
             }
         }
 
