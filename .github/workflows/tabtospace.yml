@@ -16,7 +16,7 @@ jobs:
     - name: Configure Git
       run: |
         git config --local user.email "credfeto@users.noreply.github.com"
-        git config --local user.name "Mark Ridgwell"
+        git config --local user.name "fun-sqlfmt[bot]"
     - name: What Branch Is This
       run: |
         echo Current Branch ${GITHUB_REF#refs/heads/}
