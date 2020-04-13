@@ -1,1 +1,41 @@
+"C#":
+    - src/**/*.cs
+    - src/**/*.csproj
+
+"SQL":
+    - db/**/*
+    - tools/**/*.sql
+    
+"Solidity":
+    - src/**/*.sol
+
+"unit-tests":
+    - src/*.Tests.*/**/*
+    - src/*.Tests.Integration.*/**/*
+    - src/*.Tests/**/*
+    - src/*.Tests.Integration/**/*
+
+".NET update": 
+    - src/global.json
+
+"Config Change": 
+    - src/**/*.json
+
+"Static Code Analysis Rules":
+    - src/CodeAnalysis.ruleset
+
+"Migration Script": 
+    - tools/MigrationScripts/**/*
+
+"Legal Text":
+    - tools/LegalText/**/*
+
+"Change Log":
+    - CHANGELOG.md
+
+"Read Me":
+    - README.md
+
+"Setup":
+    - SETUP.md
  
