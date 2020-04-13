@@ -1,8 +1,5 @@
 name: PR Lint
-  pull_request:
-    types: [assigned, opened, synchronize, reopened, labeled, unlabeled]
-    branches:
-      - master
+on: [pull_request]
 jobs:
   include-JIRA-ticket:
     runs-on: ubuntu-latest
@@ -12,14 +9,3 @@ jobs:
     - uses: vijaykramesh/pr-lint-action@v1.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  include-changelog-entry:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-      - uses: Zomzog/changelog-checker@v1.0.0
-        with:
-          fileName: `CHANGELOG.md`
-          noChangelogLabel: `Changelog Not Requited`
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
