@@ -5,10 +5,10 @@ on:
 
 jobs:
 
-  does-not-contain-secrets:
+  has-no-merge-conflicts:
 
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v1
-    - uses: max/secret-scan@1.0.0
+    - uses: olivernybroe/action-conflict-finder@v1.0

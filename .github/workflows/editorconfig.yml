@@ -5,10 +5,10 @@ on:
 
 jobs:
 
-  does-not-contain-secrets:
+  conforms-to-editorconfig:
 
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v1
-    - uses: max/secret-scan@1.0.0
+    - uses: zbeekman/EditorConfig-Action@v1.1.1
