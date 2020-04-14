@@ -11,4 +11,4 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - uses: zbeekman/EditorConfig-Action@v1.1.1
+    - run: echo "Hello World"

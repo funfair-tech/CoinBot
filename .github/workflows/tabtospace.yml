@@ -45,4 +45,4 @@ jobs:
         git commit --all -m"[FF-2107] Reformat SQL Files to common format." || true
     - name: Push
       run: |
-        git push "https://${{github.actor}}:${{secrets.GITHUB_PUSH_TOKEN}}@github.com/${{github.repository}}.git" "HEAD:${{ env.GIT_BRANCH }}"
+        git push "https://${{github.actor}}:${{secrets.SOURCE_PUSH_TOKEN}}@github.com/${{github.repository}}.git" "HEAD:${{ env.GIT_BRANCH }}"

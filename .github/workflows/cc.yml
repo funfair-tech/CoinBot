@@ -11,4 +11,4 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - uses: max/secret-scan@1.0.0
+    - uses: zricethezav/gitleaks-action@master
