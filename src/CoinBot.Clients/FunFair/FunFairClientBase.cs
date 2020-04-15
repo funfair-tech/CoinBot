@@ -47,7 +47,7 @@ namespace CoinBot.Clients.FunFair
 
             try
             {
-                return await Batched.WhenAllAsync(10, symbols.Select(this.GetCurrentPriceCommonAsync));
+                return await Batched.WhenAllAsync(concurrent: 10, symbols.Select(this.GetCurrentPriceCommonAsync));
             }
             catch (Exception exception)
             {
