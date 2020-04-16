@@ -11,4 +11,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - uses: olivernybroe/action-conflict-finder@v1.0
+#    - uses: olivernybroe/action-conflict-finder@v1.0
+    - uses: credfeto/action-conflict-finder@fix/merge-conflicts-only-at-begining-of-line
+
