@@ -23,7 +23,7 @@
     <DocumentationFile>bin\Debug\netcoreapp3.1\CoinBot.Discord.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Discord.Net" Version="2.1.1" />
+    <PackageReference Include="Discord.Net" Version="2.2.0" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AsyncFixer" Version="1.1.6" PrivateAssets="All" />
