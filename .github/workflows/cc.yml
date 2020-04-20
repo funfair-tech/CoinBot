@@ -1,4 +1,4 @@
-name: Code Analysis
+name: Code Analysis[GL]
 
 on:
   [push]
