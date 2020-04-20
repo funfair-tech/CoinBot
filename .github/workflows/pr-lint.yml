@@ -1,7 +1,7 @@
 name: PR Lint
 on:
   pull_request:
-    types: [assigned, opened, synchronize, reopened, labeled, unlabeled]
+    types: [assigned, opened, synchronize, reopened]
     branches:
       - master
 jobs:
