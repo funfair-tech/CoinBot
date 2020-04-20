@@ -5,6 +5,8 @@ on:
     branches-ignore:
     - "release/*"
     - "hotfix/*"
+    paths:
+    - '**.sql'
 
 jobs:
   standardise-tsql-files:

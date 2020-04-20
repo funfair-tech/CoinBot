@@ -1,5 +1,10 @@
-name: sqlcheck workflow
-on: pull_request
+name: SQL Code Analysis
+on:
+  pull_request:
+    branches:
+      - master
+    paths:
+    - '**.sql'
 
 jobs:
   sqlcheck:
