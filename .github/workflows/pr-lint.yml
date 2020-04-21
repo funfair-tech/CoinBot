@@ -21,6 +21,6 @@ jobs:
       - uses: Zomzog/changelog-checker@v1.0.0
         with:
           fileName: CHANGELOG.md
-          noChangelogLabel: Changelog Not Requited
+          noChangelogLabel: Changelog Not Required
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
