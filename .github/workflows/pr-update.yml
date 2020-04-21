@@ -1,5 +1,15 @@
 name: PR Update
-on: [pull_request]
+on: 
+  pull_request:
+    types:
+      - labeled
+      - unlabeled
+      - synchronize
+      - opened
+      - edited
+      - ready_for_review
+      - reopened
+      - unlocked
 
 jobs:
   add-pr-label:
@@ -15,6 +25,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: thomaseizinger/assign-pr-creator-action@v1.0.0
-      if: github.event_name == 'pull_request' && github.event.action == 'opened'
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
