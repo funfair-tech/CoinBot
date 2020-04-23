@@ -10,7 +10,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
     - uses: zricethezav/gitleaks-action@master
 
   has-no-merge-conflicts:
@@ -18,7 +20,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
     - uses: olivernybroe/action-conflict-finder@v1.1
 #    - uses: credfeto/action-conflict-finder@fix/merge-conflicts-only-at-begining-of-line
 
