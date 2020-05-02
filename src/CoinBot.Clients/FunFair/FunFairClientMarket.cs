@@ -11,7 +11,7 @@ namespace CoinBot.Clients.FunFair
     public sealed class FunFairClientMarket : FunFairClientBase, IMarketClient
     {
         public FunFairClientMarket(IHttpClientFactory httpClientFactory, ILogger<FunFairClientMarket> logger)
-            : base(httpClientFactory, logger)
+            : base(httpClientFactory: httpClientFactory, logger: logger)
         {
         }
 
@@ -24,7 +24,7 @@ namespace CoinBot.Clients.FunFair
             IReadOnlyCollection<FunFairWalletPriceResultPairDto?> products = await this.GetBasePricesAsync();
 
             return products.RemoveNulls()
-                           .Select(selector: product => this.CreateMarketSummaryDto(product, builder))
+                           .Select(selector: product => this.CreateMarketSummaryDto(pkt: product, builder: builder))
                            .RemoveNulls()
                            .ToList();
         }

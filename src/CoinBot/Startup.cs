@@ -89,7 +89,7 @@ namespace CoinBot
             // Initialize the bot
             DiscordBotSettings botConfig = provider.GetRequiredService<IOptions<DiscordBotSettings>>()
                                                    .Value;
-            await bot.LoginAsync(TokenType.Bot, botConfig.Token);
+            await bot.LoginAsync(tokenType: TokenType.Bot, token: botConfig.Token);
 
             // Start the bot & coinSource
             await bot.StartAsync();

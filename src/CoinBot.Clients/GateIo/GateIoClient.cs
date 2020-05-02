@@ -21,7 +21,7 @@ namespace CoinBot.Clients.GateIo
         /// <summary>
         ///     The <see cref="Uri" /> of the CoinMarketCap endpoint.
         /// </summary>
-        private static readonly Uri Endpoint = new Uri(uriString: "http://data.gate.io/api2/1/", UriKind.Absolute);
+        private static readonly Uri Endpoint = new Uri(uriString: "http://data.gate.io/api2/1/", uriKind: UriKind.Absolute);
 
         /// <summary>
         ///     The <see cref="JsonSerializerOptions" />.
@@ -29,7 +29,7 @@ namespace CoinBot.Clients.GateIo
         private readonly JsonSerializerOptions _serializerSettings;
 
         public GateIoClient(IHttpClientFactory httpClientFactory, ILogger<GateIoClient> logger)
-            : base(httpClientFactory, HTTP_CLIENT_NAME, logger)
+            : base(httpClientFactory: httpClientFactory, clientName: HTTP_CLIENT_NAME, logger: logger)
         {
             this._serializerSettings = new JsonSerializerOptions
                                        {
@@ -52,13 +52,13 @@ namespace CoinBot.Clients.GateIo
             {
                 IReadOnlyList<GateIoTicker> tickers = await this.GetTickersAsync();
 
-                return tickers.Select(selector: ticker => this.CreateMarketSummaryDto(ticker, builder))
+                return tickers.Select(selector: ticker => this.CreateMarketSummaryDto(marketSummary: ticker, builder: builder))
                               .RemoveNulls()
                               .ToList();
             }
             catch (Exception e)
             {
-                this.Logger.LogError(new EventId(e.HResult), e, e.Message);
+                this.Logger.LogError(new EventId(e.HResult), exception: e, message: e.Message);
 
                 throw;
             }
@@ -97,7 +97,7 @@ namespace CoinBot.Clients.GateIo
         {
             HttpClient httpClient = this.CreateHttpClient();
 
-            using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "tickers", UriKind.Relative)))
+            using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "tickers", uriKind: UriKind.Relative)))
             {
                 response.EnsureSuccessStatusCode();
 
@@ -105,7 +105,7 @@ namespace CoinBot.Clients.GateIo
 
                 try
                 {
-                    Dictionary<string, GateIoTicker> items = JsonSerializer.Deserialize<Dictionary<string, GateIoTicker>>(json, this._serializerSettings);
+                    Dictionary<string, GateIoTicker> items = JsonSerializer.Deserialize<Dictionary<string, GateIoTicker>>(json: json, options: this._serializerSettings);
 
                     foreach (KeyValuePair<string, GateIoTicker> item in items)
                     {
@@ -116,7 +116,7 @@ namespace CoinBot.Clients.GateIo
                 }
                 catch (Exception exception)
                 {
-                    this.Logger.LogError(new EventId(exception.HResult), exception, message: "Could not deserialise");
+                    this.Logger.LogError(new EventId(exception.HResult), exception: exception, message: "Could not deserialise");
 
                     return Array.Empty<GateIoTicker>();
                 }
@@ -127,7 +127,7 @@ namespace CoinBot.Clients.GateIo
         {
             services.AddSingleton<IMarketClient, GateIoClient>();
 
-            AddHttpClientFactorySupport(services, HTTP_CLIENT_NAME, Endpoint);
+            AddHttpClientFactorySupport(services: services, clientName: HTTP_CLIENT_NAME, endpoint: Endpoint);
         }
     }
 }

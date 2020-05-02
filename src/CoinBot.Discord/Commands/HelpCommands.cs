@@ -32,7 +32,7 @@ namespace CoinBot.Discord.Commands
 
             builder.WithDescription(stringBuilder.ToString());
 
-            return this.ReplyAsync(string.Empty, isTTS: false, builder.Build());
+            return this.ReplyAsync(message: string.Empty, isTTS: false, builder.Build());
         }
     }
 }

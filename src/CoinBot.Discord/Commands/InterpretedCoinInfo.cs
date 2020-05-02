@@ -14,9 +14,9 @@ namespace CoinBot.Discord.Commands
             this.Symbol = currency.Symbol;
             this.Name = currency.Name;
 
-            this.PriceUsd = GetPriceFromMarkets(currency, marketManager, usd);
-            this.PriceEth = GetPriceFromMarkets(currency, marketManager, eth);
-            this.PriceBtc = GetPriceFromMarkets(currency, marketManager, btc);
+            this.PriceUsd = GetPriceFromMarkets(currency: currency, marketManager: marketManager, quoteCurrency: usd);
+            this.PriceEth = GetPriceFromMarkets(currency: currency, marketManager: marketManager, quoteCurrency: eth);
+            this.PriceBtc = GetPriceFromMarkets(currency: currency, marketManager: marketManager, quoteCurrency: btc);
         }
 
         public string Id { get; }
@@ -56,7 +56,7 @@ namespace CoinBot.Discord.Commands
                 return null;
             }
 
-            IEnumerable<MarketSummaryDto> markets = marketManager.GetPair(currency, quoteCurrency);
+            IEnumerable<MarketSummaryDto> markets = marketManager.GetPair(currency1: currency, currency2: quoteCurrency);
 
             return markets.Where(predicate: x => x.Last != null)
                           .OrderByDescending(keySelector: x => x.LastUpdated ?? DateTime.MinValue)

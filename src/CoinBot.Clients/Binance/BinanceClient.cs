@@ -21,7 +21,7 @@ namespace CoinBot.Clients.Binance
         /// <summary>
         ///     The <see cref="Uri" /> of the CoinMarketCap endpoint.
         /// </summary>
-        private static readonly Uri Endpoint = new Uri(uriString: "https://www.binance.com/exchange/public/", UriKind.Absolute);
+        private static readonly Uri Endpoint = new Uri(uriString: "https://www.binance.com/exchange/public/", uriKind: UriKind.Absolute);
 
         /// <summary>
         ///     The <see cref="JsonSerializerOptions" />.
@@ -29,7 +29,7 @@ namespace CoinBot.Clients.Binance
         private readonly JsonSerializerOptions _serializerSettings;
 
         public BinanceClient(IHttpClientFactory httpClientFactory, ILogger<BinanceClient> logger)
-            : base(httpClientFactory, HTTP_CLIENT_NAME, logger)
+            : base(httpClientFactory: httpClientFactory, clientName: HTTP_CLIENT_NAME, logger: logger)
         {
             this._serializerSettings = new JsonSerializerOptions
                                        {
@@ -52,14 +52,14 @@ namespace CoinBot.Clients.Binance
             {
                 IReadOnlyList<BinanceProduct> products = await this.GetProductsAsync();
 
-                return products.Select(selector: product => this.CreateMarketSummaryDto(product, builder))
+                return products.Select(selector: product => this.CreateMarketSummaryDto(product: product, builder: builder))
                                .RemoveNulls()
                                .ToList();
             }
             catch (Exception exception)
             {
                 EventId eventId = new EventId(exception.HResult);
-                this.Logger.LogError(eventId, exception, exception.Message);
+                this.Logger.LogError(eventId: eventId, exception: exception, message: exception.Message);
 
                 throw;
             }
@@ -75,7 +75,7 @@ namespace CoinBot.Clients.Binance
                 return null;
             }
 
-            Currency? baseCurrency = builder.Get(product.BaseAsset, product.BaseAssetName);
+            Currency? baseCurrency = builder.Get(symbol: product.BaseAsset, name: product.BaseAssetName);
 
             if (baseCurrency == null)
             {
@@ -94,7 +94,7 @@ namespace CoinBot.Clients.Binance
         {
             services.AddSingleton<IMarketClient, BinanceClient>();
 
-            AddHttpClientFactorySupport(services, HTTP_CLIENT_NAME, Endpoint);
+            AddHttpClientFactorySupport(services: services, clientName: HTTP_CLIENT_NAME, endpoint: Endpoint);
         }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace CoinBot.Clients.Binance
         {
             HttpClient httpClient = this.CreateHttpClient();
 
-            using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "product", UriKind.Relative)))
+            using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "product", uriKind: UriKind.Relative)))
             {
                 response.EnsureSuccessStatusCode();
 
@@ -113,13 +113,13 @@ namespace CoinBot.Clients.Binance
 
                 try
                 {
-                    Wrapper packet = JsonSerializer.Deserialize<Wrapper>(json, this._serializerSettings);
+                    Wrapper packet = JsonSerializer.Deserialize<Wrapper>(json: json, options: this._serializerSettings);
 
                     return packet.Data ?? Array.Empty<BinanceProduct>();
                 }
                 catch (Exception exception)
                 {
-                    this.Logger.LogCritical(new EventId(exception.HResult), exception, message: "Could not convert packet");
+                    this.Logger.LogCritical(new EventId(exception.HResult), exception: exception, message: "Could not convert packet");
 
                     return Array.Empty<BinanceProduct>();
                 }

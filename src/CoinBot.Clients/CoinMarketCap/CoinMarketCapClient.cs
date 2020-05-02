@@ -17,7 +17,7 @@ namespace CoinBot.Clients.CoinMarketCap
         /// <summary>
         ///     The <see cref="Uri" /> of the CoinMarketCap endpoint.
         /// </summary>
-        private static readonly Uri Endpoint = new Uri(uriString: "https://api.coinmarketcap.com/v1/", UriKind.Absolute);
+        private static readonly Uri Endpoint = new Uri(uriString: "https://api.coinmarketcap.com/v1/", uriKind: UriKind.Absolute);
 
         /// <summary>
         ///     The <see cref="JsonSerializerOptions" />.
@@ -25,7 +25,7 @@ namespace CoinBot.Clients.CoinMarketCap
         private readonly JsonSerializerOptions _serializerSettings;
 
         public CoinMarketCapClient(IHttpClientFactory httpClientFactory, ILogger<CoinMarketCapClient> logger)
-            : base(httpClientFactory, HTTP_CLIENT_NAME, logger)
+            : base(httpClientFactory: httpClientFactory, clientName: HTTP_CLIENT_NAME, logger: logger)
         {
             this._serializerSettings = new JsonSerializerOptions
                                        {
@@ -47,18 +47,18 @@ namespace CoinBot.Clients.CoinMarketCap
             {
                 HttpClient httpClient = this.CreateHttpClient();
 
-                using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "ticker/?convert=ETH&limit=1000", UriKind.Relative)))
+                using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "ticker/?convert=ETH&limit=1000", uriKind: UriKind.Relative)))
                 {
                     response.EnsureSuccessStatusCode();
 
                     string json = await response.Content.ReadAsStringAsync();
 
-                    return JsonSerializer.Deserialize<List<CoinMarketCapCoin>>(json, this._serializerSettings) ?? new List<CoinMarketCapCoin>();
+                    return JsonSerializer.Deserialize<List<CoinMarketCapCoin>>(json: json, options: this._serializerSettings) ?? new List<CoinMarketCapCoin>();
                 }
             }
             catch (Exception e)
             {
-                this.Logger.LogError(new EventId(e.HResult), e, e.Message);
+                this.Logger.LogError(new EventId(e.HResult), exception: e, message: e.Message);
 
                 throw;
             }
@@ -75,18 +75,18 @@ namespace CoinBot.Clients.CoinMarketCap
             {
                 HttpClient httpClient = this.CreateHttpClient();
 
-                using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "global/", UriKind.Relative)))
+                using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "global/", uriKind: UriKind.Relative)))
                 {
                     response.EnsureSuccessStatusCode();
 
                     string json = await response.Content.ReadAsStringAsync();
 
-                    return JsonSerializer.Deserialize<CoinMarketCapGlobalInfo>(json, this._serializerSettings);
+                    return JsonSerializer.Deserialize<CoinMarketCapGlobalInfo>(json: json, options: this._serializerSettings);
                 }
             }
             catch (Exception e)
             {
-                this.Logger.LogError(new EventId(e.HResult), e, e.Message);
+                this.Logger.LogError(new EventId(e.HResult), exception: e, message: e.Message);
 
                 throw;
             }
@@ -96,7 +96,7 @@ namespace CoinBot.Clients.CoinMarketCap
         {
             services.AddSingleton<ICoinClient, CoinMarketCapClient>();
 
-            AddHttpClientFactorySupport(services, HTTP_CLIENT_NAME, Endpoint);
+            AddHttpClientFactorySupport(services: services, clientName: HTTP_CLIENT_NAME, endpoint: Endpoint);
         }
     }
 }

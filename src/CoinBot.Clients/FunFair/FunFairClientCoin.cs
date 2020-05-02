@@ -11,7 +11,7 @@ namespace CoinBot.Clients.FunFair
     public sealed class FunFairClientCoin : FunFairClientBase, ICoinClient
     {
         public FunFairClientCoin(IHttpClientFactory httpClientFactory, ILogger<FunFairClientCoin> logger)
-            : base(httpClientFactory, logger)
+            : base(httpClientFactory: httpClientFactory, logger: logger)
         {
         }
 

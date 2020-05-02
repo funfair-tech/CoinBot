@@ -20,7 +20,7 @@ namespace CoinBot.Clients.Gdax
         /// <summary>
         ///     The <see cref="Uri" /> of the CoinMarketCap endpoint.
         /// </summary>
-        private static readonly Uri Endpoint = new Uri(uriString: "https://api.gdax.com/", UriKind.Absolute);
+        private static readonly Uri Endpoint = new Uri(uriString: "https://api.gdax.com/", uriKind: UriKind.Absolute);
 
         /// <summary>
         ///     The <see cref="JsonSerializerOptions" />.
@@ -28,7 +28,7 @@ namespace CoinBot.Clients.Gdax
         private readonly JsonSerializerOptions _serializerSettings;
 
         public GdaxClient(IHttpClientFactory httpClientFactory, ILogger<GdaxClient> logger)
-            : base(httpClientFactory, HTTP_CLIENT_NAME, logger)
+            : base(httpClientFactory: httpClientFactory, clientName: HTTP_CLIENT_NAME, logger: logger)
         {
             this._serializerSettings = new JsonSerializerOptions
                                        {
@@ -50,13 +50,13 @@ namespace CoinBot.Clients.Gdax
                 IReadOnlyList<GdaxTicker?> tickers = await Batched.WhenAllAsync(concurrent: 2, products.Select(selector: product => this.GetTickerAsync(product.Id)));
 
                 return tickers.RemoveNulls()
-                              .Select(selector: ticker => this.CreateMarketSummaryDto(ticker, builder))
+                              .Select(selector: ticker => this.CreateMarketSummaryDto(ticker: ticker, builder: builder))
                               .RemoveNulls()
                               .ToList();
             }
             catch (Exception e)
             {
-                this.Logger.LogError(new EventId(e.HResult), e, e.Message);
+                this.Logger.LogError(new EventId(e.HResult), exception: e, message: e.Message);
 
                 throw;
             }
@@ -97,7 +97,7 @@ namespace CoinBot.Clients.Gdax
             {
                 HttpClient httpClient = this.CreateHttpClient();
 
-                using (HttpResponseMessage response = await httpClient.GetAsync(new Uri($"products/{productId}/ticker", UriKind.Relative)))
+                using (HttpResponseMessage response = await httpClient.GetAsync(new Uri($"products/{productId}/ticker", uriKind: UriKind.Relative)))
                 {
                     response.EnsureSuccessStatusCode();
 
@@ -105,7 +105,7 @@ namespace CoinBot.Clients.Gdax
 
                     try
                     {
-                        GdaxTicker? ticker = JsonSerializer.Deserialize<GdaxTicker>(json, this._serializerSettings);
+                        GdaxTicker? ticker = JsonSerializer.Deserialize<GdaxTicker>(json: json, options: this._serializerSettings);
 
                         ticker.ProductId = productId;
 
@@ -113,7 +113,7 @@ namespace CoinBot.Clients.Gdax
                     }
                     catch (Exception exception)
                     {
-                        this.Logger.LogError(new EventId(exception.HResult), exception, message: "Failed to Deserialize");
+                        this.Logger.LogError(new EventId(exception.HResult), exception: exception, message: "Failed to Deserialize");
 
                         return null;
                     }
@@ -121,7 +121,7 @@ namespace CoinBot.Clients.Gdax
             }
             catch (Exception exception)
             {
-                this.Logger.LogError(new EventId(exception.HResult), exception, $"Failed to retrieve {productId}: {exception.Message}");
+                this.Logger.LogError(new EventId(exception.HResult), exception: exception, $"Failed to retrieve {productId}: {exception.Message}");
 
                 return null;
             }
@@ -135,7 +135,7 @@ namespace CoinBot.Clients.Gdax
         {
             HttpClient httpClient = this.CreateHttpClient();
 
-            using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "products/", UriKind.Relative)))
+            using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "products/", uriKind: UriKind.Relative)))
             {
                 response.EnsureSuccessStatusCode();
 
@@ -143,13 +143,13 @@ namespace CoinBot.Clients.Gdax
 
                 try
                 {
-                    IReadOnlyList<GdaxProduct>? items = JsonSerializer.Deserialize<List<GdaxProduct>>(json, this._serializerSettings);
+                    IReadOnlyList<GdaxProduct>? items = JsonSerializer.Deserialize<List<GdaxProduct>>(json: json, options: this._serializerSettings);
 
                     return items ?? Array.Empty<GdaxProduct>();
                 }
                 catch (Exception exception)
                 {
-                    this.Logger.LogError(new EventId(exception.HResult), exception, message: "Failed to deserialize");
+                    this.Logger.LogError(new EventId(exception.HResult), exception: exception, message: "Failed to deserialize");
 
                     return Array.Empty<GdaxProduct>();
                 }
@@ -160,7 +160,7 @@ namespace CoinBot.Clients.Gdax
         {
             services.AddSingleton<IMarketClient, GdaxClient>();
 
-            AddHttpClientFactorySupport(services, HTTP_CLIENT_NAME, Endpoint);
+            AddHttpClientFactorySupport(services: services, clientName: HTTP_CLIENT_NAME, endpoint: Endpoint);
         }
     }
 }

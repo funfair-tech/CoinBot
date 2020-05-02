@@ -19,7 +19,7 @@ namespace CoinBot.Clients.Bittrex
         /// <summary>
         ///     The <see cref="Uri" /> of the CoinMarketCap endpoint.
         /// </summary>
-        private static readonly Uri Endpoint = new Uri(uriString: "https://bittrex.com/api/v1.1/public/", UriKind.Absolute);
+        private static readonly Uri Endpoint = new Uri(uriString: "https://bittrex.com/api/v1.1/public/", uriKind: UriKind.Absolute);
 
         /// <summary>
         ///     The <see cref="JsonSerializerOptions" />.
@@ -27,7 +27,7 @@ namespace CoinBot.Clients.Bittrex
         private readonly JsonSerializerOptions _serializerSettings;
 
         public BittrexClient(IHttpClientFactory httpClientFactory, ILogger<BittrexClient> logger)
-            : base(httpClientFactory, HTTP_CLIENT_NAME, logger)
+            : base(httpClientFactory: httpClientFactory, clientName: HTTP_CLIENT_NAME, logger: logger)
         {
             this._serializerSettings = new JsonSerializerOptions
                                        {
@@ -57,18 +57,18 @@ namespace CoinBot.Clients.Bittrex
 
                 foreach (BittrexCurrencyDto currency in currencies.Where(predicate: c => c.IsActive && !c.IsRestricted))
                 {
-                    builder.Get(currency.Symbol, currency.Name);
+                    builder.Get(symbol: currency.Symbol, name: currency.Name);
                 }
 
                 IReadOnlyList<BittrexMarketSummaryDto> summaries = await this.GetMarketSummariesAsync();
 
-                return summaries.Select(selector: summary => this.CreateMarketSummaryDto(summary, builder))
+                return summaries.Select(selector: summary => this.CreateMarketSummaryDto(marketSummary: summary, builder: builder))
                                 .RemoveNulls()
                                 .ToList();
             }
             catch (Exception e)
             {
-                this.Logger.LogError(new EventId(e.HResult), e, e.Message);
+                this.Logger.LogError(new EventId(e.HResult), exception: e, message: e.Message);
 
                 throw;
             }
@@ -78,7 +78,7 @@ namespace CoinBot.Clients.Bittrex
         {
             HttpClient httpClient = this.CreateHttpClient();
 
-            using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "getcurrencies", UriKind.Relative)))
+            using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "getcurrencies", uriKind: UriKind.Relative)))
             {
                 response.EnsureSuccessStatusCode();
 
@@ -86,7 +86,7 @@ namespace CoinBot.Clients.Bittrex
 
                 try
                 {
-                    BittrexCurrenciesDto summaries = JsonSerializer.Deserialize<BittrexCurrenciesDto>(content, this._serializerSettings);
+                    BittrexCurrenciesDto summaries = JsonSerializer.Deserialize<BittrexCurrenciesDto>(json: content, options: this._serializerSettings);
 
                     IReadOnlyList<BittrexCurrencyDto>? items = summaries.Result;
 
@@ -94,7 +94,7 @@ namespace CoinBot.Clients.Bittrex
                 }
                 catch (Exception exception)
                 {
-                    this.Logger.LogError(new EventId(exception.HResult), exception, message: "Failed to deserialize");
+                    this.Logger.LogError(new EventId(exception.HResult), exception: exception, message: "Failed to deserialize");
 
                     return Array.Empty<BittrexCurrencyDto>();
                 }
@@ -134,7 +134,7 @@ namespace CoinBot.Clients.Bittrex
         {
             HttpClient httpClient = this.CreateHttpClient();
 
-            using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "getmarketsummaries", UriKind.Relative)))
+            using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "getmarketsummaries", uriKind: UriKind.Relative)))
             {
                 response.EnsureSuccessStatusCode();
 
@@ -142,7 +142,7 @@ namespace CoinBot.Clients.Bittrex
 
                 try
                 {
-                    BittrexMarketSummariesDto summaries = JsonSerializer.Deserialize<BittrexMarketSummariesDto>(content, this._serializerSettings);
+                    BittrexMarketSummariesDto summaries = JsonSerializer.Deserialize<BittrexMarketSummariesDto>(json: content, options: this._serializerSettings);
 
                     IReadOnlyList<BittrexMarketSummaryDto>? items = summaries.Result;
 
@@ -150,7 +150,7 @@ namespace CoinBot.Clients.Bittrex
                 }
                 catch (Exception exception)
                 {
-                    this.Logger.LogError(new EventId(exception.HResult), exception, message: "Failed to deserialize");
+                    this.Logger.LogError(new EventId(exception.HResult), exception: exception, message: "Failed to deserialize");
 
                     return Array.Empty<BittrexMarketSummaryDto>();
                 }
@@ -161,7 +161,7 @@ namespace CoinBot.Clients.Bittrex
         {
             services.AddSingleton<IMarketClient, BittrexClient>();
 
-            AddHttpClientFactorySupport(services, HTTP_CLIENT_NAME, Endpoint);
+            AddHttpClientFactorySupport(services: services, clientName: HTTP_CLIENT_NAME, endpoint: Endpoint);
         }
     }
 }

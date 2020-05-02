@@ -66,12 +66,12 @@ namespace CoinBot.Clients
                     .ConfigurePrimaryHttpMessageHandler(
                         configureHandler: x => new HttpClientHandler {AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate})
                     .AddPolicyHandler(Policy.TimeoutAsync<HttpResponseMessage>(TimeSpan.FromSeconds(value: 30)))
-                    .AddTransientHttpErrorPolicy(configurePolicy: p => p.WaitAndRetryAsync(maxRetries, Calculate));
+                    .AddTransientHttpErrorPolicy(configurePolicy: p => p.WaitAndRetryAsync(retryCount: maxRetries, sleepDurationProvider: Calculate));
         }
 
         private static TimeSpan Calculate(int attempts)
         {
-            return attempts > 1 ? TimeSpan.FromSeconds(Math.Pow(x: 2.0, attempts)) : TimeSpan.Zero;
+            return attempts > 1 ? TimeSpan.FromSeconds(Math.Pow(x: 2.0, y: attempts)) : TimeSpan.Zero;
         }
     }
 }

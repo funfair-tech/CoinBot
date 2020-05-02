@@ -88,7 +88,7 @@ namespace CoinBot.Discord
                 {
                     if (logParam.Exception != null)
                     {
-                        this._logger.LogError(new EventId(logParam.Exception.HResult), logParam.Message, logParam.Exception);
+                        this._logger.LogError(new EventId(logParam.Exception.HResult), message: logParam.Message, logParam.Exception);
                     }
                     else
                     {
@@ -123,7 +123,7 @@ namespace CoinBot.Discord
 
             // don't respond to messages in general, access to all other channels can be controlled with
             // permissions on discord
-            if (message.Channel.Name.Equals(GENERAL_CHANNEL_NAME, StringComparison.OrdinalIgnoreCase))
+            if (message.Channel.Name.Equals(value: GENERAL_CHANNEL_NAME, comparisonType: StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }
@@ -132,17 +132,17 @@ namespace CoinBot.Discord
             int argPos = 0;
 
             // Determine if the message is a command, based on if it starts with '!' or a mention prefix
-            if (!(message.HasCharPrefix(c: '!', ref argPos) || message.HasMentionPrefix(this.CurrentUser, ref argPos)))
+            if (!(message.HasCharPrefix(c: '!', argPos: ref argPos) || message.HasMentionPrefix(user: this.CurrentUser, argPos: ref argPos)))
             {
                 return;
             }
 
             // Create a Command Context
-            CommandContext context = new CommandContext(this, message);
+            CommandContext context = new CommandContext(this, msg: message);
 
             // Execute the command. (result does not indicate a return value,
             // rather an object stating if the command executed successfully)
-            IResult result = await this._commands.ExecuteAsync(context, argPos, this._serviceProvider);
+            IResult result = await this._commands.ExecuteAsync(context: context, argPos: argPos, services: this._serviceProvider);
 
             if (!result.IsSuccess && result.Error != CommandError.UnknownCommand)
             {
