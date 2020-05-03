@@ -35,7 +35,7 @@ namespace CoinBot.Core
         public void Start()
         {
             // start a timer to fire the tickFunction
-            this._timer = new Timer(this.QueueTick, state: null, TimeSpan.Zero, Timeout.InfiniteTimeSpan);
+            this._timer = new Timer(callback: this.QueueTick, state: null, dueTime: TimeSpan.Zero, period: Timeout.InfiniteTimeSpan);
         }
 
         public void Stop()
@@ -55,12 +55,12 @@ namespace CoinBot.Core
             }
             catch (Exception e)
             {
-                this.Logger.LogError(new EventId(e.HResult), e, e.Message);
+                this.Logger.LogError(new EventId(e.HResult), exception: e, message: e.Message);
             }
             finally
             {
                 // and reset the timer
-                this._timer?.Change(this._tickInterval, TimeSpan.Zero);
+                this._timer?.Change(dueTime: this._tickInterval, period: TimeSpan.Zero);
             }
         }
 

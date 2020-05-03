@@ -29,7 +29,7 @@ namespace CoinBot.Clients.FunFair
         private readonly JsonSerializerOptions _jsonSerializerSettings;
 
         protected FunFairClientBase(IHttpClientFactory httpClientFactory, ILogger logger)
-            : base(httpClientFactory, HTTP_CLIENT_NAME, logger)
+            : base(httpClientFactory: httpClientFactory, clientName: HTTP_CLIENT_NAME, logger: logger)
         {
             this._jsonSerializerSettings = new JsonSerializerOptions
                                            {
@@ -52,7 +52,7 @@ namespace CoinBot.Clients.FunFair
             catch (Exception exception)
             {
                 EventId eventId = new EventId(exception.HResult);
-                this.Logger.LogError(eventId, exception, exception.Message);
+                this.Logger.LogError(eventId: eventId, exception: exception, message: exception.Message);
 
                 throw;
             }
@@ -65,7 +65,7 @@ namespace CoinBot.Clients.FunFair
                 return;
             }
 
-            if (!Uri.TryCreate(options.Endpoint ?? string.Empty, UriKind.Absolute, out Uri? endpoint))
+            if (!Uri.TryCreate(options.Endpoint ?? string.Empty, uriKind: UriKind.Absolute, out Uri? endpoint))
             {
                 return;
             }
@@ -74,12 +74,12 @@ namespace CoinBot.Clients.FunFair
             services.AddSingleton<ICoinClient, FunFairClientCoin>();
             services.AddSingleton(options);
 
-            AddHttpClientFactorySupport(services, HTTP_CLIENT_NAME, endpoint);
+            AddHttpClientFactorySupport(services: services, clientName: HTTP_CLIENT_NAME, endpoint: endpoint);
         }
 
         private Task<FunFairWalletPriceResultPairDto?> GetCurrentPriceCommonAsync((string tokenSymbol, string fiatCurrencySymbol) pair)
         {
-            return this.GetCurrentPriceCommonAsync(pair.tokenSymbol, pair.fiatCurrencySymbol);
+            return this.GetCurrentPriceCommonAsync(tokenSymbol: pair.tokenSymbol, fiatCurrencySymbol: pair.fiatCurrencySymbol);
         }
 
         private async Task<FunFairWalletPriceResultPairDto?> GetCurrentPriceCommonAsync(string tokenSymbol, string fiatCurrencySymbol)
@@ -88,7 +88,7 @@ namespace CoinBot.Clients.FunFair
             {
                 HttpClient client = this.CreateHttpClient();
 
-                Uri uri = BuildUri(tokenSymbol, fiatCurrencySymbol);
+                Uri uri = BuildUri(tokenSymbol: tokenSymbol, fiatCurrencySymbol: fiatCurrencySymbol);
 
                 using (HttpResponseMessage response = await client.GetAsync(uri))
                 {
@@ -108,7 +108,7 @@ namespace CoinBot.Clients.FunFair
                         return null;
                     }
 
-                    FunFairWalletPriceResultDto pkt = JsonSerializer.Deserialize<FunFairWalletPriceResultDto>(msg, this._jsonSerializerSettings);
+                    FunFairWalletPriceResultDto pkt = JsonSerializer.Deserialize<FunFairWalletPriceResultDto>(json: msg, options: this._jsonSerializerSettings);
 
                     if (pkt.Symbol == null)
                     {
@@ -119,12 +119,14 @@ namespace CoinBot.Clients.FunFair
 
                     this.Logger.LogDebug($"Retrieved price for {tokenSymbol}.  Currently {pkt.Price} {fiatCurrencySymbol}");
 
-                    return new FunFairWalletPriceResultPairDto(fiatCurrencySymbol, pkt.Symbol, pkt.Price, pkt.Date);
+                    return new FunFairWalletPriceResultPairDto(fiatCurrencySymbol: fiatCurrencySymbol, tokenSymbol: pkt.Symbol, price: pkt.Price, lastUpdated: pkt.Date);
                 }
             }
             catch (Exception exception)
             {
-                this.Logger.LogError(new EventId(exception.HResult), exception, $"Failed to retrieve prices for {tokenSymbol} in {fiatCurrencySymbol}: Error: {exception.Message}");
+                this.Logger.LogError(new EventId(exception.HResult),
+                                     exception: exception,
+                                     $"Failed to retrieve prices for {tokenSymbol} in {fiatCurrencySymbol}: Error: {exception.Message}");
 
                 return null;
             }
@@ -132,7 +134,7 @@ namespace CoinBot.Clients.FunFair
 
         private static Uri BuildUri(string tokenSymbol, string fiatCurrencySymbol)
         {
-            return new Uri($"/Dev/token/{tokenSymbol}/{fiatCurrencySymbol}", UriKind.Relative);
+            return new Uri($"/Dev/token/{tokenSymbol}/{fiatCurrencySymbol}", uriKind: UriKind.Relative);
         }
     }
 }

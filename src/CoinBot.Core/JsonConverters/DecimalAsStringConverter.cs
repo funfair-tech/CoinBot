@@ -18,7 +18,7 @@ namespace CoinBot.Core.JsonConverters
             {
                 string s = reader.GetString();
 
-                if (!decimal.TryParse(s, out decimal converted))
+                if (!decimal.TryParse(s: s, out decimal converted))
                 {
                     throw new JsonException($"Can't convert {s} to {typeof(decimal).Name}");
                 }

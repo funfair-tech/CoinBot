@@ -22,7 +22,7 @@ namespace CoinBot.Clients.Kraken
         /// <summary>
         ///     The <see cref="Uri" /> of the CoinMarketCap endpoint.
         /// </summary>
-        private static readonly Uri Endpoint = new Uri(uriString: "https://api.kraken.com/0/public/", UriKind.Absolute);
+        private static readonly Uri Endpoint = new Uri(uriString: "https://api.kraken.com/0/public/", uriKind: UriKind.Absolute);
 
         /// <summary>
         ///     The <see cref="JsonSerializerOptions" />.
@@ -30,7 +30,7 @@ namespace CoinBot.Clients.Kraken
         private readonly JsonSerializerOptions _serializerSettings;
 
         public KrakenClient(IHttpClientFactory httpClientFactory, ILogger<KrakenClient> logger)
-            : base(httpClientFactory, HTTP_CLIENT_NAME, logger)
+            : base(httpClientFactory: httpClientFactory, clientName: HTTP_CLIENT_NAME, logger: logger)
         {
             this._serializerSettings = new JsonSerializerOptions
                                        {
@@ -56,19 +56,19 @@ namespace CoinBot.Clients.Kraken
                 bool IsValid(KrakenPair pair)
                 {
                     // todo: can't get kraken details on these markets
-                    if (pair.PairId.EndsWith(value: ".d", StringComparison.Ordinal))
+                    if (pair.PairId.EndsWith(value: ".d", comparisonType: StringComparison.Ordinal))
                     {
                         return false;
                     }
 
-                    string? bc = FindCurrency(assets, pair.BaseCurrency);
+                    string? bc = FindCurrency(assets: assets, search: pair.BaseCurrency);
 
                     if (bc == null)
                     {
                         return false;
                     }
 
-                    string? qc = FindCurrency(assets, pair.QuoteCurrency);
+                    string? qc = FindCurrency(assets: assets, search: pair.QuoteCurrency);
 
                     if (qc == null)
                     {
@@ -99,13 +99,13 @@ namespace CoinBot.Clients.Kraken
                                                                                        .Select(this.GetTickerAsync));
 
                 return tickers.RemoveNulls()
-                              .Select(selector: m => this.CreateMarketSummaryDto(assets, m, builder))
+                              .Select(selector: m => this.CreateMarketSummaryDto(assets: assets, ticker: m, builder: builder))
                               .RemoveNulls()
                               .ToList();
             }
             catch (Exception e)
             {
-                this.Logger.LogError(new EventId(e.HResult), e, e.Message);
+                this.Logger.LogError(new EventId(e.HResult), exception: e, message: e.Message);
 
                 throw;
             }
@@ -118,14 +118,14 @@ namespace CoinBot.Clients.Kraken
                 return null;
             }
 
-            string? baseCurrencySymbol = FindCurrency(assets, ticker.BaseCurrency);
+            string? baseCurrencySymbol = FindCurrency(assets: assets, search: ticker.BaseCurrency);
 
             if (baseCurrencySymbol == null)
             {
                 return null;
             }
 
-            string? marketCurrencySymbol = FindCurrency(assets, ticker.QuoteCurrency);
+            string? marketCurrencySymbol = FindCurrency(assets: assets, search: ticker.QuoteCurrency);
 
             if (marketCurrencySymbol == null)
             {
@@ -157,7 +157,7 @@ namespace CoinBot.Clients.Kraken
 
         private static string? FindCurrency(IReadOnlyList<KrakenAsset> assets, string search)
         {
-            KrakenAsset? found = assets.FirstOrDefault(predicate: a => StringComparer.InvariantCultureIgnoreCase.Equals(a.Id, search));
+            KrakenAsset? found = assets.FirstOrDefault(predicate: a => StringComparer.InvariantCultureIgnoreCase.Equals(x: a.Id, y: search));
 
             if (found == null)
             {
@@ -171,7 +171,7 @@ namespace CoinBot.Clients.Kraken
         {
             // Workaround for kraken
 
-            if (currencySymbol.Equals(value: "xbt", StringComparison.OrdinalIgnoreCase))
+            if (currencySymbol.Equals(value: "xbt", comparisonType: StringComparison.OrdinalIgnoreCase))
             {
                 return "btc";
             }
@@ -187,7 +187,7 @@ namespace CoinBot.Clients.Kraken
         {
             HttpClient httpClient = this.CreateHttpClient();
 
-            using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "Assets", UriKind.Relative)))
+            using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "Assets", uriKind: UriKind.Relative)))
             {
                 response.EnsureSuccessStatusCode();
 
@@ -195,7 +195,7 @@ namespace CoinBot.Clients.Kraken
 
                 try
                 {
-                    KrakenAssetResultWrapper items = JsonSerializer.Deserialize<KrakenAssetResultWrapper>(json, this._serializerSettings);
+                    KrakenAssetResultWrapper items = JsonSerializer.Deserialize<KrakenAssetResultWrapper>(json: json, options: this._serializerSettings);
 
                     if (items.Result != null)
                     {
@@ -209,7 +209,7 @@ namespace CoinBot.Clients.Kraken
                 }
                 catch (Exception exception)
                 {
-                    this.Logger.LogError(new EventId(exception.HResult), exception, message: "Failed to deserialise");
+                    this.Logger.LogError(new EventId(exception.HResult), exception: exception, message: "Failed to deserialise");
 
                     return Array.Empty<KrakenAsset>();
                 }
@@ -224,7 +224,7 @@ namespace CoinBot.Clients.Kraken
         {
             HttpClient httpClient = this.CreateHttpClient();
 
-            using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "AssetPairs", UriKind.Relative)))
+            using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "AssetPairs", uriKind: UriKind.Relative)))
             {
                 response.EnsureSuccessStatusCode();
 
@@ -232,7 +232,7 @@ namespace CoinBot.Clients.Kraken
 
                 try
                 {
-                    KrakenPairWrapper items = JsonSerializer.Deserialize<KrakenPairWrapper>(json, this._serializerSettings);
+                    KrakenPairWrapper items = JsonSerializer.Deserialize<KrakenPairWrapper>(json: json, options: this._serializerSettings);
 
                     if (items.Result == null)
                     {
@@ -248,7 +248,7 @@ namespace CoinBot.Clients.Kraken
                 }
                 catch (Exception exception)
                 {
-                    this.Logger.LogError(new EventId(exception.HResult), exception, message: "Failed to deserialize");
+                    this.Logger.LogError(new EventId(exception.HResult), exception: exception, message: "Failed to deserialize");
 
                     return Array.Empty<KrakenPair>();
                 }
@@ -265,7 +265,7 @@ namespace CoinBot.Clients.Kraken
             {
                 HttpClient httpClient = this.CreateHttpClient();
 
-                using (HttpResponseMessage response = await httpClient.GetAsync(new Uri($"Ticker?pair={pair.PairId}", UriKind.Relative)))
+                using (HttpResponseMessage response = await httpClient.GetAsync(new Uri($"Ticker?pair={pair.PairId}", uriKind: UriKind.Relative)))
                 {
                     response.EnsureSuccessStatusCode();
 
@@ -273,14 +273,14 @@ namespace CoinBot.Clients.Kraken
 
                     try
                     {
-                        KrakenTickerWrapper item = JsonSerializer.Deserialize<KrakenTickerWrapper>(json, this._serializerSettings);
+                        KrakenTickerWrapper item = JsonSerializer.Deserialize<KrakenTickerWrapper>(json: json, options: this._serializerSettings);
 
                         if (item.Result == null)
                         {
                             return null;
                         }
 
-                        if (item.Result.TryGetValue(pair.PairId, out KrakenTicker? ticker))
+                        if (item.Result.TryGetValue(key: pair.PairId, out KrakenTicker? ticker))
                         {
                             ticker.BaseCurrency = pair.BaseCurrency;
                             ticker.QuoteCurrency = pair.QuoteCurrency;
@@ -292,7 +292,7 @@ namespace CoinBot.Clients.Kraken
                     }
                     catch (Exception exception)
                     {
-                        this.Logger.LogError(new EventId(exception.HResult), exception, message: "Failed to deserialize");
+                        this.Logger.LogError(new EventId(exception.HResult), exception: exception, message: "Failed to deserialize");
 
                         return null;
                     }
@@ -300,7 +300,7 @@ namespace CoinBot.Clients.Kraken
             }
             catch (Exception exception)
             {
-                this.Logger.LogError(new EventId(exception.HResult), exception, $"Failed to retrieve {pair.BaseCurrency}/{pair.QuoteCurrency}: {exception.Message}");
+                this.Logger.LogError(new EventId(exception.HResult), exception: exception, $"Failed to retrieve {pair.BaseCurrency}/{pair.QuoteCurrency}: {exception.Message}");
 
                 return null;
             }
@@ -310,7 +310,7 @@ namespace CoinBot.Clients.Kraken
         {
             services.AddSingleton<IMarketClient, KrakenClient>();
 
-            AddHttpClientFactorySupport(services, HTTP_CLIENT_NAME, Endpoint);
+            AddHttpClientFactorySupport(services: services, clientName: HTTP_CLIENT_NAME, endpoint: Endpoint);
         }
 
         [SuppressMessage(category: "Microsoft.Performance", checkId: "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Used as data packet")]

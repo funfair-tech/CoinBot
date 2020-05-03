@@ -36,7 +36,7 @@ namespace CoinBot.Core
                              IEnumerable<IMarketClient> marketClients,
                              ICurrencyListUpdater currencyListUpdater,
                              ILogger<MarketManager> logger)
-            : base(TimeSpan.FromMinutes(settings.Value.RefreshInterval), logger)
+            : base(TimeSpan.FromMinutes(settings.Value.RefreshInterval), logger: logger)
         {
             this._currencyListUpdater = currencyListUpdater;
             this._coinClients = coinClients?.ToList() ?? throw new ArgumentNullException(nameof(coinClients));
@@ -77,10 +77,12 @@ namespace CoinBot.Core
                                                                                                       return false;
                                                                                                   }
 
-                                                                                                  if (m.BaseCurrency?.Symbol.Equals(currency.Symbol,
-                                                                                                                                    StringComparison.OrdinalIgnoreCase) != false ||
-                                                                                                      m.MarketCurrency?.Symbol.Equals(currency.Symbol,
-                                                                                                                                      StringComparison.OrdinalIgnoreCase) != false)
+                                                                                                  if (m.BaseCurrency?.Symbol.Equals(value: currency.Symbol,
+                                                                                                                                    comparisonType: StringComparison
+                                                                                                                                        .OrdinalIgnoreCase) != false ||
+                                                                                                      m.MarketCurrency?.Symbol.Equals(value: currency.Symbol,
+                                                                                                                                      comparisonType: StringComparison
+                                                                                                                                          .OrdinalIgnoreCase) != false)
                                                                                                   {
                                                                                                       return true;
                                                                                                   }
@@ -130,15 +132,18 @@ namespace CoinBot.Core
                                                                                                       return false;
                                                                                                   }
 
-                                                                                                  if (m.BaseCurrency?.Symbol.Equals(currency1.Symbol,
-                                                                                                                                    StringComparison.OrdinalIgnoreCase) != false &&
-                                                                                                      m.MarketCurrency?.Symbol.Equals(currency2.Symbol,
-                                                                                                                                      StringComparison.OrdinalIgnoreCase) !=
-                                                                                                      false ||
-                                                                                                      m.BaseCurrency?.Symbol.Equals(currency2.Symbol,
-                                                                                                                                    StringComparison.OrdinalIgnoreCase) != false &&
-                                                                                                      m.MarketCurrency?.Symbol.Equals(currency1.Symbol,
-                                                                                                                                      StringComparison.OrdinalIgnoreCase) != false)
+                                                                                                  if (m.BaseCurrency?.Symbol.Equals(value: currency1.Symbol,
+                                                                                                                                    comparisonType: StringComparison
+                                                                                                                                        .OrdinalIgnoreCase) != false &&
+                                                                                                      m.MarketCurrency?.Symbol.Equals(value: currency2.Symbol,
+                                                                                                                                      comparisonType: StringComparison
+                                                                                                                                          .OrdinalIgnoreCase) != false ||
+                                                                                                      m.BaseCurrency?.Symbol.Equals(value: currency2.Symbol,
+                                                                                                                                    comparisonType: StringComparison
+                                                                                                                                        .OrdinalIgnoreCase) != false &&
+                                                                                                      m.MarketCurrency?.Symbol.Equals(value: currency1.Symbol,
+                                                                                                                                      comparisonType: StringComparison
+                                                                                                                                          .OrdinalIgnoreCase) != false)
                                                                                                   {
                                                                                                       return true;
                                                                                                   }
@@ -164,7 +169,7 @@ namespace CoinBot.Core
             }
             catch (Exception e)
             {
-                this.Logger.LogError(new EventId(e.HResult), e, e.Message);
+                this.Logger.LogError(new EventId(e.HResult), exception: e, message: e.Message);
             }
         }
 
@@ -178,11 +183,11 @@ namespace CoinBot.Core
 
             await this.UpdateCoinsAsync(builder);
 
-            await Task.WhenAll(this._marketClients.Select(selector: client => this.UpdateOneClientAsync(client, builder)));
+            await Task.WhenAll(this._marketClients.Select(selector: client => this.UpdateOneClientAsync(client: client, builder: builder)));
 
             IGlobalInfo? globalInfo = await this.UpdateGlobalInfoAsync();
 
-            this._currencyListUpdater.Update(builder.AllCurrencies(), globalInfo);
+            this._currencyListUpdater.Update(builder.AllCurrencies(), globalInfo: globalInfo);
         }
 
         private async Task UpdateCoinsAsync(ICoinBuilder builder)
@@ -199,7 +204,7 @@ namespace CoinBot.Core
             {
                 ICoinInfo name = cryptoInfo.Coins[0];
 
-                Currency? currency = builder.Get(cryptoInfo.Symbol, name.Name);
+                Currency? currency = builder.Get(symbol: cryptoInfo.Symbol, name: name.Name);
 
                 if (currency != null)
                 {
@@ -221,7 +226,7 @@ namespace CoinBot.Core
             }
             catch (Exception exception)
             {
-                this.Logger.LogError(new EventId(exception.HResult), exception, $"Failed to update {client.GetType().Name} CoinInfo: {exception.Message}");
+                this.Logger.LogError(new EventId(exception.HResult), exception: exception, $"Failed to update {client.GetType().Name} CoinInfo: {exception.Message}");
 
                 return Array.Empty<ICoinInfo>();
             }
@@ -237,7 +242,7 @@ namespace CoinBot.Core
 
         private async Task UpdateOneClientAsync(IMarketClient client, ICoinBuilder builder)
         {
-            if (this._exchanges.TryGetValue(client.Name, out Exchange? exchange))
+            if (this._exchanges.TryGetValue(key: client.Name, out Exchange? exchange))
             {
                 this.Logger.LogInformation($"Start updating exchange '{client.Name}'.");
                 Stopwatch watch = new Stopwatch();
@@ -251,7 +256,7 @@ namespace CoinBot.Core
                 }
                 catch (Exception e)
                 {
-                    this.Logger.LogError(eventId: 0, e, $"An error occurred while fetching results from the exchange '{client.Name}'.");
+                    this.Logger.LogError(eventId: 0, exception: e, $"An error occurred while fetching results from the exchange '{client.Name}'.");
                     exchange.Lock.EnterWriteLock();
 
                     try
@@ -295,7 +300,7 @@ namespace CoinBot.Core
             }
             catch (Exception exception)
             {
-                this.Logger.LogError(new EventId(exception.HResult), exception, $"Failed to update {client.GetType().Name} GlobalInfo: {exception.Message}");
+                this.Logger.LogError(new EventId(exception.HResult), exception: exception, $"Failed to update {client.GetType().Name} GlobalInfo: {exception.Message}");
 
                 return null;
             }

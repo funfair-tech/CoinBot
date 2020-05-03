@@ -44,7 +44,7 @@ namespace CoinBot.Core.Extensions
         /// <returns></returns>
         public static string AsUsdPrice(this double? d, int? precision = null)
         {
-            return d?.ToString($"c{precision}", UsdCulture) ?? UNKNOWN_RESPONSE;
+            return d?.ToString($"c{precision}", provider: UsdCulture) ?? UNKNOWN_RESPONSE;
         }
 
         /// <summary>

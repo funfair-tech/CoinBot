@@ -34,7 +34,7 @@ namespace CoinBot.Clients.Extensions
             KrakenClient.Register(services);
             PoloniexClient.Register(services);
 
-            FunFairClientBase.Register(services,
+            FunFairClientBase.Register(services: services,
                                        configurationRoot.GetSection(key: "Sources:FunFair")
                                                         .Get<FunFairClientConfiguration>());
 

@@ -59,7 +59,7 @@ namespace CoinBot.Discord.Commands
 
                             builder.AddField(name: "Price", details.GetPrice());
                             builder.AddField(name: "Change", details.GetChange());
-                            AddFooter(builder, details.LastUpdated);
+                            AddFooter(builder: builder, dateTime: details.LastUpdated);
                         }
                         else
                         {
@@ -74,10 +74,10 @@ namespace CoinBot.Discord.Commands
 
                             builder.AddField(name: "Price", walletDetails.GetPrice());
 
-                            AddFooter(builder, walletDetails.LastUpdated);
+                            AddFooter(builder: builder, dateTime: walletDetails.LastUpdated);
                         }
 
-                        await this.ReplyAsync(string.Empty, isTTS: false, builder.Build());
+                        await this.ReplyAsync(message: string.Empty, isTTS: false, builder.Build());
                     }
                     else
                     {
@@ -86,7 +86,7 @@ namespace CoinBot.Discord.Commands
                 }
                 catch (Exception e)
                 {
-                    this._logger.LogError(new EventId(e.HResult), e, e.Message);
+                    this._logger.LogError(new EventId(e.HResult), exception: e, message: e.Message);
                     await this.ReplyAsync(message: "oops, something went wrong, sorry!");
                 }
             }
@@ -95,8 +95,8 @@ namespace CoinBot.Discord.Commands
         private ICoinInfo GetCoinInfo(Currency currency)
         {
             ICoinInfo? walletDetails = currency.Getdetails<FunFairWalletCoin>() ?? (ICoinInfo) new InterpretedCoinInfo(
-                currency,
-                this._marketManager,
+                currency: currency,
+                marketManager: this._marketManager,
                 this._currencyManager.Get(nameOrSymbol: @"USD"),
                 this._currencyManager.Get(nameOrSymbol: @"ETH"),
                 this._currencyManager.Get(nameOrSymbol: @"BTC"));
@@ -134,7 +134,7 @@ namespace CoinBot.Discord.Commands
                     }
                     catch (Exception e)
                     {
-                        this._logger.LogError(new EventId(e.HResult), e, e.Message);
+                        this._logger.LogError(new EventId(e.HResult), exception: e, message: e.Message);
                         await this.ReplyAsync(message: "oops, something went wrong, sorry!");
 
                         return;
@@ -145,7 +145,7 @@ namespace CoinBot.Discord.Commands
                 {
                     if (notFound.Count > 1)
                     {
-                        await this.ReplyAsync($"sorry, {string.Join(separator: ", ", notFound)} were not found");
+                        await this.ReplyAsync($"sorry, {string.Join(separator: ", ", values: notFound)} were not found");
                     }
                     else
                     {
@@ -155,7 +155,7 @@ namespace CoinBot.Discord.Commands
 
                 double? totalChange = coins.Sum(selector: c => c.Getdetails<CoinMarketCapCoin>()
                                                                 ?.DayChange.GetValueOrDefault(defaultValue: 0d));
-                await this.MultiCoinReplyAsync(coins,
+                await this.MultiCoinReplyAsync(coins: coins,
                                                totalChange > 0 ? Color.Green : Color.Red,
                                                title: "Snapshot",
                                                string.Join(separator: ", ", coins.Select(selector: c => c.Symbol)));
@@ -179,7 +179,7 @@ namespace CoinBot.Discord.Commands
                 }
                 catch (Exception e)
                 {
-                    this._logger.LogError(new EventId(e.HResult), e, e.Message);
+                    this._logger.LogError(new EventId(e.HResult), exception: e, message: e.Message);
                     await this.ReplyAsync(message: "oops, something went wrong, sorry!");
 
                     return;
@@ -187,7 +187,7 @@ namespace CoinBot.Discord.Commands
 
                 await this.MultiCoinReplyAsync(coins.Take(count: 5)
                                                     .ToList(),
-                                               Color.Green,
+                                               color: Color.Green,
                                                title: "Gainers",
                                                description: "The 5 coins in the top 100 with the biggest 24 hour gain");
             }
@@ -213,7 +213,7 @@ namespace CoinBot.Discord.Commands
                 }
                 catch (Exception e)
                 {
-                    this._logger.LogError(new EventId(e.HResult), e, e.Message);
+                    this._logger.LogError(new EventId(e.HResult), exception: e, message: e.Message);
                     await this.ReplyAsync(message: "oops, something went wrong, sorry!");
 
                     return;
@@ -221,7 +221,7 @@ namespace CoinBot.Discord.Commands
 
                 await this.MultiCoinReplyAsync(coins.Take(count: 5)
                                                     .ToList(),
-                                               Color.Red,
+                                               color: Color.Red,
                                                title: "Losers",
                                                description: "The 5 coins in the top 100 with the biggest 24 hour loss");
             }
@@ -233,7 +233,7 @@ namespace CoinBot.Discord.Commands
             builder.WithTitle(title);
             builder.WithDescription(description);
             AddAuthor(builder);
-            AddFooter(builder,
+            AddFooter(builder: builder,
                       coins.Max(selector: c => c.Getdetails<CoinMarketCapCoin>()
                                                 ?.LastUpdated.GetValueOrDefault(DateTime.MinValue)));
 
@@ -254,7 +254,7 @@ namespace CoinBot.Discord.Commands
                                    });
             }
 
-            return this.ReplyAsync(string.Empty, isTTS: false, builder.Build());
+            return this.ReplyAsync(message: string.Empty, isTTS: false, builder.Build());
         }
     }
 }

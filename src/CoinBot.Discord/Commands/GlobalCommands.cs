@@ -47,9 +47,9 @@ namespace CoinBot.Discord.Commands
                 descriptionBuilder.AppendLine($"Markets: {globalInfo.Markets}");
                 builder.WithDescription(descriptionBuilder.ToString());
 
-                AddFooter(builder, globalInfo.LastUpdated);
+                AddFooter(builder: builder, dateTime: globalInfo.LastUpdated);
 
-                await this.ReplyAsync(string.Empty, isTTS: false, builder.Build());
+                await this.ReplyAsync(message: string.Empty, isTTS: false, builder.Build());
             }
         }
     }
