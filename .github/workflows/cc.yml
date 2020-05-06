@@ -24,6 +24,14 @@ jobs:
       with:
         fetch-depth: 0
     - uses: olivernybroe/action-conflict-finder@v1.1
-#    - uses: credfeto/action-conflict-finder@fix/merge-conflicts-only-at-begining-of-line
 
 
+  has-no-file-or-folder-case-sensitivity-issues:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - uses: credfeto/action-case-checker@master
