@@ -35,12 +35,3 @@ jobs:
       with:
         fetch-depth: 0
     - uses: credfeto/action-case-checker@master
-
-  raise-todo-issues:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
