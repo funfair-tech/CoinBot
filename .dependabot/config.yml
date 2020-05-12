@@ -5,6 +5,10 @@ update_configs:
     update_schedule: "live"
     commit_message:
        prefix: "[FF-1429]" 
+    default_reviewers:
+       - "credfeto"
+    default_assignees:
+       - "credfeto"
     ignored_updates:
        - match:
           dependency_name: "AsyncFixer"
@@ -36,3 +40,7 @@ update_configs:
           dependency_name: "FunFair.Test.Common"
        - match:
           dependency_name: "LibGit2Sharp"
+    allowed_updates:
+       - match:
+          update_type: security
+          dependency_type: indirect
