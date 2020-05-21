@@ -5,6 +5,7 @@ on:
     - master
     - "release/*"
     - "hotfix/*"
+    - "feature/*"
     
 jobs:
   pull-request:
