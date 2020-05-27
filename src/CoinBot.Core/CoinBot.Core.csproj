@@ -23,14 +23,14 @@
     <DocumentationFile>bin\Debug\netcoreapp3.1\CoinBot.Core.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-      <PackageReference Include="System.Threading.Tasks.Dataflow" Version="4.11.1"/>
-      <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.4"/>
-      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.4"/>
-      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.4"/>
-      <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.4"/>
+    <PackageReference Include="System.Threading.Tasks.Dataflow" Version="4.11.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.4" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.4" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.4" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="3.1.4" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AsyncFixer" Version="1.1.6" PrivateAssets="All" />
+    <PackageReference Include="AsyncFixer" Version="1.1.8" PrivateAssets="All" />
     <PackageReference Include="FunFair.CodeAnalysis" Version="1.4.1.272" PrivateAssets="All" />
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="16.6.13" PrivateAssets="All" />
