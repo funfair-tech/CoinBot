@@ -1,5 +1,49 @@
 version: 1
 update_configs:
+  - package_manager: "dotnet:nuget"
+    directory: "/"
+    update_schedule: "live"
+    commit_message:
+       prefix: "[FF-1429]" 
+    default_reviewers:
+       - "credfeto"
+    default_assignees:
+       - "credfeto"
+    ignored_updates:
+       - match:
+          dependency_name: "AsyncFixer"
+       - match:
+          dependency_name: "DisableDateTimeNow"
+       - match:
+          dependency_name: "NSubstitute.Analyzers.CSharp"
+       - match:
+          dependency_name: "Microsoft.CodeAnalysis.FxCopAnalyzers"
+       - match:
+          dependency_name: "SonarAnalyzer.CSharp"
+       - match:
+          dependency_name: "xunit.analyzers"
+       - match:
+          dependency_name: "FunFair.CodeAnalysis"
+       - match:
+          dependency_name: "Microsoft.VisualStudio.Threading.Analyzers"
+       - match:
+          dependency_name: "Roslynator.Analyzers"
+       - match:
+          dependency_name: "SourceLink.Create.CommandLine"
+       - match:
+          dependency_name: "Microsoft.NET.Test.Sdk"
+       - match:
+          dependency_name: "TeamCity.VSTest.TestAdapter"
+       - match:
+          dependency_name: "xunit.runner.visualstudio"
+       - match:
+          dependency_name: "FunFair.Test.Common"
+       - match:
+          dependency_name: "LibGit2Sharp"
+    allowed_updates:
+       - match:
+          update_type: security
+          dependency_type: indirect
   - package_manager: "github_actions"
     directory: "/"
     update_schedule: "daily"
