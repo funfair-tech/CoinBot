@@ -3,9 +3,9 @@ on:
   push:
     branches-ignore:
     - master
-    - "release/*"
-    - "hotfix/*"
-    - "feature/*"
+    - "release/**"
+    - "hotfix/**"
+    - "feature/**"
     
 jobs:
   pull-request:
