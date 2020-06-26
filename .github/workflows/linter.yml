@@ -16,8 +16,8 @@ name: Lint Code Base
 on:
   push:
     branches-ignore:
-      - 'release/*'
-      - 'hotfix/*'
+      - 'release/**'
+      - 'hotfix/**'
 
 ###############
 # Set the Job #
