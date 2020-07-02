@@ -8,6 +8,7 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
+- FF-1429 - Updated FunFair.CodeAnalysis to 1.6.0.339
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.9.0.19135
 - FF-2488 - Updated packages and global.json to net core 3.1.301
 - FF-1429 - Updated FunFair.CodeAnalysis to 1.5.0.314
@@ -20,6 +21,7 @@ Releases that have at least been deployed to staging, BUT NOT necessarily releas
 -->
 ## [1.0.0] 2020-02-11
 - Initial Version
+
 
 
 
