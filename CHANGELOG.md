@@ -21,7 +21,7 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.8.0.18411
 - FF-1429 - Updated AsyncFixer to 1.3.0
 - FF-1429 - Updated AsyncFixer to 1.1.8
-
+- FF-2652 - Update all the .NET components to .NET Core 3.1.302
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
