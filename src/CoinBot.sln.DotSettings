@@ -354,5 +354,6 @@
         <s:Boolean x:Key="/Default/UserDictionary/Words/=upgrader/@EntryIndexedValue">True</s:Boolean>
         <s:Boolean x:Key="/Default/UserDictionary/Words/=twilio/@EntryIndexedValue">True</s:Boolean>
         <s:Boolean x:Key="/Default/UserDictionary/Words/=retrier/@EntryIndexedValue">True</s:Boolean>
+        <s:Boolean x:Key="/Default/UserDictionary/Words/=Shufti/@EntryIndexedValue">True</s:Boolean>
 </wpf:ResourceDictionary>
 	
