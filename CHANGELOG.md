@@ -8,6 +8,7 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
+- FF-1429 - Updated Microsoft.VisualStudio.Threading.Analyzers to 16.7.54
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.10.0.19839
 - FF-1429 - Updated FunFair.CodeAnalysis to 1.8.0.375
 - FF-1429 - Updated FunFair.CodeAnalysis to 1.7.2.364
@@ -27,6 +28,7 @@ Releases that have at least been deployed to staging, BUT NOT necessarily releas
 -->
 ## [1.0.0] 2020-02-11
 - Initial Version
+
 
 
 
