@@ -1,6 +1,4 @@
 ﻿using System;
-using Discord;
-using Discord.Commands;
 
 namespace CoinBot.Discord.Commands
 {

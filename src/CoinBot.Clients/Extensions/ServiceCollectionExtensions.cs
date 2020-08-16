@@ -5,8 +5,6 @@ using CoinBot.Clients.GateIo;
 using CoinBot.Clients.Gdax;
 using CoinBot.Clients.Kraken;
 using CoinBot.Clients.Poloniex;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace CoinBot.Clients.Extensions
 {

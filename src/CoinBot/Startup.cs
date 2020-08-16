@@ -1,16 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using CoinBot.Clients.Extensions;
 using CoinBot.Core;
-using CoinBot.Core.Extensions;
 using CoinBot.Discord;
 using CoinBot.Discord.Extensions;
-using Discord;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Serilog;
 
 namespace CoinBot
 {

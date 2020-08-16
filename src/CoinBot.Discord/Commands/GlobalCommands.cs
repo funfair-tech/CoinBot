@@ -2,9 +2,6 @@
 using System.Threading.Tasks;
 using CoinBot.Core;
 using CoinBot.Core.Extensions;
-using Discord;
-using Discord.Commands;
-using Microsoft.Extensions.Logging;
 
 namespace CoinBot.Discord.Commands
 {

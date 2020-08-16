@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using CoinBot.Core;
 using CoinBot.Core.Extensions;
-using Microsoft.Extensions.Logging;
 
 namespace CoinBot.Clients.FunFair
 {

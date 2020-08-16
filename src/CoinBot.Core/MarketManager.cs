@@ -6,8 +6,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CoinBot.Core.Extensions;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace CoinBot.Core
 {
@@ -78,11 +76,9 @@ namespace CoinBot.Core
                                                                                                   }
 
                                                                                                   if (m.BaseCurrency?.Symbol.Equals(value: currency.Symbol,
-                                                                                                                                    comparisonType: StringComparison
-                                                                                                                                        .OrdinalIgnoreCase) != false ||
+                                                                                                          comparisonType: StringComparison.OrdinalIgnoreCase) != false ||
                                                                                                       m.MarketCurrency?.Symbol.Equals(value: currency.Symbol,
-                                                                                                                                      comparisonType: StringComparison
-                                                                                                                                          .OrdinalIgnoreCase) != false)
+                                                                                                          comparisonType: StringComparison.OrdinalIgnoreCase) != false)
                                                                                                   {
                                                                                                       return true;
                                                                                                   }
@@ -133,17 +129,13 @@ namespace CoinBot.Core
                                                                                                   }
 
                                                                                                   if (m.BaseCurrency?.Symbol.Equals(value: currency1.Symbol,
-                                                                                                                                    comparisonType: StringComparison
-                                                                                                                                        .OrdinalIgnoreCase) != false &&
+                                                                                                          comparisonType: StringComparison.OrdinalIgnoreCase) != false &&
                                                                                                       m.MarketCurrency?.Symbol.Equals(value: currency2.Symbol,
-                                                                                                                                      comparisonType: StringComparison
-                                                                                                                                          .OrdinalIgnoreCase) != false ||
+                                                                                                          comparisonType: StringComparison.OrdinalIgnoreCase) != false ||
                                                                                                       m.BaseCurrency?.Symbol.Equals(value: currency2.Symbol,
-                                                                                                                                    comparisonType: StringComparison
-                                                                                                                                        .OrdinalIgnoreCase) != false &&
+                                                                                                          comparisonType: StringComparison.OrdinalIgnoreCase) != false &&
                                                                                                       m.MarketCurrency?.Symbol.Equals(value: currency1.Symbol,
-                                                                                                                                      comparisonType: StringComparison
-                                                                                                                                          .OrdinalIgnoreCase) != false)
+                                                                                                          comparisonType: StringComparison.OrdinalIgnoreCase) != false)
                                                                                                   {
                                                                                                       return true;
                                                                                                   }
