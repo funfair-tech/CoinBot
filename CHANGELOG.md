@@ -8,6 +8,7 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
+- FF-1429 - Updated FunFair.CodeAnalysis to 1.11.0.424
 - FF-1429 - Updated Roslynator.Analyzers to 3.0.0
 - FF-1429 - Updated Microsoft.VisualStudio.Threading.Analyzers to 16.7.56
 - FF-1429 - Updated FunFair.CodeAnalysis to 1.10.0.414
