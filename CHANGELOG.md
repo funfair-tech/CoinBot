@@ -8,6 +8,13 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
+### Deployment Changes
+
+<!--
+Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
+-->
+## [1.1.0] 2020-09-10
+### Changed
 - FF-2830 - Update all the .NET components to .NET Core 3.1.402
 - FF-1429 - Updated FunFair.CodeAnalysis to 1.11.0.424
 - FF-1429 - Updated Roslynator.Analyzers to 3.0.0
@@ -32,8 +39,6 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 - FF-1429 - Updated AsyncFixer to 1.3.0
 - FF-1429 - Updated AsyncFixer to 1.1.8
 - FF-2652 - Update all the .NET components to .NET Core 3.1.302
-<!--
-Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
--->
+
 ## [1.0.0] 2020-02-11
 - Initial Version
