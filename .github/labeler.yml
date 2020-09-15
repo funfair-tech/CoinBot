@@ -5,7 +5,7 @@
 "SQL":
     - db/**/*
     - tools/**/*.sql
-    
+
 "Solidity":
     - src/**/*.sol
 
@@ -15,16 +15,16 @@
     - src/*.Tests/**/*
     - src/*.Tests.Integration/**/*
 
-".NET update": 
+".NET update":
     - src/global.json
 
-"Config Change": 
+"Config Change":
     - src/**/*.json
 
 "Static Code Analysis Rules":
     - src/CodeAnalysis.ruleset
 
-"Migration Script": 
+"Migration Script":
     - tools/MigrationScripts/**/*
 
 "Legal Text":
