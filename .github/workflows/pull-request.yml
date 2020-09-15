@@ -6,7 +6,7 @@ on:
     - "release/**"
     - "hotfix/**"
     - "feature/**"
-    
+
 jobs:
   pull-request:
     runs-on: ubuntu-latest
