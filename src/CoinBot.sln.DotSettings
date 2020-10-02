@@ -195,6 +195,7 @@
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=UnusedVariable_002ECompiler/@EntryIndexedValue">ERROR</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=UseCancellationTokenForIAsyncEnumerable/@EntryIndexedValue">WARNING</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=UseCollectionCountProperty/@EntryIndexedValue">ERROR</s:String>
+        <s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=UseDeconstruction/@EntryIndexedValue">ERROR</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=UseIsOperator_002E1/@EntryIndexedValue">ERROR</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=UseIsOperator_002E2/@EntryIndexedValue">ERROR</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=UseMethodAny_002E0/@EntryIndexedValue">ERROR</s:String>
