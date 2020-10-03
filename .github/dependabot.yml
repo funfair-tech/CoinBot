@@ -23,6 +23,7 @@ update_configs:
   - "dotnet"
   - "dependencies"
   - "Changelog Not Required"
+
 - package-ecosystem: github-actions
   directory: "/"
   schedule:
@@ -43,3 +44,4 @@ update_configs:
    - "github-actions"
    - "dependencies"
    - "Changelog Not Required"
+
