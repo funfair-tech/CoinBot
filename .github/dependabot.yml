@@ -1,5 +1,6 @@
 version: 2
 update_configs:
+
 - package-ecosystem: nuget
   directory: "/"
   schedule: 
@@ -21,7 +22,8 @@ update_configs:
   labels:
   - "dotnet"
   - "dependencies"
-  - "Changelog Not Required"- package-ecosystem: github-actions
+  - "Changelog Not Required"
+- package-ecosystem: github-actions
   directory: "/"
   schedule:
     interval: daily
