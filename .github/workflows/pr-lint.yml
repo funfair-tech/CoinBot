@@ -10,7 +10,7 @@ jobs:
     steps:
 # Although the line below works perfectly in a personal repo, it doesn't in any of the FunFair ones!
     - if: ${{ !startsWith(github.head_ref, 'release/') && !startsWith(github.head_ref, 'hotfix/') }}
-      uses: vijaykramesh/pr-lint-action@v1.0
+      uses: vijaykramesh/pr-lint-action@v1.1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
