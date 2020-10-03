@@ -47,8 +47,10 @@ jobs:
         env:
           DEFAULT_BRANCH: master
           GITHUB_TOKEN: ${{ secrets.SOURCE_PUSH_TOKEN }}
+          MULTI_STATUS: true
           VALIDATE_ALL_CODEBASE: true
           VALIDATE_BASH: true
+          VALIDATE_CSHARP: true
           VALIDATE_CSS: true
           VALIDATE_DOCKERFILE: true
           VALIDATE_DOCKERFILE_HADOLINT: true
@@ -63,23 +65,22 @@ jobs:
           VALIDATE_PYTHON_FLAKE8: true
           VALIDATE_PYTHON_BLACK: true
           VALIDATE_POWERSHELL: true
-          VALIDATE_SNAKEMAKE_LINT: false
+          VALIDATE_SHELL_SHFMT: true
           VALIDATE_SQL: true
           VALIDATE_TSX: true
           VALIDATE_TYPESCRIPT_ES: true
           VALIDATE_TYPESCRIPT_STANDARD: true
           VALIDATE_XML: true
           VALIDATE_YAML: true
-          YAML_CONFIG_FILE: true
+          # VALIDATE_YAML: true # this currently crashes
+          # VALIDATE_EDITORCONFIG: true # really want this on though
           #VALIDATE_ANSIBLE: false
           #VALIDATE_ARM: false
           #VALIDATE_BASH_EXEC: false
           #VALIDATE_CLOJURE: false
           #VALIDATE_CLOUDFORMATION: false
           #VALIDATE_COFFEE: false
-          #VALIDATE_CSHARP: true
           #VALIDATE_DART: false
-          #VALIDATE_EDITORCONFIG: false
           #VALIDATE_ENV: false
           #VALIDATE_GO: false
           #VALIDATE_GROOVY: false
@@ -99,7 +100,7 @@ jobs:
           #VALIDATE_R: false
           #VALIDATE_RAKU: false
           #VALIDATE_RUBY: false
-          #VALIDATE_SHELL_SHFMT: true
+          #VALIDATE_SNAKEMAKE_LINT: false
           #VALIDATE_SNAKEMAKE_SNAKEFMT: false
           #VALIDATE_STATES: false
           #VALIDATE_TERRAFORM: false
