@@ -30,7 +30,19 @@ indent_size=2
 
 [*.md]
 max_line_length = off
-trim_trailing_whitespace = false
+trim_trailing_whitespace = true
+insert_final_newline=true
+
+[*.gitignore]
+insert_final_newline=true
+
+[*.json]
+
+[.DotSettings]
+max_line_length = off
+
+[.ruleset]
+max_line_length = off
 
 [*.cs]
 charset=utf-8
