@@ -44,6 +44,10 @@ max_line_length = off
 [.ruleset]
 max_line_length = off
 
+[.yml]
+indent_size=2
+insert_final_newline=false
+
 [*.cs]
 charset=utf-8
 end_of_line=crlf
@@ -51,6 +55,9 @@ trim_trailing_whitespace=false
 insert_final_newline=false
 indent_style=space
 indent_size=4
+
+[*.toml]
+Not all lines have the correct end of line character
 
 # Microsoft .NET properties
 csharp_preferred_modifier_order=public, private, protected, internal, new, abstract, virtual, sealed, override, static, readonly, extern, unsafe, volatile, async:suggestion
