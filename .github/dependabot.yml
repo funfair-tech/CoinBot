@@ -1,11 +1,32 @@
 version: 2
 update_configs:
-- package-ecosystem: github-actions
+- package-ecosystem: nuget
+  directory: "/"
+  schedule: 
+    interval: daily
+    time: "03:00"
+    timezone: "Europe/London"
+  open-pull-requests-limit: 99
+  reviewers:
+  - credfeto
+  assignees:
+  - credfeto
+  allow:
+  - dependency-type: all
+  ignore:
+  - dependency-name: "Yoti"
+  commit-message:
+    prefix: "[FF-1429]"
+  rebase-strategy: "auto"
+  labels:
+  - "dotnet"
+  - "dependencies"
+  - "Changelog Not Required"- package-ecosystem: github-actions
   directory: "/"
   schedule:
     interval: daily
-	time: "03:00"
-	timezone: "Europe/London"
+    time: "03:00"
+    timezone: "Europe/London"
   open-pull-requests-limit: 99
   reviewers:
   - credfeto
