@@ -43,7 +43,65 @@ jobs:
       # Run Linter against code base #
       ################################
       - name: Lint Code Base
-        uses: github/super-linter@v2.0.0
+        uses: github/super-linter@v3.11.0
         env:
+          DEFAULT_BRANCH: master
+          GITHUB_TOKEN: ${{ secrets.SOURCE_PUSH_TOKEN }}
           VALIDATE_ALL_CODEBASE: true
-          VALIDATE_ANSIBLE: false
+          VALIDATE_BASH: true
+          VALIDATE_CSS: true
+          VALIDATE_DOCKERFILE: true
+          VALIDATE_DOCKERFILE_HADOLINT: true
+          VALIDATE_HTML: true
+          VALIDATE_JAVASCRIPT_ES: true
+          VALIDATE_JAVASCRIPT_STANDARD: true
+          VALIDATE_JSON: true
+          VALIDATE_JSX: true
+          VALIDATE_MD: true
+          VALIDATE_PYTHON: true
+          VALIDATE_PYTHON_PYLINT: true
+          VALIDATE_PYTHON_FLAKE8: true
+          VALIDATE_PYTHON_BLACK: true
+          VALIDATE_POWERSHELL: true
+          VALIDATE_SNAKEMAKE_LINT: false
+          VALIDATE_SQL: true
+          VALIDATE_TSX: true
+          VALIDATE_TYPESCRIPT_ES: true
+          VALIDATE_TYPESCRIPT_STANDARD: true
+          VALIDATE_XML: true
+          VALIDATE_YAML: true
+          YAML_CONFIG_FILE: true
+          #VALIDATE_ANSIBLE: false
+          #VALIDATE_ARM: false
+          #VALIDATE_BASH_EXEC: false
+          #VALIDATE_CLOJURE: false
+          #VALIDATE_CLOUDFORMATION: false
+          #VALIDATE_COFFEE: false
+          #VALIDATE_CSHARP: true
+          #VALIDATE_DART: false
+          #VALIDATE_EDITORCONFIG: false
+          #VALIDATE_ENV: false
+          #VALIDATE_GO: false
+          #VALIDATE_GROOVY: false
+          #VALIDATE_JAVA: false
+          #VALIDATE_KOTLIN: false
+          #VALIDATE_KUBERNETES_KUBEVAL: false
+          #VALIDATE_LATEX: false
+          #VALIDATE_LUA: false
+          #VALIDATE_OPENAPI: false
+          #VALIDATE_PERL: false
+          #VALIDATE_PHP: false
+          #VALIDATE_PHP_BUILTIN: false
+          #VALIDATE_PHP_PHPCS: false
+          #VALIDATE_PHP_PHPSTAN: false
+          #VALIDATE_PHP_PSALM: false
+          #VALIDATE_PROTOBUF: false
+          #VALIDATE_R: false
+          #VALIDATE_RAKU: false
+          #VALIDATE_RUBY: false
+          #VALIDATE_SHELL_SHFMT: true
+          #VALIDATE_SNAKEMAKE_SNAKEFMT: false
+          #VALIDATE_STATES: false
+          #VALIDATE_TERRAFORM: false
+          #VALIDATE_TERRAFORM_TERRASCAN: false
+          
