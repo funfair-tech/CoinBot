@@ -15,7 +15,6 @@ title = "gitleaks config"
     regex = '''amzn\.mws\.[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'''
     tags = ["key", "AWS", "MWS"]
 
-
 [[rules]]
     description = "Github"
     regex = '''(?i)github(.{0,20})?(?-i)[0-9a-zA-Z]{35,40}'''
@@ -35,7 +34,6 @@ title = "gitleaks config"
     description = "Google (GCP) Service Account"
     regex = '''"type": "service_account"'''
     tags = ["key", "Google"]
-
 
 [[rules]]
     description = "SendGrid API Key"
