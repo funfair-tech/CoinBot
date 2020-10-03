@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using CoinBot.Core;
@@ -22,8 +22,7 @@ namespace CoinBot.Clients.CoinMarketCap
         public decimal? MaxSupply { get; set; }
 
         [JsonPropertyName(name: @"id")]
-
-        // ReSharper disable once RedundantDefaultMemberInitializer
+        [SuppressMessage(category: "ReSharper", checkId: "RedundantDefaultMemberInitializer", Justification = "TODO: Review")]
         public string Id { get; set; } = default!;
 
         [SuppressMessage(category: "Microsoft.Design", checkId: "CA1056:UriPropertiesShouldNotBeStrings", Justification = "Model for serialization")]
@@ -32,13 +31,11 @@ namespace CoinBot.Clients.CoinMarketCap
                   .ToString();
 
         [JsonPropertyName(name: @"name")]
-
-        // ReSharper disable once RedundantDefaultMemberInitializer
+        [SuppressMessage(category: "ReSharper", checkId: "RedundantDefaultMemberInitializer", Justification = "TODO: Review")]
         public string Name { get; set; } = default!;
 
         [JsonPropertyName(name: @"symbol")]
-
-        // ReSharper disable once RedundantDefaultMemberInitializer
+        [SuppressMessage(category: "ReSharper", checkId: "RedundantDefaultMemberInitializer", Justification = "TODO: Review")]
         public string Symbol { get; set; } = default!;
 
         [JsonPropertyName(name: @"rank")]

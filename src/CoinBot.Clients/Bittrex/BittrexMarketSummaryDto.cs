@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
@@ -8,8 +8,7 @@ namespace CoinBot.Clients.Bittrex
     internal sealed class BittrexMarketSummaryDto
     {
         [JsonPropertyName(name: @"MarketName")]
-
-        // ReSharper disable once RedundantDefaultMemberInitializer
+        [SuppressMessage(category: "ReSharper", checkId: "RedundantDefaultMemberInitializer", Justification = "TODO: Review")]
         public string MarketName { get; set; } = default!;
 
         [JsonPropertyName(name: @"High")]
