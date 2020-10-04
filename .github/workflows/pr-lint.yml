@@ -17,7 +17,7 @@ jobs:
   include-changelog-entry:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.3.3
         with:
           fetch-depth: 0
 # Although the line below works perfectly in a personal repo, it doesn't in any of the FunFair ones!
