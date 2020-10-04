@@ -3,7 +3,7 @@ updates:
 
 - package-ecosystem: nuget
   directory: "/"
-  schedule: 
+  schedule:
     interval: daily
     time: "03:00"
     timezone: "Europe/London"
