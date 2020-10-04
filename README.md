@@ -1,7 +1,7 @@
 # CoinBot
 Discord Cryptocurrency Bot
 
-# Running a development version
+## Running a development version
 
 1. Create a private Discord server by following the steps explained here: [https://support.discordapp.com/hc/en-us/articles/204849977](https://support.discordapp.com/hc/en-us/articles/204849977).
 
@@ -27,3 +27,9 @@ Discord Cryptocurrency Bot
   * Or use environment variables as explained here: [https://docs.microsoft.com/en-us/aspnet/core/fundamentals/environments](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/environments). You will need to configure these variables: `DiscordBot:Token` (required) and `MarketManager:RefreshInterval` (optional).
 
 5. Build and run the CoinBot application. You should see the CoinBot come online in Discord. It will not reply to you in the General channel!
+
+## Changelog
+
+View [changelog](CHANGELOG.md)
+
+[CHANGELOG]: ./CHANGELOG.md
