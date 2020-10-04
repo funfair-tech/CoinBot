@@ -37,7 +37,7 @@ jobs:
       # Checkout the code base #
       ##########################
       - name: Checkout Code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2.3.3
 
       ################################
       # Run Linter against code base #
@@ -66,12 +66,12 @@ jobs:
           VALIDATE_PYTHON_BLACK: true
           VALIDATE_POWERSHELL: true
           VALIDATE_SHELL_SHFMT: true
-          VALIDATE_SQL: true
           VALIDATE_TSX: true
           VALIDATE_TYPESCRIPT_ES: true
           VALIDATE_TYPESCRIPT_STANDARD: true
           VALIDATE_XML: true
           VALIDATE_YAML: true
+          # VALIDATE_SQL: true # needs more invesigation so it can understand SQL dialect
           #VALIDATE_CSHARP: true # Just complains about end of line being wrong
           # VALIDATE_YAML: true # this currently crashes
           # VALIDATE_EDITORCONFIG: true # really want this on though
