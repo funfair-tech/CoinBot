@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace CoinBot.Clients.FunFair
@@ -9,14 +9,14 @@ namespace CoinBot.Clients.FunFair
     [SuppressMessage(category: "Microsoft.Performance", checkId: "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Used as data packet")]
     internal sealed class FunFairWalletPriceResultDto
     {
-        // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Global
+        [SuppressMessage(category: "ReSharper", checkId: "AutoPropertyCanBeMadeGetOnly.Global", Justification = "TODO: Review")]
         public string? Status { get; set; } = default!;
 
-        // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Global
+        [SuppressMessage(category: "ReSharper", checkId: "AutoPropertyCanBeMadeGetOnly.Global", Justification = "TODO: Review")]
         public decimal Price { get; set; } = default!;
 
-        // ReSharper disable once UnusedMember.Local
-        // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Global
+        [SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Local", Justification = "TODO: Review")]
+        [SuppressMessage(category: "ReSharper", checkId: "AutoPropertyCanBeMadeGetOnly.Global", Justification = "TODO: Review")]
         public string? Symbol { get; set; } = default!;
 
         public DateTime Date { get; set; }

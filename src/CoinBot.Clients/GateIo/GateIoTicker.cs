@@ -1,15 +1,15 @@
-﻿using System.Text.Json.Serialization;
+using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 
 namespace CoinBot.Clients.GateIo
 {
     public sealed class GateIoTicker
     {
-        // ReSharper disable once RedundantDefaultMemberInitializer
+        [SuppressMessage(category: "ReSharper", checkId: "RedundantDefaultMemberInitializer", Justification = "TODO: Review")]
         public string Pair { get; set; } = default!;
 
         [JsonPropertyName(name: @"result")]
-
-        // ReSharper disable once RedundantDefaultMemberInitializer
+        [SuppressMessage(category: "ReSharper", checkId: "RedundantDefaultMemberInitializer", Justification = "TODO: Review")]
         public string Result { get; set; } = default!;
 
         [JsonPropertyName(name: @"last")]

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -130,8 +130,7 @@ namespace CoinBot.Clients.Binance
         private sealed class Wrapper
         {
             [JsonPropertyName(name: @"data")]
-
-            // ReSharper disable once UnusedAutoPropertyAccessor.Local
+            [SuppressMessage(category: "ReSharper", checkId: "UnusedAutoPropertyAccessor.Local", Justification = "TODO: Review")]
             public BinanceProduct[]? Data { get; set; }
         }
     }

@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
@@ -9,15 +9,13 @@ namespace CoinBot.Clients.Bittrex
     internal sealed class BittrexCurrencyDto
     {
         [JsonPropertyName(name: @"Currency")]
-
-        // ReSharper disable once RedundantDefaultMemberInitializer
-        // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Global
+        [SuppressMessage(category: "ReSharper", checkId: "RedundantDefaultMemberInitializer", Justification = "TODO: Review")]
+        [SuppressMessage(category: "ReSharper", checkId: "AutoPropertyCanBeMadeGetOnly.Global", Justification = "TODO: Review")]
         public string Symbol { get; set; } = default!;
 
         [JsonPropertyName(name: @"CurrencyLong")]
-
-        // ReSharper disable once RedundantDefaultMemberInitializer
-        // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Global
+        [SuppressMessage(category: "ReSharper", checkId: "RedundantDefaultMemberInitializer", Justification = "TODO: Review")]
+        [SuppressMessage(category: "ReSharper", checkId: "AutoPropertyCanBeMadeGetOnly.Global", Justification = "TODO: Review")]
         public string Name { get; set; } = default!;
 
         [JsonPropertyName(name: @"MinConfirmation")]
