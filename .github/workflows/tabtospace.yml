@@ -21,7 +21,7 @@ jobs:
         echo Current Branch ${GITHUB_REF#refs/heads/}
         echo ::set-env name=GIT_BRANCH::$(echo ${GITHUB_REF#refs/heads/})
     - name: Reformat
-      uses: credfeto/action-sql-format@master
+      uses: credfeto/action-sql-format@v1
     - name: Commit files
       run: |
         git status
