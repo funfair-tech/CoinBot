@@ -55,14 +55,11 @@ jobs:
           VALIDATE_DOCKERFILE_HADOLINT: true
           VALIDATE_HTML: true
           VALIDATE_JAVASCRIPT_ES: true
-          VALIDATE_JAVASCRIPT_STANDARD: true
           VALIDATE_JSON: true
           VALIDATE_JSX: true
           VALIDATE_MD: true
           VALIDATE_PYTHON: true
           VALIDATE_PYTHON_PYLINT: true
-          VALIDATE_PYTHON_FLAKE8: true
-          VALIDATE_PYTHON_BLACK: true
           VALIDATE_POWERSHELL: true
           VALIDATE_SHELL_SHFMT: true
           VALIDATE_TSX: true
@@ -70,6 +67,9 @@ jobs:
           VALIDATE_TYPESCRIPT_STANDARD: true
           VALIDATE_XML: true
           VALIDATE_YAML: true
+          # VALIDATE_JAVASCRIPT_STANDARD: true # doesn't match our code
+          # VALIDATE_PYTHON_FLAKE8: true # too picky
+          # VALIDATE_PYTHON_BLACK: true # too picky
           # VALIDATE_SQL: true # needs more invesigation so it can understand SQL dialect
           #VALIDATE_CSHARP: true # Just complains about end of line being wrong
           # VALIDATE_YAML: true # this currently crashes
