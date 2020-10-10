@@ -181,6 +181,7 @@
         <!-- Properties should not copy collections -->
         <Rule Id="S2365" Action="Error"/>
         <Rule Id="S2368" Action="None"/>
+        <Rule Id="S2583" Action="Error"/>
         <Rule Id="S2699" Action="None"/>
         <Rule Id="S3218" Action="None"/>
         <Rule Id="S3442" Action="None"/>
