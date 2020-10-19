@@ -48,7 +48,7 @@ jobs:
           DEFAULT_BRANCH: master
           GITHUB_TOKEN: ${{ secrets.SOURCE_PUSH_TOKEN }}
           MULTI_STATUS: true
-          VALIDATE_ALL_CODEBASE: true
+          VALIDATE_ALL_CODEBASE: false
           VALIDATE_BASH: true
           VALIDATE_CSS: true
           VALIDATE_DOCKERFILE: true
