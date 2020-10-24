@@ -22,7 +22,7 @@ jobs:
         echo Current Branch ${GITHUB_REF#refs/heads/}
         echo ::set-env name=GIT_BRANCH::$(echo ${GITHUB_REF#refs/heads/})
         echo User: ${{github.actor}}
-    - uses: credfeto/action-yaml-format@v1.1.0
+    - uses: credfeto/action-yaml-format@v1.2
     - run: |
         git status
         git config --local user.email "credfeto@users.noreply.github.com"
