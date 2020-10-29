@@ -12,7 +12,7 @@ jobs:
     - if: ${{ !startsWith(github.head_ref, 'release/') && !startsWith(github.head_ref, 'hotfix/') }}
       uses: seferov/pr-lint-action@v1.1.2
       with:
-        title-regex: '^\[FF-\d*\](\ )'
+        title-regex: '^\[FF\-\d*?\](\ )'
         title-regex-flags: 'g'
         error-message: 'Add Jira Ticket ID to your title'
 
