@@ -23,7 +23,7 @@ jobs:
         with:
           fetch-depth: 0
       - if: ${{ github.actor != 'dependabot-preview[bot]' }}
-        uses: Zomzog/changelog-checker@v1.0.0
+        uses: Zomzog/changelog-checker@v1.1.0
         with:
           fileName: CHANGELOG.md
           noChangelogLabel: Changelog Not Required
