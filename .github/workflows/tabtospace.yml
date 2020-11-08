@@ -17,17 +17,18 @@ jobs:
     - uses: actions/checkout@v2.3.4
       with:
         fetch-depth: 0
+        ref: ${{ github.head_ref }}
+        token: ${{ secrets.SOURCE_PUSH_TOKEN }}
     - run: |
         echo Current Branch ${GITHUB_REF#refs/heads/}
         echo ::set-env name=GIT_BRANCH::$(echo ${GITHUB_REF#refs/heads/})
     - name: Reformat
       uses: credfeto/action-sql-format@v1.2
-    - name: Commit files
-      run: |
-        git status
-        git config --local user.email "credfeto@users.noreply.github.com"
-        git config --local user.name "fun-sqlfmt[bot]"
-        git commit --all -m"[FF-2107] Reformat SQL Files to common format." || true
-    - name: Push
-      run: |
-        git push "https://${{github.actor}}:${{secrets.SOURCE_PUSH_TOKEN}}@github.com/${{github.repository}}.git" "HEAD:${{ env.GIT_BRANCH }}"
+    - uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: "[FF-2107] Reformat SQL Files to common format"
+        file_pattern: "*.sql"
+        commit_user_name: "fun-sqlfmt[bot]"
+        commit_user_email: "credfeto@users.noreply.github.com"
+        commit_author: "fun-sqlfmt[bot] <credfeto@users.noreply.github.com>"
+        skip_dirty_check: false
