@@ -37,14 +37,12 @@ jobs:
       ##########################
       # Checkout the code base #
       ##########################
-      - name: Checkout Code
-        uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v2.3.4
 
       ################################
       # Run Linter against code base #
       ################################
-      - name: Lint Code Base
-        uses: github/super-linter@v3.13.5
+      - uses: github/super-linter@v3.13.5
         env:
           DEFAULT_BRANCH: master
           GITHUB_TOKEN: ${{ secrets.SOURCE_PUSH_TOKEN }}
