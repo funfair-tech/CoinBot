@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 namespace CoinBot
@@ -32,7 +33,7 @@ namespace CoinBot
 
         private static string? LookupAppSettingsLocationByAssemblyName()
         {
-            string location = typeof(ApplicationConfig).Assembly.Location;
+            string location = AppLocation();
 
             string? path = Path.GetDirectoryName(location);
 
@@ -47,6 +48,14 @@ namespace CoinBot
             }
 
             return path;
+        }
+
+        [SuppressMessage(category: "FunFair.CodeAnalysis", checkId: "FFS0008: Don't disable warnings", Justification = "TODO: Review")]
+        private static string AppLocation()
+        {
+#pragma warning disable IL3000
+            return typeof(ApplicationConfig).Assembly.Location;
+#pragma warning restore IL3000
         }
     }
 }
