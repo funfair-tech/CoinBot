@@ -37,7 +37,7 @@ namespace CoinBot.Discord.Extensions
 
         public static async Task<CommandService> AddCommandsAsync(this IServiceProvider serviceProvider)
         {
-            CommandService commandService = serviceProvider.GetService<CommandService>();
+            CommandService commandService = serviceProvider.GetRequiredService<CommandService>();
 
             // Add the command modules
             await commandService.AddModuleAsync<CoinCommands>(serviceProvider);
