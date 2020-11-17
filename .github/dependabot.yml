@@ -15,7 +15,7 @@ updates:
   allow:
   - dependency-type: all
   ignore:
-  - dependency-name: "FunFair.*",
+  - dependency-name: "FunFair.*"
   - dependency-name: "Microsoft.Extensions.*"
   - dependency-name: "AsyncFixer"
   - dependency-name: "Castle.Core"
