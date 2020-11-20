@@ -19,7 +19,7 @@ jobs:
       with:
         path: ./.github/PULL_REQUEST_TEMPLATE.md
     - run: |
-        echo ::set-env name=COMMIT_MSG::`git log -1 --pretty=%B`
+        echo COMMIT_MSG=`git log -1 --pretty=%B` >> $GITHUB_ENV
     - uses: repo-sync/pull-request@v2
       with:
         source_branch: ""                     # If blank, default: triggered branch
