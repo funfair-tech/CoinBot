@@ -47,4 +47,4 @@ jobs:
     - name: Install Changelog tool
       run: dotnet tool install --local Credfeto.ChangeLog.Cmd
     - name: Check Changelog
-      run: dotnet changelog -changelog CHANGELOG.md -check-insert ${{ github.base_ref}}
+      run: dotnet changelog -changelog CHANGELOG.md -check-insert "origin/${{ github.base_ref}}"
