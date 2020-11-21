@@ -42,6 +42,12 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
+    - if: env.DOTNET_VERSION != '5.0.100'
+      uses: actions/setup-dotnet@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        dotnet-version: '5.0.100'
     - name: Enable dotnet tools
       run: dotnet new tool-manifest
     - name: Install Changelog tool
