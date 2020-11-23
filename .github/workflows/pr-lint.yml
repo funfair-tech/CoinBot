@@ -13,7 +13,6 @@ jobs:
       uses: seferov/pr-lint-action@v1.1.2
       with:
         title-regex: '^\[FF\-\d*?\](:)?(\ )'
-        title-regex-flags: 'g'
         error-message: 'Add Jira Ticket ID to your title'
 
   include-changelog-entry:
