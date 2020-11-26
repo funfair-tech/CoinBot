@@ -38,3 +38,6 @@
 
 "Setup":
     - SETUP.md
+
+"github-actions":
+    - ".github/workflows/*.yml
