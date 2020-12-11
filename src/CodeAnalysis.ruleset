@@ -2,6 +2,7 @@
 <RuleSet Name="Custom Rulset" Description="Custom Rulset" ToolsVersion="15.0">
     <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
         <Rule Id="CA1001" Action="Hidden"/>
+        <Rule Id="CA1002" Action="Hidden"/>
         <Rule Id="CA1003" Action="Warning"/>
         <Rule Id="CA1005" Action="Hidden"/>
         <Rule Id="CA1009" Action="Warning"/>
@@ -139,6 +140,7 @@
         <Rule Id="CA2214" Action="Warning"/>
         <Rule Id="CA2215" Action="Warning"/>
         <Rule Id="CA2216" Action="Warning"/>
+        <Rule Id="CA2217" Action="Hidden"/>
         <Rule Id="CA2218" Action="Warning"/>
         <Rule Id="CA2219" Action="Warning"/>
         <Rule Id="CA2220" Action="Warning"/>
