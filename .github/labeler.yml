@@ -40,4 +40,4 @@
     - SETUP.md
 
 "github-actions":
-    - ".github/workflows/*.yml
+    - ".github/workflows/*.yml"
