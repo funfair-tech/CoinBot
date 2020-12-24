@@ -17,6 +17,7 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.15.0.24505
 - FF-1429 - Updated Microsoft.Extensions to 5.0.1
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.16.0.25740
+- FF-1429 - Updated Microsoft.CodeAnalysis to 3.3.2
 ### Removed
 ### Deployment Changes
 
