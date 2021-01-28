@@ -102,6 +102,11 @@ namespace CoinBot.Clients.Gdax
                     {
                         GdaxTicker? ticker = JsonSerializer.Deserialize<GdaxTicker>(json: json, options: this._serializerSettings);
 
+                        if (ticker == null)
+                        {
+                            return null;
+                        }
+
                         ticker.ProductId = productId;
 
                         return ticker;

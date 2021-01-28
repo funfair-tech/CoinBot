@@ -97,11 +97,16 @@ namespace CoinBot.Clients.Poloniex
 
                 try
                 {
-                    Dictionary<string, PoloniexTicker> tickers = JsonSerializer.Deserialize<Dictionary<string, PoloniexTicker>>(json: json, options: this._serializerSettings);
+                    Dictionary<string, PoloniexTicker>? tickers = JsonSerializer.Deserialize<Dictionary<string, PoloniexTicker>>(json: json, options: this._serializerSettings);
 
-                    foreach (KeyValuePair<string, PoloniexTicker> item in tickers)
+                    if (tickers == null)
                     {
-                        item.Value.Pair = item.Key;
+                        return Array.Empty<PoloniexTicker>();
+                    }
+
+                    foreach ((string key, PoloniexTicker value) in tickers)
+                    {
+                        value.Pair = key;
                     }
 
                     return tickers.Values.ToArray();

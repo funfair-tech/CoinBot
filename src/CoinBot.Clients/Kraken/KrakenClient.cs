@@ -190,17 +190,17 @@ namespace CoinBot.Clients.Kraken
 
                 try
                 {
-                    KrakenAssetResultWrapper items = JsonSerializer.Deserialize<KrakenAssetResultWrapper>(json: json, options: this._serializerSettings);
+                    KrakenAssetResultWrapper? items = JsonSerializer.Deserialize<KrakenAssetResultWrapper>(json: json, options: this._serializerSettings);
 
-                    if (items.Result != null)
+                    if (items?.Result != null)
                     {
-                        foreach (KeyValuePair<string, KrakenAsset> item in items.Result)
+                        foreach ((string key, KrakenAsset value) in items.Result)
                         {
-                            item.Value.Id = item.Key;
+                            value.Id = key;
                         }
                     }
 
-                    return items.Result?.Values.ToArray() ?? Array.Empty<KrakenAsset>();
+                    return items?.Result?.Values.ToArray() ?? Array.Empty<KrakenAsset>();
                 }
                 catch (Exception exception)
                 {
@@ -227,16 +227,16 @@ namespace CoinBot.Clients.Kraken
 
                 try
                 {
-                    KrakenPairWrapper items = JsonSerializer.Deserialize<KrakenPairWrapper>(json: json, options: this._serializerSettings);
+                    KrakenPairWrapper? items = JsonSerializer.Deserialize<KrakenPairWrapper>(json: json, options: this._serializerSettings);
 
-                    if (items.Result == null)
+                    if (items?.Result == null)
                     {
                         return Array.Empty<KrakenPair>();
                     }
 
-                    foreach (KeyValuePair<string, KrakenPair> item in items.Result)
+                    foreach ((string key, KrakenPair value) in items.Result)
                     {
-                        item.Value.PairId = item.Key;
+                        value.PairId = key;
                     }
 
                     return items.Result.Values.ToArray();
@@ -268,9 +268,9 @@ namespace CoinBot.Clients.Kraken
 
                     try
                     {
-                        KrakenTickerWrapper item = JsonSerializer.Deserialize<KrakenTickerWrapper>(json: json, options: this._serializerSettings);
+                        KrakenTickerWrapper? item = JsonSerializer.Deserialize<KrakenTickerWrapper>(json: json, options: this._serializerSettings);
 
-                        if (item.Result == null)
+                        if (item?.Result == null)
                         {
                             return null;
                         }
@@ -312,6 +312,8 @@ namespace CoinBot.Clients.Kraken
         private sealed class KrakenPairWrapper
         {
             [JsonPropertyName(name: @"result")]
+
+            // ReSharper disable once UnusedAutoPropertyAccessor.Local
             public Dictionary<string, KrakenPair>? Result { get; set; }
         }
 
@@ -319,6 +321,8 @@ namespace CoinBot.Clients.Kraken
         private sealed class KrakenTickerWrapper
         {
             [JsonPropertyName(name: @"result")]
+
+            // ReSharper disable once UnusedAutoPropertyAccessor.Local
             public Dictionary<string, KrakenTicker>? Result { get; set; }
         }
 
@@ -326,6 +330,8 @@ namespace CoinBot.Clients.Kraken
         private sealed class KrakenAssetResultWrapper
         {
             [JsonPropertyName(name: @"result")]
+
+            // ReSharper disable once UnusedAutoPropertyAccessor.Local
             public Dictionary<string, KrakenAsset>? Result { get; set; }
         }
     }
