@@ -34,11 +34,11 @@ namespace CoinBot.Discord.Commands
                     return;
                 }
 
-                EmbedBuilder builder = new EmbedBuilder {Color = Color.DarkPurple};
+                EmbedBuilder builder = new() {Color = Color.DarkPurple};
                 builder.WithTitle(title: "Global Currency Information");
                 AddAuthor(builder);
 
-                StringBuilder descriptionBuilder = new StringBuilder();
+                StringBuilder descriptionBuilder = new();
                 descriptionBuilder.AppendLine($"Market cap {globalInfo.MarketCap.AsUsdPrice()}");
                 descriptionBuilder.AppendLine($"24 hour volume: {globalInfo.Volume.AsUsdPrice()}");
                 descriptionBuilder.AppendLine($"BTC dominance: {globalInfo.BtcDominance.AsPercentage()}");

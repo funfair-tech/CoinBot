@@ -19,7 +19,7 @@ namespace CoinBot.Clients.Poloniex
         /// <summary>
         ///     The <see cref="Uri" /> of the CoinMarketCap endpoint.
         /// </summary>
-        private static readonly Uri Endpoint = new Uri(uriString: "https://poloniex.com/", uriKind: UriKind.Absolute);
+        private static readonly Uri Endpoint = new(uriString: "https://poloniex.com/", uriKind: UriKind.Absolute);
 
         /// <summary>
         ///     The <see cref="JsonSerializerOptions" />.
@@ -78,12 +78,7 @@ namespace CoinBot.Clients.Poloniex
                 return null;
             }
 
-            return new MarketSummaryDto(market: this.Name,
-                                        baseCurrency: baseCurrency,
-                                        marketCurrency: marketCurrency,
-                                        volume: ticker.BaseVolume,
-                                        last: ticker.Last,
-                                        lastUpdated: null);
+            return new MarketSummaryDto(market: this.Name, baseCurrency: baseCurrency, marketCurrency: marketCurrency, volume: ticker.BaseVolume, last: ticker.Last, lastUpdated: null);
         }
 
         /// <summary>

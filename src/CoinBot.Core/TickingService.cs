@@ -66,13 +66,12 @@ namespace CoinBot.Core
 
         private static BufferBlock<Func<Task>> CreateBufferBlock()
         {
-            BufferBlock<Func<Task>> bufferBlock = new BufferBlock<Func<Task>>();
+            BufferBlock<Func<Task>> bufferBlock = new();
 
             // link the buffer block to an action block to process the actions submitted to the buffer.
             // restrict the number of parallel tasks executing to 1, and only allow 1 messages per task to prevent
             // tasks submitted here from consuming all the available CPU time.
-            bufferBlock.LinkTo(new ActionBlock<Func<Task>>(action: action => action(),
-                                                           new ExecutionDataflowBlockOptions {MaxDegreeOfParallelism = 1, MaxMessagesPerTask = 1, BoundedCapacity = 1}));
+            bufferBlock.LinkTo(new ActionBlock<Func<Task>>(action: action => action(), new ExecutionDataflowBlockOptions {MaxDegreeOfParallelism = 1, MaxMessagesPerTask = 1, BoundedCapacity = 1}));
 
             return bufferBlock;
         }

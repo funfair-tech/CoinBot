@@ -22,7 +22,7 @@ namespace CoinBot.Clients.Kraken
         /// <summary>
         ///     The <see cref="Uri" /> of the CoinMarketCap endpoint.
         /// </summary>
-        private static readonly Uri Endpoint = new Uri(uriString: "https://api.kraken.com/0/public/", uriKind: UriKind.Absolute);
+        private static readonly Uri Endpoint = new(uriString: "https://api.kraken.com/0/public/", uriKind: UriKind.Absolute);
 
         /// <summary>
         ///     The <see cref="JsonSerializerOptions" />.
@@ -147,12 +147,7 @@ namespace CoinBot.Clients.Kraken
                 return null;
             }
 
-            return new MarketSummaryDto(market: this.Name,
-                                        baseCurrency: baseCurrency,
-                                        marketCurrency: marketCurrency,
-                                        volume: ticker.Volume[1],
-                                        last: ticker.Last[0],
-                                        lastUpdated: null);
+            return new MarketSummaryDto(market: this.Name, baseCurrency: baseCurrency, marketCurrency: marketCurrency, volume: ticker.Volume[1], last: ticker.Last[0], lastUpdated: null);
         }
 
         private static string? FindCurrency(IReadOnlyList<KrakenAsset> assets, string search)

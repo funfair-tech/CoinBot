@@ -22,7 +22,7 @@ namespace CoinBot.Discord.Extensions
         /// <returns></returns>
         public static string GetChange(this CoinMarketCapCoin details)
         {
-            StringBuilder changeStringBuilder = new StringBuilder();
+            StringBuilder changeStringBuilder = new();
             changeStringBuilder.AppendLine($"Hour: {details.HourChange.AsPercentage()}");
             changeStringBuilder.AppendLine($"Day: {details.DayChange.AsPercentage()}");
             changeStringBuilder.AppendLine($"Week: {details.WeekChange.AsPercentage()}");
@@ -47,7 +47,7 @@ namespace CoinBot.Discord.Extensions
         /// <returns></returns>
         public static string GetDescription(this CoinMarketCapCoin details)
         {
-            StringBuilder descriptionBuilder = new StringBuilder();
+            StringBuilder descriptionBuilder = new();
             descriptionBuilder.AppendLine($"Market cap {details.MarketCap.AsUsdPrice()} (Rank {details.Rank})");
             descriptionBuilder.AppendLine($"24 hour volume: {details.Volume.AsUsdPrice()}");
 
@@ -61,7 +61,7 @@ namespace CoinBot.Discord.Extensions
         /// <returns></returns>
         public static string GetPrice(this ICoinInfo details)
         {
-            StringBuilder priceStringBuilder = new StringBuilder();
+            StringBuilder priceStringBuilder = new();
 
             if (details.PriceUsd != null)
             {

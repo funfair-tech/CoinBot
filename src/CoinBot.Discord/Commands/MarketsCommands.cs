@@ -58,7 +58,7 @@ namespace CoinBot.Discord.Commands
                         return;
                     }
 
-                    EmbedBuilder builder = new EmbedBuilder();
+                    EmbedBuilder builder = new();
                     builder.WithTitle(primaryCurrency.GetTitle());
                     CoinMarketCapCoin? details = primaryCurrency.Getdetails<CoinMarketCapCoin>();
 
@@ -86,7 +86,7 @@ namespace CoinBot.Discord.Commands
                         const int maxResults = 3;
                         int totalResults = group.Count();
 
-                        StringBuilder marketDetails = new StringBuilder();
+                        StringBuilder marketDetails = new();
 
                         if (secondaryCurrency == null && totalResults > maxResults)
                         {

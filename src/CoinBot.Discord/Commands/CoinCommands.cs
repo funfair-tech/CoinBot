@@ -39,7 +39,7 @@ namespace CoinBot.Discord.Commands
 
                     if (currency != null && !currency.IsFiat)
                     {
-                        EmbedBuilder builder = new EmbedBuilder();
+                        EmbedBuilder builder = new();
                         builder.WithTitle(currency.GetTitle());
 
                         CoinMarketCapCoin? details = currency.Getdetails<CoinMarketCapCoin>();
@@ -94,12 +94,11 @@ namespace CoinBot.Discord.Commands
 
         private ICoinInfo GetCoinInfo(Currency currency)
         {
-            ICoinInfo? walletDetails = currency.Getdetails<FunFairWalletCoin>() ?? (ICoinInfo) new InterpretedCoinInfo(
-                currency: currency,
-                marketManager: this._marketManager,
-                this._currencyManager.Get(nameOrSymbol: @"USD"),
-                this._currencyManager.Get(nameOrSymbol: @"ETH"),
-                this._currencyManager.Get(nameOrSymbol: @"BTC"));
+            ICoinInfo? walletDetails = currency.Getdetails<FunFairWalletCoin>() ?? (ICoinInfo) new InterpretedCoinInfo(currency: currency,
+                                                                                                                       marketManager: this._marketManager,
+                                                                                                                       this._currencyManager.Get(nameOrSymbol: @"USD"),
+                                                                                                                       this._currencyManager.Get(nameOrSymbol: @"ETH"),
+                                                                                                                       this._currencyManager.Get(nameOrSymbol: @"BTC"));
 
             return walletDetails;
         }
@@ -114,7 +113,7 @@ namespace CoinBot.Discord.Commands
                 string[] symbolsList = symbols.Split(separator: ',')
                                               .Select(selector: s => s.Trim())
                                               .ToArray();
-                List<Currency> coins = new List<Currency>();
+                List<Currency> coins = new();
                 IList<string> notFound = new List<string>();
 
                 foreach (string symbol in symbolsList)
@@ -155,10 +154,7 @@ namespace CoinBot.Discord.Commands
 
                 double? totalChange = coins.Sum(selector: c => c.Getdetails<CoinMarketCapCoin>()
                                                                 ?.DayChange.GetValueOrDefault(defaultValue: 0d));
-                await this.MultiCoinReplyAsync(coins: coins,
-                                               totalChange > 0 ? Color.Green : Color.Red,
-                                               title: "Snapshot",
-                                               string.Join(separator: ", ", coins.Select(selector: c => c.Symbol)));
+                await this.MultiCoinReplyAsync(coins: coins, totalChange > 0 ? Color.Green : Color.Red, title: "Snapshot", string.Join(separator: ", ", coins.Select(selector: c => c.Symbol)));
             }
         }
 
@@ -229,7 +225,7 @@ namespace CoinBot.Discord.Commands
 
         private Task MultiCoinReplyAsync(IList<Currency> coins, Color color, string title, string description)
         {
-            EmbedBuilder builder = new EmbedBuilder {Color = color};
+            EmbedBuilder builder = new() {Color = color};
             builder.WithTitle(title);
             builder.WithDescription(description);
             AddAuthor(builder);

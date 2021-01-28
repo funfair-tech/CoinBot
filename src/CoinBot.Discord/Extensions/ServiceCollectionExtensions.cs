@@ -28,7 +28,7 @@ namespace CoinBot.Discord.Extensions
         [SuppressMessage(category: "Microsoft.Reliability", checkId: "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ownership transferred into a singleton")]
         public static IServiceCollection AddCoinBot(this IServiceCollection services, IConfiguration configuration)
         {
-            CommandService commandService = new CommandService(new CommandServiceConfig {DefaultRunMode = RunMode.Async, LogLevel = LogSeverity.Debug});
+            CommandService commandService = new(new CommandServiceConfig {DefaultRunMode = RunMode.Async, LogLevel = LogSeverity.Debug});
 
             return services.Configure<DiscordBotSettings>(configuration.GetSection(DISCORD_BOT_SETTINGS_SECTION))
                            .AddSingleton(commandService)

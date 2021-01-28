@@ -31,7 +31,7 @@ namespace CoinBot.Core.Extensions
         /// <returns>Set of items.</returns>
         public static IEnumerable<IReadOnlyList<T>> Split<T>(this IEnumerable<T> source, int splitSize)
         {
-            List<T> items = new List<T>(splitSize);
+            List<T> items = new(splitSize);
 
             foreach (T entry in source)
             {

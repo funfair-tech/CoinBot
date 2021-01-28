@@ -17,7 +17,7 @@ namespace CoinBot.Clients.CoinMarketCap
         /// <summary>
         ///     The <see cref="Uri" /> of the CoinMarketCap endpoint.
         /// </summary>
-        private static readonly Uri Endpoint = new Uri(uriString: "https://api.coinmarketcap.com/v1/", uriKind: UriKind.Absolute);
+        private static readonly Uri Endpoint = new(uriString: "https://api.coinmarketcap.com/v1/", uriKind: UriKind.Absolute);
 
         /// <summary>
         ///     The <see cref="JsonSerializerOptions" />.

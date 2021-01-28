@@ -8,7 +8,7 @@ namespace CoinBot.Core.Helpers
     {
         public static async Task<IReadOnlyList<TResult>> WhenAllAsync<TResult>(int concurrent, IEnumerable<Task<TResult>> items)
         {
-            List<TResult> results = new List<TResult>();
+            List<TResult> results = new();
 
             foreach (IReadOnlyList<Task<TResult>> batch in items.Split(concurrent))
             {

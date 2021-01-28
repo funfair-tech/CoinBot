@@ -41,13 +41,12 @@ namespace CoinBot.Core
             this._currencyListUpdater = currencyListUpdater;
             this._coinClients = coinClients?.ToList() ?? throw new ArgumentNullException(nameof(coinClients));
             this._marketClients = marketClients?.ToList() ?? throw new ArgumentNullException(nameof(marketClients));
-            this._exchanges = new ReadOnlyDictionary<string, Exchange>(
-                this._marketClients.ToDictionary(keySelector: client => client.Name, elementSelector: client => new Exchange()));
+            this._exchanges = new ReadOnlyDictionary<string, Exchange>(this._marketClients.ToDictionary(keySelector: client => client.Name, elementSelector: client => new Exchange()));
         }
 
         public IEnumerable<MarketSummaryDto> Get(Currency currency)
         {
-            List<MarketSummaryDto> results = new List<MarketSummaryDto>();
+            List<MarketSummaryDto> results = new();
 
             foreach (KeyValuePair<string, Exchange> row in this._exchanges)
             {
@@ -78,7 +77,7 @@ namespace CoinBot.Core
                                                                                                   }
 
                                                                                                   if (m.BaseCurrency?.Symbol.Equals(value: currency.Symbol,
-                                                                                                          comparisonType: StringComparison.OrdinalIgnoreCase) != false ||
+                                                                                                                                    comparisonType: StringComparison.OrdinalIgnoreCase) != false ||
                                                                                                       m.MarketCurrency?.Symbol.Equals(value: currency.Symbol,
                                                                                                           comparisonType: StringComparison.OrdinalIgnoreCase) != false)
                                                                                                   {
@@ -100,7 +99,7 @@ namespace CoinBot.Core
 
         public IEnumerable<MarketSummaryDto> GetPair(Currency currency1, Currency currency2)
         {
-            List<MarketSummaryDto> results = new List<MarketSummaryDto>();
+            List<MarketSummaryDto> results = new();
 
             foreach (KeyValuePair<string, Exchange> row in this._exchanges)
             {
@@ -131,11 +130,11 @@ namespace CoinBot.Core
                                                                                                   }
 
                                                                                                   if (m.BaseCurrency?.Symbol.Equals(value: currency1.Symbol,
-                                                                                                          comparisonType: StringComparison.OrdinalIgnoreCase) != false &&
+                                                                                                                                    comparisonType: StringComparison.OrdinalIgnoreCase) != false &&
                                                                                                       m.MarketCurrency?.Symbol.Equals(value: currency2.Symbol,
                                                                                                           comparisonType: StringComparison.OrdinalIgnoreCase) != false ||
                                                                                                       m.BaseCurrency?.Symbol.Equals(value: currency2.Symbol,
-                                                                                                          comparisonType: StringComparison.OrdinalIgnoreCase) != false &&
+                                                                                                                                    comparisonType: StringComparison.OrdinalIgnoreCase) != false &&
                                                                                                       m.MarketCurrency?.Symbol.Equals(value: currency1.Symbol,
                                                                                                           comparisonType: StringComparison.OrdinalIgnoreCase) != false)
                                                                                                   {
@@ -173,7 +172,7 @@ namespace CoinBot.Core
         /// <returns></returns>
         private async Task UpdateAsync()
         {
-            CoinBuilder builder = new CoinBuilder();
+            CoinBuilder builder = new();
 
             await this.UpdateCoinsAsync(builder);
 
@@ -239,7 +238,7 @@ namespace CoinBot.Core
             if (this._exchanges.TryGetValue(key: client.Name, out Exchange? exchange))
             {
                 this.Logger.LogInformation($"Start updating exchange '{client.Name}'.");
-                Stopwatch watch = new Stopwatch();
+                Stopwatch watch = new();
                 watch.Start();
 
                 IReadOnlyCollection<MarketSummaryDto> markets;

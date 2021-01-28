@@ -21,7 +21,7 @@ namespace CoinBot.Clients.Binance
         /// <summary>
         ///     The <see cref="Uri" /> of the CoinMarketCap endpoint.
         /// </summary>
-        private static readonly Uri Endpoint = new Uri(uriString: "https://www.binance.com/exchange/public/", uriKind: UriKind.Absolute);
+        private static readonly Uri Endpoint = new(uriString: "https://www.binance.com/exchange/public/", uriKind: UriKind.Absolute);
 
         /// <summary>
         ///     The <see cref="JsonSerializerOptions" />.
@@ -58,7 +58,7 @@ namespace CoinBot.Clients.Binance
             }
             catch (Exception exception)
             {
-                EventId eventId = new EventId(exception.HResult);
+                EventId eventId = new(exception.HResult);
                 this.Logger.LogError(eventId: eventId, exception: exception, message: exception.Message);
 
                 throw;
@@ -82,12 +82,7 @@ namespace CoinBot.Clients.Binance
                 return null;
             }
 
-            return new MarketSummaryDto(market: this.Name,
-                                        baseCurrency: baseCurrency,
-                                        marketCurrency: marketCurrency,
-                                        volume: product.Volume,
-                                        last: product.PrevClose,
-                                        lastUpdated: null);
+            return new MarketSummaryDto(market: this.Name, baseCurrency: baseCurrency, marketCurrency: marketCurrency, volume: product.Volume, last: product.PrevClose, lastUpdated: null);
         }
 
         public static void Register(IServiceCollection services)

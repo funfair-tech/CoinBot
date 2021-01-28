@@ -18,12 +18,12 @@ namespace CoinBot.Discord.Commands
         [Summary(text: "prints this help text, which you've already figured out")]
         public Task HelpAsync()
         {
-            EmbedBuilder builder = new EmbedBuilder();
+            EmbedBuilder builder = new();
             builder.WithTitle(title: "Help");
             AddAuthor(builder);
             AddFooter(builder);
 
-            StringBuilder stringBuilder = new StringBuilder();
+            StringBuilder stringBuilder = new();
 
             foreach (CommandInfo command in this._commandService.Commands)
             {

@@ -42,8 +42,7 @@ namespace CoinBot.Clients.FunFair
 
         internal async Task<IReadOnlyCollection<FunFairWalletPriceResultPairDto?>> GetBasePricesAsync()
         {
-            List<(string cryptoSymbol, string fiatSymbol)> symbols =
-                (from cryptoSymbol in this._cryptoSymbols from fiatSymbol in this._fiatSymbols select (cryptoSymbol, fiatSymbol)).ToList();
+            List<(string cryptoSymbol, string fiatSymbol)> symbols = (from cryptoSymbol in this._cryptoSymbols from fiatSymbol in this._fiatSymbols select (cryptoSymbol, fiatSymbol)).ToList();
 
             try
             {
@@ -51,7 +50,7 @@ namespace CoinBot.Clients.FunFair
             }
             catch (Exception exception)
             {
-                EventId eventId = new EventId(exception.HResult);
+                EventId eventId = new(exception.HResult);
                 this.Logger.LogError(eventId: eventId, exception: exception, message: exception.Message);
 
                 throw;
@@ -124,9 +123,7 @@ namespace CoinBot.Clients.FunFair
             }
             catch (Exception exception)
             {
-                this.Logger.LogError(new EventId(exception.HResult),
-                                     exception: exception,
-                                     $"Failed to retrieve prices for {tokenSymbol} in {fiatCurrencySymbol}: Error: {exception.Message}");
+                this.Logger.LogError(new EventId(exception.HResult), exception: exception, $"Failed to retrieve prices for {tokenSymbol} in {fiatCurrencySymbol}: Error: {exception.Message}");
 
                 return null;
             }
@@ -134,7 +131,7 @@ namespace CoinBot.Clients.FunFair
 
         private static Uri BuildUri(string tokenSymbol, string fiatCurrencySymbol)
         {
-            return new Uri($"/Dev/token/{tokenSymbol}/{fiatCurrencySymbol}", uriKind: UriKind.Relative);
+            return new($"/Dev/token/{tokenSymbol}/{fiatCurrencySymbol}", uriKind: UriKind.Relative);
         }
     }
 }

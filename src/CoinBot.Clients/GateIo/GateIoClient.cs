@@ -21,7 +21,7 @@ namespace CoinBot.Clients.GateIo
         /// <summary>
         ///     The <see cref="Uri" /> of the CoinMarketCap endpoint.
         /// </summary>
-        private static readonly Uri Endpoint = new Uri(uriString: "http://data.gate.io/api2/1/", uriKind: UriKind.Absolute);
+        private static readonly Uri Endpoint = new(uriString: "http://data.gate.io/api2/1/", uriKind: UriKind.Absolute);
 
         /// <summary>
         ///     The <see cref="JsonSerializerOptions" />.
@@ -81,12 +81,7 @@ namespace CoinBot.Clients.GateIo
                 return null;
             }
 
-            return new MarketSummaryDto(market: this.Name,
-                                        baseCurrency: baseCurrency,
-                                        marketCurrency: marketCurrency,
-                                        volume: marketSummary.BaseVolume,
-                                        last: marketSummary.Last,
-                                        lastUpdated: null);
+            return new MarketSummaryDto(market: this.Name, baseCurrency: baseCurrency, marketCurrency: marketCurrency, volume: marketSummary.BaseVolume, last: marketSummary.Last, lastUpdated: null);
         }
 
         /// <summary>

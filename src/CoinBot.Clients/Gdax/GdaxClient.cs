@@ -20,7 +20,7 @@ namespace CoinBot.Clients.Gdax
         /// <summary>
         ///     The <see cref="Uri" /> of the CoinMarketCap endpoint.
         /// </summary>
-        private static readonly Uri Endpoint = new Uri(uriString: "https://api.gdax.com/", uriKind: UriKind.Absolute);
+        private static readonly Uri Endpoint = new(uriString: "https://api.gdax.com/", uriKind: UriKind.Absolute);
 
         /// <summary>
         ///     The <see cref="JsonSerializerOptions" />.
@@ -79,12 +79,7 @@ namespace CoinBot.Clients.Gdax
                 return null;
             }
 
-            return new MarketSummaryDto(market: this.Name,
-                                        baseCurrency: baseCurrency,
-                                        marketCurrency: marketCurrency,
-                                        volume: ticker.Volume,
-                                        last: ticker.Price,
-                                        lastUpdated: ticker.Time);
+            return new MarketSummaryDto(market: this.Name, baseCurrency: baseCurrency, marketCurrency: marketCurrency, volume: ticker.Volume, last: ticker.Price, lastUpdated: ticker.Time);
         }
 
         /// <summary>

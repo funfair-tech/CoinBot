@@ -138,7 +138,7 @@ namespace CoinBot.Discord
             }
 
             // Create a Command Context
-            CommandContext context = new CommandContext(this, msg: message);
+            CommandContext context = new(this, msg: message);
 
             // Execute the command. (result does not indicate a return value,
             // rather an object stating if the command executed successfully)

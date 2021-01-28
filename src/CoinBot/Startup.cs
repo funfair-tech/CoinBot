@@ -37,7 +37,7 @@ namespace CoinBot
         public Task StartAsync()
         {
             // Build the service provider
-            ServiceCollection services = new ServiceCollection();
+            ServiceCollection services = new();
             this.ConfigureServices(services);
             ServiceProvider provider = services.BuildServiceProvider();
 
@@ -75,7 +75,7 @@ namespace CoinBot
             loggerFactory.AddSerilog();
 
             //set up a task completion source so we can quit on CTRL+C
-            TaskCompletionSource<bool> exitSource = new TaskCompletionSource<bool>();
+            TaskCompletionSource<bool> exitSource = new();
             Console.CancelKeyPress += (sender, eventArgs) =>
                                       {
                                           eventArgs.Cancel = true;

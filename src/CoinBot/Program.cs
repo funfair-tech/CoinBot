@@ -6,7 +6,7 @@ namespace CoinBot
     {
         private static Task Main()
         {
-            Startup startup = new Startup();
+            Startup startup = new();
 
             return startup.StartAsync();
         }

@@ -16,7 +16,7 @@ namespace CoinBot.Core.Extensions
         /// <summary>
         ///     The US <see cref="CultureInfo" />.
         /// </summary>
-        private static readonly CultureInfo UsdCulture = new CultureInfo(name: "en-US");
+        private static readonly CultureInfo UsdCulture = new(name: "en-US");
 
         /// <summary>
         ///     Formats the <paramref name="d" /> as a USD currency.
