@@ -107,9 +107,9 @@ namespace CoinBot.Clients.FunFair
                         return null;
                     }
 
-                    FunFairWalletPriceResultDto pkt = JsonSerializer.Deserialize<FunFairWalletPriceResultDto>(json: msg, options: this._jsonSerializerSettings);
+                    FunFairWalletPriceResultDto? pkt = JsonSerializer.Deserialize<FunFairWalletPriceResultDto>(json: msg, options: this._jsonSerializerSettings);
 
-                    if (pkt.Symbol == null)
+                    if (pkt?.Symbol == null)
                     {
                         this.Logger.LogError($"Failed to retrieve prices for {tokenSymbol} in {fiatCurrencySymbol}: No Content returned (2)");
 

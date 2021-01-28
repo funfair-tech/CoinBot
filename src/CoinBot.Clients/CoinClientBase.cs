@@ -63,8 +63,7 @@ namespace CoinBot.Clients
 
             services.AddHttpClient(clientName)
                     .ConfigureHttpClient(ConfigureClient)
-                    .ConfigurePrimaryHttpMessageHandler(
-                        configureHandler: x => new HttpClientHandler {AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate})
+                    .ConfigurePrimaryHttpMessageHandler(configureHandler: _ => new HttpClientHandler {AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate})
                     .AddPolicyHandler(Policy.TimeoutAsync<HttpResponseMessage>(TimeSpan.FromSeconds(value: 30)))
                     .AddTransientHttpErrorPolicy(configurePolicy: p => p.WaitAndRetryAsync(retryCount: maxRetries, sleepDurationProvider: Calculate));
         }

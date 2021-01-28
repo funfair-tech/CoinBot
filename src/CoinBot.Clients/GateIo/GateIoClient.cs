@@ -100,11 +100,16 @@ namespace CoinBot.Clients.GateIo
 
                 try
                 {
-                    Dictionary<string, GateIoTicker> items = JsonSerializer.Deserialize<Dictionary<string, GateIoTicker>>(json: json, options: this._serializerSettings);
+                    Dictionary<string, GateIoTicker>? items = JsonSerializer.Deserialize<Dictionary<string, GateIoTicker>>(json: json, options: this._serializerSettings);
 
-                    foreach (KeyValuePair<string, GateIoTicker> item in items)
+                    if (items == null)
                     {
-                        item.Value.Pair = item.Key;
+                        return Array.Empty<GateIoTicker>();
+                    }
+
+                    foreach ((string pair, GateIoTicker ticker) in items)
+                    {
+                        ticker.Pair = pair;
                     }
 
                     return items.Values.ToArray();

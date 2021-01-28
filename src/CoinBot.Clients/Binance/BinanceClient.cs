@@ -108,9 +108,9 @@ namespace CoinBot.Clients.Binance
 
                 try
                 {
-                    Wrapper packet = JsonSerializer.Deserialize<Wrapper>(json: json, options: this._serializerSettings);
+                    Wrapper? packet = JsonSerializer.Deserialize<Wrapper>(json: json, options: this._serializerSettings);
 
-                    return packet.Data ?? Array.Empty<BinanceProduct>();
+                    return packet?.Data ?? Array.Empty<BinanceProduct>();
                 }
                 catch (Exception exception)
                 {

@@ -86,9 +86,9 @@ namespace CoinBot.Clients.Bittrex
 
                 try
                 {
-                    BittrexCurrenciesDto summaries = JsonSerializer.Deserialize<BittrexCurrenciesDto>(json: content, options: this._serializerSettings);
+                    BittrexCurrenciesDto? summaries = JsonSerializer.Deserialize<BittrexCurrenciesDto>(json: content, options: this._serializerSettings);
 
-                    IReadOnlyList<BittrexCurrencyDto>? items = summaries.Result;
+                    IReadOnlyList<BittrexCurrencyDto>? items = summaries?.Result;
 
                     return items ?? Array.Empty<BittrexCurrencyDto>();
                 }
@@ -142,9 +142,9 @@ namespace CoinBot.Clients.Bittrex
 
                 try
                 {
-                    BittrexMarketSummariesDto summaries = JsonSerializer.Deserialize<BittrexMarketSummariesDto>(json: content, options: this._serializerSettings);
+                    BittrexMarketSummariesDto? summaries = JsonSerializer.Deserialize<BittrexMarketSummariesDto>(json: content, options: this._serializerSettings);
 
-                    IReadOnlyList<BittrexMarketSummaryDto>? items = summaries.Result;
+                    IReadOnlyList<BittrexMarketSummaryDto>? items = summaries?.Result;
 
                     return items ?? Array.Empty<BittrexMarketSummaryDto>();
                 }
