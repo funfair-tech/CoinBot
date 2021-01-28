@@ -13,7 +13,7 @@
     <Features>strict;flow-analysis</Features>
     <Nullable>enable</Nullable>
     <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
-    <IsPackable>true</IsPackable>
+    <IsPackable>false</IsPackable>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(MSBuildProjectName).xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
