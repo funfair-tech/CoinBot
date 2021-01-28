@@ -1,5 +1,7 @@
 ﻿using System.Text;
 using System.Threading.Tasks;
+using Discord;
+using Discord.Commands;
 
 namespace CoinBot.Discord.Commands
 {

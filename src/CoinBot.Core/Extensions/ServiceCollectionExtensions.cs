@@ -1,4 +1,7 @@
-﻿namespace CoinBot.Core.Extensions
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace CoinBot.Core.Extensions
 {
     /// <summary>
     ///     <see cref="IServiceCollection" /> extension methods.

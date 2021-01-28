@@ -2,6 +2,10 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using CoinBot.Discord.Commands;
+using Discord;
+using Discord.Commands;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CoinBot.Discord.Extensions
 {
