@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using CoinBot.Clients.Extensions;
 using CoinBot.Core;
+using CoinBot.Core.Extensions;
 using CoinBot.Discord;
 using CoinBot.Discord.Extensions;
 using Discord;
