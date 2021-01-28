@@ -37,7 +37,7 @@ namespace CoinBot.Discord.Commands
                 {
                     Currency? currency = this._currencyManager.Get(symbol);
 
-                    if (currency != null && !currency.IsFiat)
+                    if (currency?.IsFiat == false)
                     {
                         EmbedBuilder builder = new();
                         builder.WithTitle(currency.GetTitle());
@@ -94,13 +94,11 @@ namespace CoinBot.Discord.Commands
 
         private ICoinInfo GetCoinInfo(Currency currency)
         {
-            ICoinInfo? walletDetails = currency.Getdetails<FunFairWalletCoin>() ?? (ICoinInfo) new InterpretedCoinInfo(currency: currency,
-                                                                                                                       marketManager: this._marketManager,
-                                                                                                                       this._currencyManager.Get(nameOrSymbol: @"USD"),
-                                                                                                                       this._currencyManager.Get(nameOrSymbol: @"ETH"),
-                                                                                                                       this._currencyManager.Get(nameOrSymbol: @"BTC"));
-
-            return walletDetails;
+            return currency.Getdetails<FunFairWalletCoin>() ?? (ICoinInfo) new InterpretedCoinInfo(currency: currency,
+                                                                                                   marketManager: this._marketManager,
+                                                                                                   this._currencyManager.Get(nameOrSymbol: @"USD"),
+                                                                                                   this._currencyManager.Get(nameOrSymbol: @"ETH"),
+                                                                                                   this._currencyManager.Get(nameOrSymbol: @"BTC"));
         }
 
         [Command(text: "snapshot")]

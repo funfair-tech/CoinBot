@@ -25,7 +25,7 @@ namespace CoinBot.Discord.Commands
         {
             using (this.Context.Channel.EnterTypingState())
             {
-                IGlobalInfo? globalInfo = this._currencyManager.GetGlobalInfo();
+                IGlobalInfo? globalInfo = this._currencyManager.GlobalInfo;
 
                 if (globalInfo == null)
                 {

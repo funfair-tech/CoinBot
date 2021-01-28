@@ -21,11 +21,6 @@ namespace CoinBot.Core
         private IReadOnlyDictionary<string, Currency> _coinInfoBySymbol;
 
         /// <summary>
-        ///     The <see cref="IGlobalInfo" />.
-        /// </summary>
-        private IGlobalInfo? _globalInfo;
-
-        /// <summary>
         ///     Constructor
         /// </summary>
         /// <param name="logger">Logging</param>
@@ -37,17 +32,17 @@ namespace CoinBot.Core
             this._coinInfoBySymbol = ImmutableDictionary<string, Currency>.Empty;
         }
 
+        /// <summary>
+        ///     The <see cref="IGlobalInfo" />.
+        /// </summary>
+        public IGlobalInfo? GlobalInfo { get; private set; }
+
         void ICurrencyListUpdater.Update(IReadOnlyList<Currency> currencies, IGlobalInfo? globalInfo)
         {
             this._logger.LogInformation(message: "Currencies updated");
             this._coinInfoBySymbol = currencies.ToDictionary(keySelector: key => key.Symbol, elementSelector: value => value);
             this._coinInfoByName = currencies.ToDictionary(keySelector: key => key.Name, elementSelector: value => value);
-            this._globalInfo = globalInfo;
-        }
-
-        public IGlobalInfo? GetGlobalInfo()
-        {
-            return this._globalInfo;
+            this.GlobalInfo = globalInfo;
         }
 
         public Currency? Get(string nameOrSymbol)

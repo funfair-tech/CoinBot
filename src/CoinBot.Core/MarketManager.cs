@@ -39,9 +39,9 @@ namespace CoinBot.Core
             : base(TimeSpan.FromMinutes(settings.Value.RefreshInterval), logger: logger)
         {
             this._currencyListUpdater = currencyListUpdater;
-            this._coinClients = coinClients?.ToList() ?? throw new ArgumentNullException(nameof(coinClients));
-            this._marketClients = marketClients?.ToList() ?? throw new ArgumentNullException(nameof(marketClients));
-            this._exchanges = new ReadOnlyDictionary<string, Exchange>(this._marketClients.ToDictionary(keySelector: client => client.Name, elementSelector: client => new Exchange()));
+            this._coinClients = coinClients.ToList() ?? throw new ArgumentNullException(nameof(coinClients));
+            this._marketClients = marketClients.ToList() ?? throw new ArgumentNullException(nameof(marketClients));
+            this._exchanges = new ReadOnlyDictionary<string, Exchange>(this._marketClients.ToDictionary(keySelector: client => client.Name, elementSelector: _ => new Exchange()));
         }
 
         public IEnumerable<MarketSummaryDto> Get(Currency currency)

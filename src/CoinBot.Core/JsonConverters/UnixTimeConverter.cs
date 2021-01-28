@@ -26,9 +26,9 @@ namespace CoinBot.Core.JsonConverters
         {
             if (reader.TokenType == JsonTokenType.String)
             {
-                string value = reader.GetString();
+                string? value = reader.GetString();
 
-                long seconds = long.Parse(value);
+                long seconds = long.Parse(value ?? string.Empty);
 
                 return Epoch.AddSeconds(seconds);
             }
@@ -40,7 +40,7 @@ namespace CoinBot.Core.JsonConverters
                 return Epoch.AddSeconds(seconds);
             }
 
-            throw new JsonException($"{typeof(decimal).Name} parameters must be passed as strings");
+            throw new JsonException($"{nameof(Decimal)} parameters must be passed as strings");
         }
     }
 }

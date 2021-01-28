@@ -16,17 +16,17 @@ namespace CoinBot.Core.JsonConverters
 
             if (reader.TokenType == JsonTokenType.String)
             {
-                string s = reader.GetString();
+                string? s = reader.GetString();
 
                 if (!decimal.TryParse(s: s, out decimal converted))
                 {
-                    throw new JsonException($"Can't convert {s} to {typeof(decimal).Name}");
+                    throw new JsonException($"Can't convert {s} to {nameof(Decimal)}");
                 }
 
                 return converted;
             }
 
-            throw new JsonException($"{typeof(decimal).Name} parameters must be passed as strings");
+            throw new JsonException($"{nameof(Decimal)} parameters must be passed as strings");
         }
 
         public override void Write(Utf8JsonWriter writer, decimal value, JsonSerializerOptions options)

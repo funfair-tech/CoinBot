@@ -76,7 +76,7 @@ namespace CoinBot
 
             //set up a task completion source so we can quit on CTRL+C
             TaskCompletionSource<bool> exitSource = new();
-            Console.CancelKeyPress += (sender, eventArgs) =>
+            Console.CancelKeyPress += (_, eventArgs) =>
                                       {
                                           eventArgs.Cancel = true;
                                           exitSource.SetResult(result: true);
