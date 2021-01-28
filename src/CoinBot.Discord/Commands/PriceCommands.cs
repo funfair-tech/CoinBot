@@ -4,8 +4,6 @@ using CoinBot.Clients.CoinMarketCap;
 using CoinBot.Clients.FunFair;
 using CoinBot.Core;
 using CoinBot.Discord.Extensions;
-using Discord.Commands;
-using Microsoft.Extensions.Logging;
 
 namespace CoinBot.Discord.Commands
 {

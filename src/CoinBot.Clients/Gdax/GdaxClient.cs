@@ -8,8 +8,6 @@ using CoinBot.Core;
 using CoinBot.Core.Extensions;
 using CoinBot.Core.Helpers;
 using CoinBot.Core.JsonConverters;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 namespace CoinBot.Clients.Gdax
 {

@@ -17,6 +17,8 @@ ProjectSection(SolutionItems) = preProject
 	CodeAnalysis.ruleset = CodeAnalysis.ruleset
 EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinBot.Core.Tests", "CoinBot.Core.Tests\CoinBot.Core.Tests.csproj", "{D97A777C-5DB8-4317-A533-DA9312C2E974}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{6DEC910A-A6A5-4C6F-B285-FBDEF398FA2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6DEC910A-A6A5-4C6F-B285-FBDEF398FA2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6DEC910A-A6A5-4C6F-B285-FBDEF398FA2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D97A777C-5DB8-4317-A533-DA9312C2E974}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D97A777C-5DB8-4317-A533-DA9312C2E974}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D97A777C-5DB8-4317-A533-DA9312C2E974}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D97A777C-5DB8-4317-A533-DA9312C2E974}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

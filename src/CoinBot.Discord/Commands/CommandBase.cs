@@ -1,6 +1,4 @@
 ﻿using System;
-using Discord;
-using Discord.Commands;
 
 namespace CoinBot.Discord.Commands
 {
@@ -10,9 +8,7 @@ namespace CoinBot.Discord.Commands
         {
             builder.WithAuthor(new EmbedAuthorBuilder
                                {
-                                   Name = "FunFair CoinBot - right click above to block",
-                                   Url = "https://funfair.io",
-                                   IconUrl = "https://s2.coinmarketcap.com/static/img/coins/32x32/1757.png"
+                                   Name = "FunFair CoinBot - right click above to block", Url = "https://funfair.io", IconUrl = "https://s2.coinmarketcap.com/static/img/coins/32x32/1757.png"
                                });
         }
 
