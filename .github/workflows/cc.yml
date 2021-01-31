@@ -1,11 +1,9 @@
 name: Code Analysis
 
 on:
-  push:
-    branches-ignore:
-    - master
-    - "release/**"
-    - "hotfix/**"
+  pull_request:
+    branches:
+      - master
 
 jobs:
 
