@@ -16,7 +16,8 @@ jobs:
         error-message: 'Add Jira Ticket ID to your title'
 
   include-changelog-entry:
-    runs-on: ubuntu-latest
+    # As LibGit2Sharp doesn't work on 20.04
+    runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2.3.4
         with:
