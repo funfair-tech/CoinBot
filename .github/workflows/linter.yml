@@ -14,11 +14,9 @@ name: Lint Code Base
 # Start the job on all push #
 #############################
 on:
-  push:
-    branches-ignore:
+  pull_request:
+    branches:
       - master
-      - "release/**"
-      - "hotfix/**"
 
 ###############
 # Set the Job #
