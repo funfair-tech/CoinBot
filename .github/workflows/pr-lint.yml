@@ -16,8 +16,7 @@ jobs:
         error-message: 'Add Jira Ticket ID to your title'
 
   include-changelog-entry:
-    # As LibGit2Sharp doesn't work on 20.04
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.3.4
         with:
@@ -31,7 +30,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   change-log-entry-is-in-unreleased:
-    runs-on: ubuntu-latest
+    # As LibGit2Sharp doesn't work on 20.04
+    runs-on: ubuntu-18.04
     steps:
     - uses: actions/checkout@v2.3.4
       with:
@@ -42,12 +42,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
-    - if: env.DOTNET_VERSION != '5.0.100'
-      uses: actions/setup-dotnet@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        dotnet-version: '5.0.100'
     - name: Enable dotnet tools
       run: dotnet new tool-manifest
     - name: Install Changelog tool
