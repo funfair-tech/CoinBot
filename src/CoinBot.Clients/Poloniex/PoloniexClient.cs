@@ -78,7 +78,12 @@ namespace CoinBot.Clients.Poloniex
                 return null;
             }
 
-            return new MarketSummaryDto(market: this.Name, baseCurrency: baseCurrency, marketCurrency: marketCurrency, volume: ticker.BaseVolume, last: ticker.Last, lastUpdated: null);
+            return new MarketSummaryDto(market: this.Name,
+                                        baseCurrency: baseCurrency,
+                                        marketCurrency: marketCurrency,
+                                        volume: ticker.BaseVolume,
+                                        last: ticker.Last,
+                                        lastUpdated: null);
         }
 
         /// <summary>

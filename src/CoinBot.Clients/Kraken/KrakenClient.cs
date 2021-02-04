@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -147,7 +147,12 @@ namespace CoinBot.Clients.Kraken
                 return null;
             }
 
-            return new MarketSummaryDto(market: this.Name, baseCurrency: baseCurrency, marketCurrency: marketCurrency, volume: ticker.Volume[1], last: ticker.Last[0], lastUpdated: null);
+            return new MarketSummaryDto(market: this.Name,
+                                        baseCurrency: baseCurrency,
+                                        marketCurrency: marketCurrency,
+                                        volume: ticker.Volume[1],
+                                        last: ticker.Last[0],
+                                        lastUpdated: null);
         }
 
         private static string? FindCurrency(IReadOnlyList<KrakenAsset> assets, string search)
@@ -312,8 +317,7 @@ namespace CoinBot.Clients.Kraken
         private sealed class KrakenPairWrapper
         {
             [JsonPropertyName(name: @"result")]
-
-            // ReSharper disable once UnusedAutoPropertyAccessor.Local
+            [SuppressMessage(category: "ReSharper", checkId: "UnusedAutoPropertyAccessor.Local", Justification = "TODO: Review")]
             public Dictionary<string, KrakenPair>? Result { get; set; }
         }
 
@@ -321,8 +325,7 @@ namespace CoinBot.Clients.Kraken
         private sealed class KrakenTickerWrapper
         {
             [JsonPropertyName(name: @"result")]
-
-            // ReSharper disable once UnusedAutoPropertyAccessor.Local
+            [SuppressMessage(category: "ReSharper", checkId: "UnusedAutoPropertyAccessor.Local", Justification = "TODO: Review")]
             public Dictionary<string, KrakenTicker>? Result { get; set; }
         }
 
@@ -330,8 +333,7 @@ namespace CoinBot.Clients.Kraken
         private sealed class KrakenAssetResultWrapper
         {
             [JsonPropertyName(name: @"result")]
-
-            // ReSharper disable once UnusedAutoPropertyAccessor.Local
+            [SuppressMessage(category: "ReSharper", checkId: "UnusedAutoPropertyAccessor.Local", Justification = "TODO: Review")]
             public Dictionary<string, KrakenAsset>? Result { get; set; }
         }
     }

@@ -79,7 +79,12 @@ namespace CoinBot.Clients.Gdax
                 return null;
             }
 
-            return new MarketSummaryDto(market: this.Name, baseCurrency: baseCurrency, marketCurrency: marketCurrency, volume: ticker.Volume, last: ticker.Price, lastUpdated: ticker.Time);
+            return new MarketSummaryDto(market: this.Name,
+                                        baseCurrency: baseCurrency,
+                                        marketCurrency: marketCurrency,
+                                        volume: ticker.Volume,
+                                        last: ticker.Price,
+                                        lastUpdated: ticker.Time);
         }
 
         /// <summary>
