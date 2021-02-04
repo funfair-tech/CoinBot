@@ -81,7 +81,12 @@ namespace CoinBot.Clients.GateIo
                 return null;
             }
 
-            return new MarketSummaryDto(market: this.Name, baseCurrency: baseCurrency, marketCurrency: marketCurrency, volume: marketSummary.BaseVolume, last: marketSummary.Last, lastUpdated: null);
+            return new MarketSummaryDto(market: this.Name,
+                                        baseCurrency: baseCurrency,
+                                        marketCurrency: marketCurrency,
+                                        volume: marketSummary.BaseVolume,
+                                        last: marketSummary.Last,
+                                        lastUpdated: null);
         }
 
         /// <summary>

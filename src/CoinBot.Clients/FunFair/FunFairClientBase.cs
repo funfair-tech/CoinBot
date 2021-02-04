@@ -42,7 +42,8 @@ namespace CoinBot.Clients.FunFair
 
         internal async Task<IReadOnlyCollection<FunFairWalletPriceResultPairDto?>> GetBasePricesAsync()
         {
-            List<(string cryptoSymbol, string fiatSymbol)> symbols = (from cryptoSymbol in this._cryptoSymbols from fiatSymbol in this._fiatSymbols select (cryptoSymbol, fiatSymbol)).ToList();
+            List<(string cryptoSymbol, string fiatSymbol)> symbols =
+                (from cryptoSymbol in this._cryptoSymbols from fiatSymbol in this._fiatSymbols select (cryptoSymbol, fiatSymbol)).ToList();
 
             try
             {
@@ -123,7 +124,9 @@ namespace CoinBot.Clients.FunFair
             }
             catch (Exception exception)
             {
-                this.Logger.LogError(new EventId(exception.HResult), exception: exception, $"Failed to retrieve prices for {tokenSymbol} in {fiatCurrencySymbol}: Error: {exception.Message}");
+                this.Logger.LogError(new EventId(exception.HResult),
+                                     exception: exception,
+                                     $"Failed to retrieve prices for {tokenSymbol} in {fiatCurrencySymbol}: Error: {exception.Message}");
 
                 return null;
             }

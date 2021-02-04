@@ -82,7 +82,12 @@ namespace CoinBot.Clients.Binance
                 return null;
             }
 
-            return new MarketSummaryDto(market: this.Name, baseCurrency: baseCurrency, marketCurrency: marketCurrency, volume: product.Volume, last: product.PrevClose, lastUpdated: null);
+            return new MarketSummaryDto(market: this.Name,
+                                        baseCurrency: baseCurrency,
+                                        marketCurrency: marketCurrency,
+                                        volume: product.Volume,
+                                        last: product.PrevClose,
+                                        lastUpdated: null);
         }
 
         public static void Register(IServiceCollection services)

@@ -24,39 +24,33 @@ namespace CoinBot.Clients.Bittrex
         public string Name { get; init; } = default!;
 
         [JsonPropertyName(name: @"MinConfirmation")]
-
-        // ReSharper disable once UnusedMember.Local
+        [SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Local", Justification = "TODO: Review")]
         private int MinConfirmations { get; set; }
 
         [JsonPropertyName(name: @"IsActive")]
-
-        // ReSharper disable once UnusedAutoPropertyAccessor.Global
+        [SuppressMessage(category: "ReSharper", checkId: "UnusedAutoPropertyAccessor.Global", Justification = "TODO: Review")]
         public bool IsActive { get; set; }
 
         [JsonPropertyName(name: @"TxFee")]
-
-        // ReSharper disable once UnusedMember.Global
+        [SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Global", Justification = "TODO: Review")]
         public decimal TxFee { get; set; }
 
         [JsonPropertyName(name: @"IsRestricted")]
 
         // ReSharper disable once MemberCanBePrivate.Global
-        // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Global
+        [SuppressMessage(category: "ReSharper", checkId: "AutoPropertyCanBeMadeGetOnly.Global", Justification = "TODO: Review")]
         public bool IsRestricted { get; init; }
 
         [JsonPropertyName(name: @"CoinType")]
-
-        // ReSharper disable once UnusedMember.Local
+        [SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Local", Justification = "TODO: Review")]
         private string CoinType { get; set; } = default!;
 
         [JsonPropertyName(name: @"BaseAddress")]
-
-        // ReSharper disable once UnusedMember.Local
+        [SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Local", Justification = "TODO: Review")]
         private string? BaseAddress { get; set; }
 
         [JsonPropertyName(name: @"BaseAddress")]
-
-        // ReSharper disable once UnusedMember.Local
+        [SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Local", Justification = "TODO: Review")]
         private string? Notice { get; set; }
     }
 }
