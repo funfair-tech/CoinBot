@@ -1,43 +1,63 @@
 "C#":
-    - src/**/*.cs
-    - src/**/*.csproj
+ - src/**/*.cs
+ - src/**/*.csproj
+
+"Powershell":
+ - **/*.ps1
+ - **/*.psm1
 
 "SQL":
-    - db/**/*
-    - tools/**/*.sql
+ - db/**/*
+ - tools/**/*.sql
 
 "Solidity":
-    - src/**/*.sol
+ - src/**/*.sol
 
 "unit-tests":
-    - src/*.Tests.*/**/*
-    - src/*.Tests.Integration.*/**/*
-    - src/*.Tests/**/*
-    - src/*.Tests.Integration/**/*
+ - src/*.Tests.*/**/*
+ - src/*.Tests.Integration.*/**/*
+ - src/*.Tests/**/*
+ - src/*.Tests.Integration/**/*
 
 ".NET update":
-    - src/global.json
+ - src/global.json
 
 "Config Change":
-    - src/**/*.json
+ - src/**/*.json
 
 "Static Code Analysis Rules":
-    - src/CodeAnalysis.ruleset
+ - src/CodeAnalysis.ruleset
 
 "Migration Script":
-    - tools/MigrationScripts/**/*
+ - tools/MigrationScripts/**/*
 
 "Legal Text":
-    - tools/LegalText/**/*
+ - tools/LegalText/**/*
 
 "Change Log":
-    - CHANGELOG.md
+ - CHANGELOG.md
 
 "Read Me":
-    - README.md
+ - README.md
 
 "Setup":
-    - SETUP.md
+ - SETUP.md
 
 "github-actions":
-    - ".github/workflows/*.yml"
+ - .github/workflows/*.yml
+
+"CoinBot":
+ - src/CoinBot/**/*
+
+"Clients":
+ - src/CoinBot.Clients/**/*
+
+"Core":
+ - src/CoinBot.Core/**/*
+
+"Core.Tests":
+ - src/CoinBot.Core.Tests/**/*
+
+"Discord":
+ - src/CoinBot.Discord/**/*
+
