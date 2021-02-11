@@ -1,17 +1,17 @@
 "C#":
- - src/**/*.cs
- - src/**/*.csproj
+ - ./**/*.cs
+ - ./**/*.csproj
 
 "Powershell":
- - src/**/*.ps1
- - src/**/*.psm1
+ - ./**/*.ps1
+ - ./**/*.psm1
 
 "SQL":
  - db/**/*
- - tools/**/*.sql
+ - ./**/*.sql
 
 "Solidity":
- - src/**/*.sol
+ - ./**/*.sol
 
 "unit-tests":
  - src/*.Tests.*/**/*
