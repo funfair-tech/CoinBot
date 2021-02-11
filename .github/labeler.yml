@@ -3,8 +3,8 @@
  - src/**/*.csproj
 
 "Powershell":
- - **/*.ps1
- - **/*.psm1
+ - src/**/*.ps1
+ - src/**/*.psm1
 
 "SQL":
  - db/**/*
