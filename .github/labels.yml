@@ -82,6 +82,10 @@
    color: "ffff00"
    description: "Pull request needs a QA Signoff before it can be merged"
 
+ - name: "!!! WAITING FOR ETHEREUM PR"
+   color: "ffff00"
+   description: "Pull request needs a server ethereum pull request to be merged at the same time"
+
  - name: "dependencies"
    color: "0366d6"
    description: "Updates to dependencies"
