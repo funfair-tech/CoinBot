@@ -2,6 +2,14 @@
    color: "db6baa"
    description: "C# Source Files"
 
+ - name: "C# Project"
+   color: "db6baa"
+   description: "C# Project Files"
+
+ - name: "C# Solution"
+   color: "db6baa"
+   description: "C# Solutions"
+
  - name: "Powershell"
    color: "23bc12"
    description: "Powershell Source Files"
@@ -49,6 +57,10 @@
  - name: "Setup"
    color: "5319e7"
    description: "Setup instructions"
+
+ - name: "Markdown"
+   color: "5319e7"
+   description: "Markdown files"
 
  - name: "github-actions"
    color: "e09cf4"
