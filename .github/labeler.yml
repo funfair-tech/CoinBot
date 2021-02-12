@@ -2,6 +2,12 @@
  - ./**/*.cs
  - ./**/*.csproj
 
+"C# Project":
+ - ./**/*.csproj
+
+"C# Solution":
+ - ./**/*.sln
+
 "Powershell":
  - ./**/*.ps1
  - ./**/*.psm1
@@ -23,6 +29,7 @@
  - src/global.json
 
 "Config Change":
+ - !src/global.json
  - src/**/*.json
 
 "Static Code Analysis Rules":
@@ -42,6 +49,9 @@
 
 "Setup":
  - SETUP.md
+
+"Markdown":
+ - ./**/*.md
 
 "github-actions":
  - .github/workflows/*.yml
