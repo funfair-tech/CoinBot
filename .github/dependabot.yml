@@ -16,6 +16,7 @@ updates:
   - dependency-type: all
   ignore:
   - dependency-name: "AWSSDK.*"
+  - dependency-name: "Coverlet.*"
   - dependency-name: "FunFair.*"
   - dependency-name: "Microsoft.AspNetCore.*"
   - dependency-name: "Microsoft.CodeAnalysis.*"
