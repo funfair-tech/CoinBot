@@ -1,3 +1,2 @@
 "Config Change":
- - any: [ , 'src/**/*.json''!src/global.json'
- ]
+ - any: [ 'src/**/*.json', '!src/global.json' ]
