@@ -26,6 +26,7 @@ namespace CoinBot.Discord.Extensions
         /// <param name="configuration">The <see cref="IConfiguration" />.</param>
         /// <returns></returns>
 
+
         [SuppressMessage(category: "Microsoft.Reliability", checkId: "CA2000:DisposeObjectsBeforeLosingScope", Justification = "Ownership transferred into a singleton")]
         public static IServiceCollection AddCoinBot(this IServiceCollection services, IConfiguration configuration)
         {
@@ -51,3 +52,4 @@ namespace CoinBot.Discord.Extensions
         }
     }
 }
+
