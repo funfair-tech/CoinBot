@@ -17,6 +17,7 @@ namespace CoinBot.Core
         ///     The coin image.
         /// </summary>
 
+
         [SuppressMessage(category: "Microsoft.Design", checkId: "CA1056:UriPropertiesShouldNotBeStrings", Justification = "Model for serialization")]
         string ImageUrl { get; }
 
@@ -81,3 +82,4 @@ namespace CoinBot.Core
         DateTime? LastUpdated { get; }
     }
 }
+
