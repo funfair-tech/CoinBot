@@ -41,8 +41,6 @@ namespace CoinBot.Core
         /// <summary>
         ///     The currency image url.
         /// </summary>
-
-
         [SuppressMessage(category: "Microsoft.Design", checkId: "CA1056:UriPropertiesShouldNotBeStrings", Justification = "Model for serialization")]
         public string? ImageUrl { get; set; }
 
@@ -61,4 +59,5 @@ namespace CoinBot.Core
         }
     }
 }
+
 
