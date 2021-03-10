@@ -6,8 +6,6 @@ namespace CoinBot.Clients.FunFair
     /// <summary>
     ///     The price source response packet
     /// </summary>
-
-
     [SuppressMessage(category: "Microsoft.Performance", checkId: "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Used as data packet")]
     internal sealed class FunFairWalletPriceResultDto
     {
@@ -24,4 +22,5 @@ namespace CoinBot.Clients.FunFair
         public DateTime Date { get; set; }
     }
 }
+
 
