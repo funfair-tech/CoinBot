@@ -375,6 +375,7 @@
         <s:Boolean x:Key="/Default/UserDictionary/Words/=Goerli/@EntryIndexedValue">True</s:Boolean>
         <s:Boolean x:Key="/Default/UserDictionary/Words/=Maxmind/@EntryIndexedValue">True</s:Boolean>
         <s:Boolean x:Key="/Default/UserDictionary/Words/=Changelly/@EntryIndexedValue">True</s:Boolean>
+        <s:Boolean x:Key="/Default/UserDictionary/Words/=xDai/@EntryIndexedValue">True</s:Boolean>
         <s:Boolean x:Key="/Default/UserDictionary/Words/=testnet/@EntryIndexedValue">True</s:Boolean>
         <s:Boolean x:Key="/Default/UserDictionary/Words/=nonces/@EntryIndexedValue">True</s:Boolean>
         <s:Boolean x:Key="/Default/UserDictionary/Words/=nonce/@EntryIndexedValue">True</s:Boolean>
@@ -389,5 +390,6 @@
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Dapp/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=openable/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=unopenable/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=Gwei/@EntryIndexedValue">True</s:Boolean>
 </wpf:ResourceDictionary>
 	
