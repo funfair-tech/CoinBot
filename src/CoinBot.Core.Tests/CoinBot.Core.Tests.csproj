@@ -23,7 +23,7 @@
     <CodeAnalysisRuleSet>$(SolutionDir)\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="FunFair.Test.Common" Version="5.1.1.792" />
+    <PackageReference Include="FunFair.Test.Common" Version="5.1.2.864" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.1" />
     <PackageReference Include="NSubstitute" Version="4.2.2" />
     <PackageReference Include="TeamCity.VSTest.TestAdapter" Version="1.0.25" />
