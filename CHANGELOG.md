@@ -33,6 +33,7 @@ Please ADD ALL Changes to the UNRELASED SECTION and not a specific release
 - FF-1429 - Updated Discord.Net to 2.3.1
 - FF-1429 - Updated Microsoft.VisualStudio.Threading.Analyzers to 16.9.60
 - FF-1429 - Updated FunFair.Test.Common to 5.1.2.864
+- FF-1429 - Updated SonarAnalyzer.CSharp to 8.20.0.28934
 ### Removed
 ### Deployment Changes
 
