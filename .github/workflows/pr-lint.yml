@@ -22,7 +22,7 @@ jobs:
         with:
           fetch-depth: 0
       - if: ${{ github.repository_owner == 'funfair-tech' && github.actor != 'dependabot[bot]' }}
-        uses: Zomzog/changelog-checker@v1.1.0
+        uses: Zomzog/changelog-checker@v1.2.0
         with:
           fileName: CHANGELOG.md
           noChangelogLabel: Changelog Not Required
