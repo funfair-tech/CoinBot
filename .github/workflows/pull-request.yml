@@ -20,7 +20,7 @@ jobs:
         path: ./.github/PULL_REQUEST_TEMPLATE.md
     - run: |
         echo COMMIT_MSG=`git log -1 --pretty=%B` >> $GITHUB_ENV
-    - uses: repo-sync/pull-request@v2
+    - uses: repo-sync/pull-request@v2.6
       with:
         source_branch: ""                     # If blank, default: triggered branch
         destination_branch: "master"          # If blank, default: master
