@@ -48,11 +48,8 @@ namespace CoinBot.Core
         {
             List<MarketSummaryDto> results = new();
 
-            foreach (KeyValuePair<string, Exchange> row in this._exchanges)
+            foreach ((string name, Exchange exchange) in this._exchanges)
             {
-                string name = row.Key;
-                Exchange exchange = row.Value;
-
                 // Enter read lock with a timeout of 3 seconds to continue to the next exchange.
                 if (!exchange.Lock.TryEnterReadLock(TimeSpan.FromSeconds(value: 3)))
                 {
@@ -63,23 +60,12 @@ namespace CoinBot.Core
 
                 try
                 {
-                    if (exchange.Markets == null)
-                    {
-                        continue;
-                    }
-
                     IEnumerable<MarketSummaryDto> markets = exchange.Markets.Where(predicate: m =>
                                                                                               {
-                                                                                                  // TODO FIX EMPTY CURRENCIES
-                                                                                                  if (m.BaseCurrency == null || m.MarketCurrency == null)
-                                                                                                  {
-                                                                                                      return false;
-                                                                                                  }
-
-                                                                                                  if (m.BaseCurrency?.Symbol.Equals(value: currency.Symbol,
-                                                                                                          comparisonType: StringComparison.OrdinalIgnoreCase) != false ||
-                                                                                                      m.MarketCurrency?.Symbol.Equals(value: currency.Symbol,
-                                                                                                          comparisonType: StringComparison.OrdinalIgnoreCase) != false)
+                                                                                                  if (m.BaseCurrency.Symbol.Equals(value: currency.Symbol,
+                                                                                                                                   comparisonType: StringComparison.OrdinalIgnoreCase) ||
+                                                                                                      m.MarketCurrency.Symbol.Equals(value: currency.Symbol,
+                                                                                                          comparisonType: StringComparison.OrdinalIgnoreCase))
                                                                                                   {
                                                                                                       return true;
                                                                                                   }
@@ -101,11 +87,8 @@ namespace CoinBot.Core
         {
             List<MarketSummaryDto> results = new();
 
-            foreach (KeyValuePair<string, Exchange> row in this._exchanges)
+            foreach ((string name, Exchange exchange) in this._exchanges)
             {
-                string name = row.Key;
-                Exchange exchange = row.Value;
-
                 // Enter read lock with a timeout of 3 seconds to continue to the next exchange.
                 if (!exchange.Lock.TryEnterReadLock(TimeSpan.FromSeconds(value: 3)))
                 {
@@ -116,27 +99,16 @@ namespace CoinBot.Core
 
                 try
                 {
-                    if (exchange.Markets == null)
-                    {
-                        continue;
-                    }
-
                     IEnumerable<MarketSummaryDto> markets = exchange.Markets.Where(predicate: m =>
                                                                                               {
-                                                                                                  // TODO FIX EMPTY CURRENCIES
-                                                                                                  if (m.BaseCurrency == null || m.MarketCurrency == null)
-                                                                                                  {
-                                                                                                      return false;
-                                                                                                  }
-
-                                                                                                  if (m.BaseCurrency?.Symbol.Equals(value: currency1.Symbol,
-                                                                                                          comparisonType: StringComparison.OrdinalIgnoreCase) != false &&
-                                                                                                      m.MarketCurrency?.Symbol.Equals(value: currency2.Symbol,
-                                                                                                          comparisonType: StringComparison.OrdinalIgnoreCase) != false ||
-                                                                                                      m.BaseCurrency?.Symbol.Equals(value: currency2.Symbol,
-                                                                                                          comparisonType: StringComparison.OrdinalIgnoreCase) != false &&
-                                                                                                      m.MarketCurrency?.Symbol.Equals(value: currency1.Symbol,
-                                                                                                          comparisonType: StringComparison.OrdinalIgnoreCase) != false)
+                                                                                                  if (m.BaseCurrency.Symbol.Equals(value: currency1.Symbol,
+                                                                                                                                   comparisonType: StringComparison.OrdinalIgnoreCase) &&
+                                                                                                      m.MarketCurrency.Symbol.Equals(value: currency2.Symbol,
+                                                                                                          comparisonType: StringComparison.OrdinalIgnoreCase) ||
+                                                                                                      m.BaseCurrency.Symbol.Equals(value: currency2.Symbol,
+                                                                                                                                   comparisonType: StringComparison.OrdinalIgnoreCase) &&
+                                                                                                      m.MarketCurrency.Symbol.Equals(value: currency1.Symbol,
+                                                                                                          comparisonType: StringComparison.OrdinalIgnoreCase))
                                                                                                   {
                                                                                                       return true;
                                                                                                   }
