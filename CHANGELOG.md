@@ -40,6 +40,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.21.0.30542
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.22.0.31243
 - FF-1429 - Updated FunFair.CodeAnalysis to 5.2.0.740
+- FF-1429 - Updated SonarAnalyzer.CSharp to 8.23.0.32424
 ### Removed
 ### Deployment Changes
 
