@@ -7,6 +7,7 @@ on:
 
 jobs:
   include-JIRA-ticket:
+    if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     steps:
     - if: ${{ !startsWith(github.head_ref, 'release/') && !startsWith(github.head_ref, 'hotfix/') }}
@@ -16,6 +17,7 @@ jobs:
         error-message: 'Add Jira Ticket ID to your title'
 
   include-changelog-entry:
+    if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.3.4
@@ -30,6 +32,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   change-log-entry-is-in-unreleased:
+    if: github.event.pull_request.draft == false
     # As LibGit2Sharp doesn't work on 20.04
     runs-on: ubuntu-18.04
     steps:
@@ -50,19 +53,19 @@ jobs:
       run: dotnet changelog --changelog CHANGELOG.md --check-insert "origin/${{ github.base_ref}}"
 
   does-not-contain-secrets:
-
+    if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2.3.4
       with:
         fetch-depth: 0
     - uses: zricethezav/gitleaks-action@v1.6.0
+      with:
+        config-path: .gitleaks.toml
 
   has-no-merge-conflicts:
-
+    if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2.3.4
       with:
@@ -71,9 +74,8 @@ jobs:
 
 
   has-no-file-or-folder-case-sensitivity-issues:
-
+    if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2.3.4
       with:
@@ -81,15 +83,12 @@ jobs:
     - uses: credfeto/action-case-checker@v1.1
 
   lint-code:
-    # Set the agent to run on
+    if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
-
     steps:
-
       - uses: actions/checkout@v2.3.4
         with:
           fetch-depth: 0
-
       - uses: github/super-linter@v3.17.1
         env:
           DEFAULT_BRANCH: master
