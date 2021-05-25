@@ -29,6 +29,4 @@ jobs:
         pr_draft: true                        # Creates pull request as draft
         pr_title: "${{ env.COMMIT_MSG }}"
         pr_body: "${{ steps.pr-template.outputs.content }}"
-        #pr_reviewer: "wei,worker"             # Comma-separated list (no spaces)
-        #pr_milestone: "Milestone 1"           # Milestone name
         github_token: ${{ secrets.GITHUB_TOKEN }}
