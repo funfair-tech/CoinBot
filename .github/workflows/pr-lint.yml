@@ -48,3 +48,64 @@ jobs:
       run: dotnet tool install --local Credfeto.ChangeLog.Cmd
     - name: Check Changelog
       run: dotnet changelog --changelog CHANGELOG.md --check-insert "origin/${{ github.base_ref}}"
+
+  does-not-contain-secrets:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2.3.4
+      with:
+        fetch-depth: 0
+    - uses: zricethezav/gitleaks-action@v1.6.0
+
+  has-no-merge-conflicts:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2.3.4
+      with:
+        fetch-depth: 0
+    - uses: olivernybroe/action-conflict-finder@v2.0
+
+
+  has-no-file-or-folder-case-sensitivity-issues:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2.3.4
+      with:
+        fetch-depth: 0
+    - uses: credfeto/action-case-checker@v1.1
+
+  lint-code:
+    # Set the agent to run on
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - uses: actions/checkout@v2.3.4
+        with:
+          fetch-depth: 0
+
+      - uses: github/super-linter@v3.17.1
+        env:
+          DEFAULT_BRANCH: master
+          GITHUB_TOKEN: ${{ secrets.SOURCE_PUSH_TOKEN }}
+          MULTI_STATUS: true
+          VALIDATE_ALL_CODEBASE: false
+          VALIDATE_BASH: true
+          VALIDATE_CSS: true
+          VALIDATE_DOCKERFILE: true
+          VALIDATE_DOCKERFILE_HADOLINT: true
+          VALIDATE_JSON: true
+          VALIDATE_MD: true
+          VALIDATE_PYTHON: true
+          VALIDATE_PYTHON_PYLINT: true
+          VALIDATE_POWERSHELL: true
+          VALIDATE_SHELL_SHFMT: true
+          VALIDATE_TYPESCRIPT_ES: true
+          VALIDATE_XML: true
+          VALIDATE_YAML: true
