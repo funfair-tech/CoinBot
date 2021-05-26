@@ -42,6 +42,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated FunFair.CodeAnalysis to 5.2.0.740
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.23.0.32424
 - FF-1429 - Updated Discord.Net to 2.4.0
+- FF-1429 - Updated Microsoft.NET.Test.Sdk to 16.10.0
 ### Removed
 ### Deployment Changes
 
