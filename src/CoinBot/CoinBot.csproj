@@ -1,80 +1,80 @@
-<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
-    <RuntimeIdentifiers>win-x64;win10-x64;win81-x64;osx.10.12-x64;linux-x64</RuntimeIdentifiers>
-    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
-    <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
-    <LangVersion>latest</LangVersion>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningsAsErrors />
-    <NoWarn>1591</NoWarn>
-    <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
-    <Features>strict;flow-analysis</Features>
-    <Nullable>enable</Nullable>
-    <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
-    <IsPackable>false</IsPackable>
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(MSBuildProjectName).xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AnalysisLevel>latest</AnalysisLevel>
-    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
-    <EnableNETAnalyzers>true</EnableNETAnalyzers>
-    <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
-    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-    <CodeAnalysisRuleSet>$(SolutionDir)\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="5.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="5.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
-    <PackageReference Include="Serilog.Extensions.Logging" Version="3.0.1" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="AsyncFixer" Version="1.5.1" PrivateAssets="All" />
-    <PackageReference Include="FunFair.CodeAnalysis" Version="5.2.0.740" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="16.10.56" PrivateAssets="All" />
-    <PackageReference Include="Roslynator.Analyzers" Version="3.1.0" PrivateAssets="All" />
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.23.0.32424" PrivateAssets="All" />
-    <PackageReference Include="SourceLink.Create.CommandLine" Version="2.8.3" PrivateAssets="All" />
-    <PackageReference Include="ToStringWithoutOverrideAnalyzer" Version="0.6.0" PrivateAssets="All" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CoinBot.Clients\CoinBot.Clients.csproj" />
-    <ProjectReference Include="..\CoinBot.Core\CoinBot.Core.csproj" />
-    <ProjectReference Include="..\CoinBot.Discord\CoinBot.Discord.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="appsettings-local.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Update="appsettings.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
-    </Content>
-    <Content Update="appsettings-local.json" Condition="Exists('appsettings-local.json')">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Copy SourceFiles="appsettings.json" DestinationFiles="$(OutDir)\appsettings.json" SkipUnchangedFiles="true" />
-    <Copy SourceFiles="appsettings-local.json" DestinationFiles="$(OutDir)\appsettings-local.json" SkipUnchangedFiles="true" Condition="Exists('appsettings-local.json')" />
-  </Target>
-  <Target Name="PrePublish" BeforeTargets="PrepareForPublish">
-    <Copy SourceFiles="appsettings.json" DestinationFiles="$(PublishDir)\appsettings.json" SkipUnchangedFiles="true" />
-  </Target>
-  <ItemGroup>
-    <TrimmerRootAssembly Include="System.Text.Json" />
-    <TrimmerRootAssembly Include="System.IO.MemoryMappedFiles" />
-    <TrimmerRootAssembly Include="System.Resources.Writer" />
-    <TrimmerRootAssembly Include="System.Threading.ThreadPool" />
-    <TrimmerRootAssembly Include="System.Transactions" />
-    <TrimmerRootAssembly Include="System.Diagnostics.FileVersionInfo" />
-  </ItemGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net5.0</TargetFramework>
+        <RuntimeIdentifiers>win-x64;win10-x64;win81-x64;osx.10.12-x64;linux-x64</RuntimeIdentifiers>
+        <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+        <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
+        <LangVersion>latest</LangVersion>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <WarningsAsErrors />
+        <NoWarn>1591</NoWarn>
+        <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
+        <Features>strict;flow-analysis</Features>
+        <Nullable>enable</Nullable>
+        <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
+        <IsPackable>false</IsPackable>
+        <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(MSBuildProjectName).xml</DocumentationFile>
+    </PropertyGroup>
+    <PropertyGroup>
+        <AnalysisLevel>latest</AnalysisLevel>
+        <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+        <EnableNETAnalyzers>true</EnableNETAnalyzers>
+        <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+        <CodeAnalysisRuleSet>$(SolutionDir)\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="5.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="5.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="5.0.1" />
+        <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="5.0.1" />
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
+        <PackageReference Include="Serilog.Extensions.Logging" Version="3.0.1" />
+        <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="AsyncFixer" Version="1.5.1" PrivateAssets="All" />
+        <PackageReference Include="FunFair.CodeAnalysis" Version="5.2.0.740" PrivateAssets="All" />
+        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="16.10.56" PrivateAssets="All" />
+        <PackageReference Include="Roslynator.Analyzers" Version="3.1.0" PrivateAssets="All" />
+        <PackageReference Include="SonarAnalyzer.CSharp" Version="8.24.0.32949" PrivateAssets="All" />
+        <PackageReference Include="SourceLink.Create.CommandLine" Version="2.8.3" PrivateAssets="All" />
+        <PackageReference Include="ToStringWithoutOverrideAnalyzer" Version="0.6.0" PrivateAssets="All" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\CoinBot.Clients\CoinBot.Clients.csproj" />
+        <ProjectReference Include="..\CoinBot.Core\CoinBot.Core.csproj" />
+        <ProjectReference Include="..\CoinBot.Discord\CoinBot.Discord.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <None Remove="appsettings-local.json" />
+    </ItemGroup>
+    <ItemGroup>
+        <Content Update="appsettings.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+            <CopyToPublishDirectory>Always</CopyToPublishDirectory>
+        </Content>
+        <Content Update="appsettings-local.json" Condition="Exists('appsettings-local.json')">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+            <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+        </Content>
+    </ItemGroup>
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+        <Copy SourceFiles="appsettings.json" DestinationFiles="$(OutDir)\appsettings.json" SkipUnchangedFiles="true" />
+        <Copy SourceFiles="appsettings-local.json" DestinationFiles="$(OutDir)\appsettings-local.json" SkipUnchangedFiles="true" Condition="Exists('appsettings-local.json')" />
+    </Target>
+    <Target Name="PrePublish" BeforeTargets="PrepareForPublish">
+        <Copy SourceFiles="appsettings.json" DestinationFiles="$(PublishDir)\appsettings.json" SkipUnchangedFiles="true" />
+    </Target>
+    <ItemGroup>
+        <TrimmerRootAssembly Include="System.Text.Json" />
+        <TrimmerRootAssembly Include="System.IO.MemoryMappedFiles" />
+        <TrimmerRootAssembly Include="System.Resources.Writer" />
+        <TrimmerRootAssembly Include="System.Threading.ThreadPool" />
+        <TrimmerRootAssembly Include="System.Transactions" />
+        <TrimmerRootAssembly Include="System.Diagnostics.FileVersionInfo" />
+    </ItemGroup>
 </Project>

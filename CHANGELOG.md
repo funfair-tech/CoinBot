@@ -44,6 +44,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated Discord.Net to 2.4.0
 - FF-1429 - Updated Microsoft.NET.Test.Sdk to 16.10.0
 - FF-1429 - Updated Microsoft.VisualStudio.Threading.Analyzers to 16.10.56
+- FF-1429 - Updated SonarAnalyzer.CSharp to 8.24.0.32949
 ### Removed
 ### Deployment Changes
 
