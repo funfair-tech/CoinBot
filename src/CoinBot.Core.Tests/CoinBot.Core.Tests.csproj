@@ -37,7 +37,7 @@
         <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="16.10.56" PrivateAssets="All" />
         <PackageReference Include="NSubstitute.Analyzers.CSharp" Version="1.0.14" PrivateAssets="All" />
         <PackageReference Include="Roslynator.Analyzers" Version="3.2.0" PrivateAssets="All" />
-        <PackageReference Include="SonarAnalyzer.CSharp" Version="8.24.0.32949" PrivateAssets="All" />
+        <PackageReference Include="SonarAnalyzer.CSharp" Version="8.25.0.33663" PrivateAssets="All" />
         <PackageReference Include="SourceLink.Create.CommandLine" Version="2.8.3" PrivateAssets="All" />
         <PackageReference Include="ToStringWithoutOverrideAnalyzer" Version="0.6.0" PrivateAssets="All" />
         <PackageReference Include="xunit.analyzers" Version="0.10.0" PrivateAssets="All" />
