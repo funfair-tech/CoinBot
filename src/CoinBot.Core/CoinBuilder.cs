@@ -16,7 +16,7 @@ namespace CoinBot.Core
             this._coinsBySymbol.TryAdd(key: @"USD", new Currency(symbol: "USD", name: "United States dollar") {IsFiat = true});
         }
 
-        public Currency? Get(string symbol, string name)
+        public Currency Get(string symbol, string name)
         {
             string upperSymbol = symbol.ToUpperInvariant();
 

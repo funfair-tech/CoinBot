@@ -169,14 +169,11 @@ namespace CoinBot.Core
             {
                 ICoinInfo name = cryptoInfo.Coins[0];
 
-                Currency? currency = builder.Get(symbol: cryptoInfo.Symbol, name: name.Name);
+                Currency currency = builder.Get(symbol: cryptoInfo.Symbol, name: name.Name);
 
-                if (currency != null)
+                foreach (ICoinInfo info in cryptoInfo.Coins)
                 {
-                    foreach (ICoinInfo info in cryptoInfo.Coins)
-                    {
-                        currency.AddDetails(info);
-                    }
+                    currency.AddDetails(info);
                 }
             }
         }
@@ -199,7 +196,7 @@ namespace CoinBot.Core
 
         private async Task<IGlobalInfo?> UpdateGlobalInfoAsync()
         {
-            IGlobalInfo?[] results = await Task.WhenAll(this._coinClients.Select(selector: client => this.GetGlobalInfoAsync(client)));
+            IGlobalInfo?[] results = await Task.WhenAll(this._coinClients.Select(selector: this.GetGlobalInfoAsync));
 
             return results.RemoveNulls()
                           .FirstOrDefault();
