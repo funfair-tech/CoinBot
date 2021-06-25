@@ -309,3 +309,4 @@ src/Data
 .config
 
 *.sdsc
+.idea/workspace.xml
