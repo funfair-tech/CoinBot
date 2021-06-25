@@ -3,7 +3,7 @@
 ###############################################################################
 
 #note left to system settings
-#*	text=auto
+*	text=auto
 
 ###############################################################################
 # Scripts
@@ -23,3 +23,15 @@
 ###############################################################################
 
 *.cs    text=auto diff=csharp
+
+
+#### Not Text
+*.jpg   binary
+*.jpeg  binary
+*.png   binary
+*.gif   binary
+*.ico   binary
+*.woff  binary
+*.wof   binary
+*.eot   binary
+*.ttf   binary
