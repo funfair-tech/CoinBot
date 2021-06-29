@@ -33,8 +33,9 @@
 
 *.cs    text=auto diff=csharp
 
-
-#### Not Text
+###############################################################################
+# Explicitly binary - should be handled automatically anyway
+###############################################################################
 *.jpg   binary
 *.jpeg  binary
 *.png   binary
