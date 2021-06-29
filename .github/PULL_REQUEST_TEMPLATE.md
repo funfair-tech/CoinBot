@@ -18,7 +18,7 @@
 
 # Types of changes
 
-<!--- What types of changes does your code introduce? Put an `x` in all the boxes that apply: -->
+<!--- What types of changes does your code introduce? Put an 'x' in all the boxes that apply: -->
 <!-- Note that you can just click these after submission and it will remember the tick for you -->
 
 - [ ] Docs change
@@ -38,7 +38,7 @@
 
 # Checklist
 
-<!--- Go over all the following points, and put an `x` in all the boxes once they are true. -->
+<!--- Go over all the following points, and put an 'x' in all the boxes once they are true. -->
 <!-- Note that you can just click these after submission and it will remember the tick for you -->
 
 - [ ] There are no Resharper\static code analysis errors anywhere in the solution.
