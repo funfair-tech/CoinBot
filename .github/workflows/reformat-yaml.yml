@@ -12,6 +12,7 @@ on:
 jobs:
   standardise-yaml-files:
 
+    if: ${{ github.event.pull_request.draft == false && ( !startsWith(github.head_ref, 'release/') && !startsWith(github.head_ref, 'hotfix/') ) }}
     runs-on: ubuntu-latest
 
     steps:
