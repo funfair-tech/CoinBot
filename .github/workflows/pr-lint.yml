@@ -6,6 +6,16 @@ on:
       - master
 
 jobs:
+  info:
+    if: ${{ endsWith(github.repository , '-template') }}
+    runs-on: ubuntu-latest
+    steps:
+    - run: |
+        echo "Branch: ${{ github.head_ref }}"
+        echo "Base Branch: ${{ github.base_ref }}"
+        echo "Repo: ${{ github.repository }}"
+        echo "Owner: ${{ github.repository_owner }}"
+
   include-JIRA-ticket:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
@@ -20,10 +30,11 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2.3.4
+      - if: ${{ github.actor != 'dependabot[bot]' || endsWith(github.repository , '-template') }}
+        uses: actions/checkout@v2.3.4
         with:
           fetch-depth: 0
-      - if: ${{ github.repository_owner == 'funfair-tech' && github.actor != 'dependabot[bot]' }}
+      - if: ${{ github.actor != 'dependabot[bot]' || endsWith(github.repository , '-template') }}
         uses: Zomzog/changelog-checker@v1.2.0
         with:
           fileName: CHANGELOG.md
@@ -34,13 +45,13 @@ jobs:
   change-log-entry-is-in-unreleased:
     if: github.event.pull_request.draft == false
     # As LibGit2Sharp doesn't work on 20.04
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2.3.4
       with:
         fetch-depth: 0
     - uses: credfeto/action-dotnet-version-detect@v1.1.1
-    - uses: actions/setup-dotnet@v1.8.0
+    - uses: actions/setup-dotnet@v1.8.1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -50,7 +61,7 @@ jobs:
     - name: Install Changelog tool
       run: dotnet tool install --local Credfeto.ChangeLog.Cmd
     - name: Check Changelog
-      run: dotnet changelog --changelog CHANGELOG.md --check-insert "origin/${{ github.base_ref}}"
+      run: dotnet changelog --changelog CHANGELOG.md --check-insert "origin/${{ github.base_ref }}"
 
   does-not-contain-secrets:
     if: github.event.pull_request.draft == false
@@ -72,7 +83,6 @@ jobs:
         fetch-depth: 0
     - uses: olivernybroe/action-conflict-finder@v2.0
 
-
   has-no-file-or-folder-case-sensitivity-issues:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
@@ -83,7 +93,7 @@ jobs:
     - uses: credfeto/action-case-checker@v1.1
 
   lint-code:
-    if: github.event.pull_request.draft == false
+    if: ${{ github.event.pull_request.draft == false && ( !startsWith(github.head_ref, 'release/') && !startsWith(github.head_ref, 'hotfix/') ) }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.3.4
