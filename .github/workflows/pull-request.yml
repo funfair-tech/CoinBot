@@ -11,16 +11,31 @@ jobs:
   pull-request:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2.3.4
+    - uses: jwalton/gh-find-current-pr@v1.1.0
+      id: findPr
+
+    - if: ${{ steps.findPr.outputs.number == '' }}
+      uses: actions/checkout@v2.3.4
       with:
         fetch-depth: 1
-    - id: pr-template
+
+    - if: ${{ steps.findPr.outputs.number != '' }}
+      run: |
+        echo "Pull request already exists with id: ${{ steps.findPr.outputs.number }}"
+        echo "URL: https://github.com/${{github.repository}}/pull/${{ steps.findPr.outputs.number }}"
+
+    - if: ${{ steps.findPr.outputs.number == '' }}
+      id: pr-template
       uses: juliangruber/read-file-action@v1
       with:
         path: ./.github/PULL_REQUEST_TEMPLATE.md
-    - run: |
+
+    - if: ${{ steps.findPr.outputs.number == '' }}
+      run: |
         echo COMMIT_MSG=`git log -1 --pretty=%B` >> $GITHUB_ENV
-    - uses: repo-sync/pull-request@v2.6
+
+    - if: ${{ steps.findPr.outputs.number == '' }}
+      uses: repo-sync/pull-request@v2.6
       with:
         source_branch: ""                     # If blank, default: triggered branch
         destination_branch: "master"          # If blank, default: master
