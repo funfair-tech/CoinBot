@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <Project>
-  <PropertyGroup>
-    <Company>FunFair</Company>
-    <Copyright>FunFair</Copyright>
-    <Product>FunFair</Product>
-    <PackageReleaseNotes>$(ReleaseNotes)</PackageReleaseNotes>
-  </PropertyGroup>
-  <PropertyGroup>
-    <RepositoryType>git</RepositoryType>
-    <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
-    <!--    <PackageLicenseUrl>$(RepositoryUrl)/blob/master/LICENSE.md</PackageLicenseUrl>-->
-    <PackageIconUrl Condition="Exists('$(SolutionDir)packageicon.png')">https://avatars.githubusercontent.com/u/29401895</PackageIconUrl>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PackageIcon Condition="Exists('$(SolutionDir)packageicon.png')">packageicon.png</PackageIcon>
-  </PropertyGroup>
-  <ItemGroup>
-    <None Include="$(SolutionDir)packageicon.png" Pack="true" PackagePath="\" Condition="Exists('$(SolutionDir)packageicon.png')"/>
-  </ItemGroup>
+    <PropertyGroup>
+        <Company>FunFair</Company>
+        <Copyright>FunFair</Copyright>
+        <Product>FunFair</Product>
+        <PackageReleaseNotes>$(ReleaseNotes)</PackageReleaseNotes>
+    </PropertyGroup>
+    <PropertyGroup>
+        <RepositoryType>git</RepositoryType>
+        <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
+        <!--    <PackageLicenseUrl>$(RepositoryUrl)/blob/master/LICENSE.md</PackageLicenseUrl>-->
+        <PackageIconUrl Condition="Exists('$(SolutionDir)packageicon.png')">https://avatars.githubusercontent.com/u/29401895</PackageIconUrl>
+    </PropertyGroup>
+    <PropertyGroup>
+        <PackageIcon Condition="Exists('$(SolutionDir)packageicon.png')">packageicon.png</PackageIcon>
+    </PropertyGroup>
+    <ItemGroup>
+        <None Include="$(SolutionDir)packageicon.png" Pack="true" PackagePath="\"
+              Condition="Exists('$(SolutionDir)packageicon.png')" />
+    </ItemGroup>
 </Project>
