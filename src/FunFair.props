@@ -1,26 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <Project>
+    <!-- Common company metadata -->
     <PropertyGroup>
+        <Authors>FunFair</Authors>
         <Company>FunFair</Company>
         <Copyright>FunFair</Copyright>
         <Product>FunFair</Product>
+    </PropertyGroup>
+
+    <!-- Release notes; if any - injected in at build time -->
+    <PropertyGroup>
         <PackageReleaseNotes>$(ReleaseNotes)</PackageReleaseNotes>
     </PropertyGroup>
+
+    <!-- Repository type -->
     <PropertyGroup>
         <RepositoryType>git</RepositoryType>
         <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
-        <PackageLicenseUrl Condition="Exists('$(SolutionDir)..\LICENSE')">$(RepositoryUrl)/blob/master/LICENSE.md</PackageLicenseUrl>
-        <PackageIconUrl Condition="Exists('$(SolutionDir)packageicon.png')">https://avatars.githubusercontent.com/u/29401895</PackageIconUrl>
     </PropertyGroup>
+
+    <!-- Only add these properties in if the project is publishable or packable.  
+         TODO: Find a better piece of metadata that gets defined _only_ during publish or pack
+    -->
     <PropertyGroup>
-        <PackageIcon Condition="Exists('$(SolutionDir)packageicon.png')">packageicon.png</PackageIcon>
-        <PackageLicense Condition="Exists('$(SolutionDir)..\LICENSE')">LICENSE</PackageLicense>
+        <FFPacking>False</FFPacking>
+        <FFPacking Condition="$(IsPackable) == 'true' OR $(IsPublishable) == 'true'">True</FFPacking>
     </PropertyGroup>
-    <ItemGroup>
-        <None Include="$(SolutionDir)packageicon.png" Pack="true" PackagePath="\"
-              Condition="Exists('$(SolutionDir)packageicon.png')" />
-        <None Include="$(SolutionDir)..\LICENSE" Pack="true" PackagePath="\"
-              Condition="Exists('$(SolutionDir)..\LICENSE')" />
+    
+    <!-- Package Icon -->
+    <PropertyGroup Condition="$(FFPacking) == 'True' AND Exists('$(SolutionDir)packageicon.png')">
+        <PackageIcon >packageicon.png</PackageIcon>
+        <PackageIconUrl>https://avatars.githubusercontent.com/u/29401895</PackageIconUrl>
+    </PropertyGroup>
+    <ItemGroup Condition="$(FFPacking) == 'True' AND Exists('$(SolutionDir)packageicon.png')">
+        <None Include="$(SolutionDir)packageicon.png" Pack="true" PackagePath="\" />
+    </ItemGroup>
+
+    <!-- License -->
+    <PropertyGroup Condition="$(FFPacking) == 'True' AND Exists('$(SolutionDir)..\LICENSE')">
+        <PackageLicense >LICENSE</PackageLicense>
+        <PackageLicenseUrl>$(RepositoryUrl)/blob/master/LICENSE.md</PackageLicenseUrl>
+    </PropertyGroup>
+    <ItemGroup Condition="$(FFPacking) == 'True' AND Exists('$(SolutionDir)..\LICENSE')">
+        <None Include="$(SolutionDir)..\LICENSE"  Pack="true" PackagePath="\" />
     </ItemGroup>
 </Project>
