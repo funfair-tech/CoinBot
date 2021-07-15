@@ -10,14 +10,17 @@
     <PropertyGroup>
         <RepositoryType>git</RepositoryType>
         <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
-        <!--    <PackageLicenseUrl>$(RepositoryUrl)/blob/master/LICENSE.md</PackageLicenseUrl>-->
+        <PackageLicenseUrl Condition="Exists('$(SolutionDir)..\LICENSE')">$(RepositoryUrl)/blob/master/LICENSE.md</PackageLicenseUrl>
         <PackageIconUrl Condition="Exists('$(SolutionDir)packageicon.png')">https://avatars.githubusercontent.com/u/29401895</PackageIconUrl>
     </PropertyGroup>
     <PropertyGroup>
         <PackageIcon Condition="Exists('$(SolutionDir)packageicon.png')">packageicon.png</PackageIcon>
+        <PackageLicense Condition="Exists('$(SolutionDir)..\LICENSE')">LICENSE</PackageLicense>
     </PropertyGroup>
     <ItemGroup>
         <None Include="$(SolutionDir)packageicon.png" Pack="true" PackagePath="\"
               Condition="Exists('$(SolutionDir)packageicon.png')" />
+        <None Include="$(SolutionDir)..\LICENSE" Pack="true" PackagePath="\"
+              Condition="Exists('$(SolutionDir)..\LICENSE')" />
     </ItemGroup>
 </Project>
