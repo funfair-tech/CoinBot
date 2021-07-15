@@ -8,10 +8,11 @@
         <LangVersion>latest</LangVersion>
         <Features>strict;flow-analysis</Features>
         <TreatSpecificWarningsAsErrors />
-        <NoWarn></NoWarn>
+        <NoWarn/>
         <Nullable>enable</Nullable>
         <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
         <IsPackable>false</IsPackable>
+      <IsPublishable>false</IsPublishable>
     </PropertyGroup>
     <PropertyGroup>
         <AnalysisLevel>latest</AnalysisLevel>
