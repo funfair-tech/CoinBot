@@ -12,7 +12,7 @@
         <Nullable>enable</Nullable>
         <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
         <IsPackable>false</IsPackable>
-      <IsPublishable>false</IsPublishable>
+        <IsPublishable>false</IsPublishable>
         <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(MSBuildProjectName).xml</DocumentationFile>
     </PropertyGroup>
     <PropertyGroup>
@@ -29,7 +29,7 @@
     <ItemGroup>
         <PackageReference Include="AsyncFixer" Version="1.5.1" PrivateAssets="All" />
         <PackageReference Include="Discord.Net.Analyzers" Version="2.4.0" PrivateAssets="All" />
-        <PackageReference Include="FunFair.CodeAnalysis" Version="5.2.3.837" PrivateAssets="All" />
+        <PackageReference Include="FunFair.CodeAnalysis" Version="5.2.4.852" PrivateAssets="All" />
         <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="16.10.56" PrivateAssets="All" />
         <PackageReference Include="Roslynator.Analyzers" Version="3.2.0" PrivateAssets="All" />
         <PackageReference Include="SonarAnalyzer.CSharp" Version="8.26.0.34506" PrivateAssets="All" />
