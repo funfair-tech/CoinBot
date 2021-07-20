@@ -310,3 +310,26 @@ src/Data
 
 *.sdsc
 .idea/workspace.xml
+
+
+################################################################
+# RIDER settings
+
+*/.idea/*
+!/src/.idea/*
+
+# Default ignored files
+/src/.idea/**/shelf/*
+/src/.idea/**/workspace.xml
+
+# Datasource local storage ignored files
+/src/.idea/**/dataSources/*
+/src/.idea/**/dataSources.local.xml
+
+# Editor-based HTTP Client requests
+/src/.idea/**/httpRequests/*
+
+# settings updater
+!/src/.idea/*/projectSettingsUpdater.xml
+
+################################################################
