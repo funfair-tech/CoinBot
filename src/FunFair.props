@@ -27,10 +27,10 @@
         <FFPacking>False</FFPacking>
         <FFPacking Condition="$(IsPackable) == 'true' OR $(IsPublishable) == 'true'">True</FFPacking>
     </PropertyGroup>
-    
+
     <!-- Package Icon -->
     <PropertyGroup Condition="$(FFPacking) == 'True' AND Exists('$(SolutionDir)packageicon.png')">
-        <PackageIcon >packageicon.png</PackageIcon>
+        <PackageIcon>packageicon.png</PackageIcon>
         <PackageIconUrl>https://avatars.githubusercontent.com/u/29401895</PackageIconUrl>
     </PropertyGroup>
     <ItemGroup Condition="$(FFPacking) == 'True' AND Exists('$(SolutionDir)packageicon.png')">
@@ -39,10 +39,10 @@
 
     <!-- License -->
     <PropertyGroup Condition="$(FFPacking) == 'True' AND Exists('$(SolutionDir)..\LICENSE')">
-        <PackageLicense >LICENSE</PackageLicense>
+        <PackageLicense>LICENSE</PackageLicense>
         <PackageLicenseUrl>$(RepositoryUrl)/blob/master/LICENSE.md</PackageLicenseUrl>
     </PropertyGroup>
     <ItemGroup Condition="$(FFPacking) == 'True' AND Exists('$(SolutionDir)..\LICENSE')">
-        <None Include="$(SolutionDir)..\LICENSE"  Pack="true" PackagePath="\" />
+        <None Include="$(SolutionDir)..\LICENSE" Pack="true" PackagePath="\" />
     </ItemGroup>
 </Project>
