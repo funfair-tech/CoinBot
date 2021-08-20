@@ -11,7 +11,7 @@ jobs:
   pull-request:
     runs-on: ubuntu-latest
     steps:
-    - uses: jwalton/gh-find-current-pr@v1.1.0
+    - uses: jwalton/gh-find-current-pr@v1.2.0
       id: findPr
 
     - if: ${{ steps.findPr.outputs.number == '' }}
