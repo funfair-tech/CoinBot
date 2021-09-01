@@ -402,5 +402,6 @@
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Arbitrum/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Polkadot/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Roslynator/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=Wreckless/@EntryIndexedValue">True</s:Boolean>
 </wpf:ResourceDictionary>
 	
