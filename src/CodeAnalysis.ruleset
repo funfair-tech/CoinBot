@@ -1,216 +1,475 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <RuleSet Name="Custom Rulset" Description="Custom Rulset" ToolsVersion="15.0">
     <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
-        <Rule Id="CA1001" Action="Hidden"/>
-        <Rule Id="CA1002" Action="Hidden"/>
-        <Rule Id="CA1003" Action="Warning"/>
-        <Rule Id="CA1005" Action="Hidden"/>
-        <Rule Id="CA1009" Action="Warning"/>
-        <Rule Id="CA1012" Action="Warning"/>
-        <Rule Id="CA1014" Action="Hidden"/>
-        <Rule Id="CA1016" Action="Warning"/>
-        <Rule Id="CA1018" Action="Warning"/>
-        <Rule Id="CA1019" Action="Hidden"/>
-        <Rule Id="CA1025" Action="Warning"/>
-        <Rule Id="CA1027" Action="Hidden"/>
-        <Rule Id="CA1028" Action="Warning"/>
-        <Rule Id="CA1030" Action="Hidden"/>
-        <Rule Id="CA1031" Action="Hidden"/>
-        <Rule Id="CA1033" Action="Hidden"/>
-        <Rule Id="CA1034" Action="Warning"/>
-        <Rule Id="CA1036" Action="Warning"/>
-        <Rule Id="CA1040" Action="Hidden"/>
-        <Rule Id="CA1041" Action="Warning"/>
-        <Rule Id="CA1043" Action="Warning"/>
-        <Rule Id="CA1044" Action="Warning"/>
-        <Rule Id="CA1047" Action="Warning"/>
-        <Rule Id="CA1048" Action="Warning"/>
-        <Rule Id="CA1049" Action="Warning"/>
-        <Rule Id="CA1050" Action="Warning"/>
-        <Rule Id="CA1051" Action="Warning"/>
-        <Rule Id="CA1052" Action="Warning"/>
-        <Rule Id="CA1053" Action="Warning"/>
-        <Rule Id="CA1054" Action="Hidden"/>
-        <Rule Id="CA1055" Action="Warning"/>
-        <Rule Id="CA1056" Action="Warning"/>
-        <Rule Id="CA1057" Action="Warning"/>
-        <Rule Id="CA1058" Action="Warning"/>
-        <Rule Id="CA1059" Action="Warning"/>
-        <Rule Id="CA1060" Action="Warning"/>
-        <Rule Id="CA1061" Action="Warning"/>
-        <Rule Id="CA1062" Action="Hidden"/>
-        <Rule Id="CA1063" Action="Warning"/>
-        <Rule Id="CA1064" Action="Warning"/>
-        <Rule Id="CA1065" Action="Warning"/>
-        <Rule Id="CA1301" Action="Warning"/>
-        <Rule Id="CA1303" Action="Hidden"/>
-        <Rule Id="CA1305" Action="Hidden"/>
-        <Rule Id="CA1306" Action="Warning"/>
-        <Rule Id="CA1307" Action="Hidden"/>
-        <Rule Id="CA1308" Action="Hidden"/>
-        <Rule Id="CA1309" Action="Warning"/>
-        <Rule Id="CA1400" Action="Warning"/>
-        <Rule Id="CA1401" Action="Warning"/>
-        <Rule Id="CA1403" Action="Warning"/>
-        <Rule Id="CA1404" Action="Warning"/>
-        <Rule Id="CA1405" Action="Warning"/>
-        <Rule Id="CA1410" Action="Warning"/>
-        <Rule Id="CA1415" Action="Warning"/>
-        <Rule Id="CA1501" Action="Hidden"/>
-        <Rule Id="CA1502" Action="Warning"/>
-        <Rule Id="CA1504" Action="Warning"/>
-        <Rule Id="CA1505" Action="Warning"/>
-        <Rule Id="CA1506" Action="Hidden"/>
-        <Rule Id="CA1600" Action="Warning"/>
-        <Rule Id="CA1601" Action="Warning"/>
-        <Rule Id="CA1700" Action="Warning"/>
-        <Rule Id="CA1707" Action="Hidden"/>
-        <Rule Id="CA1710" Action="Hidden"/>
-        <Rule Id="CA1712" Action="Hidden"/>
-        <Rule Id="CA1716" Action="Hidden"/>
-        <Rule Id="CA1717" Action="Hidden"/>
-        <Rule Id="CA1724" Action="Hidden"/>
-        <Rule Id="CA1800" Action="Warning"/>
-        <Rule Id="CA1801" Action="Warning"/>
-        <Rule Id="CA1802" Action="Warning"/>
-        <Rule Id="CA1803" Action="Warning"/>
-        <Rule Id="CA1804" Action="Warning"/>
-        <Rule Id="CA1805" Action="Warning"/>
-        <Rule Id="CA1806" Action="Warning"/>
-        <Rule Id="CA1807" Action="Warning"/>
-        <Rule Id="CA1808" Action="Warning"/>
-        <Rule Id="CA1809" Action="Warning"/>
-        <Rule Id="CA1810" Action="Warning"/>
-        <Rule Id="CA1811" Action="Warning"/>
-        <Rule Id="CA1812" Action="Warning"/>
-        <Rule Id="CA1813" Action="Warning"/>
-        <Rule Id="CA1814" Action="Warning"/>
-        <Rule Id="CA1815" Action="Warning"/>
-        <Rule Id="CA1816" Action="Warning"/>
-        <Rule Id="CA1819" Action="Hidden"/>
-        <Rule Id="CA1820" Action="Warning"/>
-        <Rule Id="CA1821" Action="Warning"/>
-        <Rule Id="CA1822" Action="Warning"/>
-        <Rule Id="CA1823" Action="Warning"/>
-        <Rule Id="CA1826" Action="Hidden"/>
-        <Rule Id="CA1900" Action="Warning"/>
-        <Rule Id="CA1901" Action="Warning"/>
-        <Rule Id="CA2000" Action="Warning"/>
-        <Rule Id="CA2001" Action="Warning"/>
-        <Rule Id="CA2002" Action="Warning"/>
-        <Rule Id="CA2003" Action="Warning"/>
-        <Rule Id="CA2004" Action="Warning"/>
-        <Rule Id="CA2006" Action="Warning"/>
+        <!-- CA1001 - ?? -->
+        <Rule Id="CA1001" Action="None"/>
+        <!-- CA1002 - ?? -->
+        <Rule Id="CA1002" Action="None"/>
+        <!-- CA1003 - ?? -->
+        <Rule Id="CA1003" Action="Error"/>
+        <!-- CA1005 - ?? -->
+        <Rule Id="CA1005" Action="None"/>
+        <!-- C1A008 - Flags Enum should have an enum called 'None' with a value 0 -->
+        <Rule Id="CA1008" Action="None"/>
+        <!-- CA1009 - ?? -->
+        <Rule Id="CA1009" Action="Error"/>
+        <!-- CA1012 - ?? -->
+        <Rule Id="CA1012" Action="Error"/>
+        <!-- CA1014 - ?? -->
+        <Rule Id="CA1014" Action="None"/>
+        <!-- CA1016 - ?? -->
+        <Rule Id="CA1016" Action="Error"/>
+        <!-- CA1018 - ?? -->
+        <Rule Id="CA1018" Action="Error"/>
+        <!-- CA1019 - ?? -->
+        <Rule Id="CA1019" Action="None"/>
+        <!-- CA1025 - ?? -->
+        <Rule Id="CA1025" Action="Error"/>
+        <!-- CA1027 - ?? -->
+        <Rule Id="CA1027" Action="None"/>
+        <!-- CA1028 - ?? -->
+        <Rule Id="CA1028" Action="Error"/>
+        <!-- CA1030 - ?? -->
+        <Rule Id="CA1030" Action="None"/>
+        <!-- CA1031 - ?? -->
+        <Rule Id="CA1031" Action="None"/>
+        <!-- CA1033 - ?? -->
+        <Rule Id="CA1033" Action="None"/>
+        <!-- CA1034 - ?? -->
+        <Rule Id="CA1034" Action="Error"/>
+        <!-- CA1036 - ?? -->
+        <Rule Id="CA1036" Action="Error"/>
+        <!-- CA1040 - ?? -->
+        <Rule Id="CA1040" Action="None"/>
+        <!-- CA1041 - ?? -->
+        <Rule Id="CA1041" Action="Error"/>
+        <!-- CA1043 - ?? -->
+        <Rule Id="CA1043" Action="Error"/>
+        <!-- CA1044 - ?? -->
+        <Rule Id="CA1044" Action="Error"/>
+        <!-- CA1047 - ?? -->
+        <Rule Id="CA1047" Action="Error"/>
+        <!-- CA1048 - ?? -->
+        <Rule Id="CA1048" Action="Error"/>
+        <!-- CA1049 - ?? -->
+        <Rule Id="CA1049" Action="Error"/>
+        <!-- CA1050 - ?? -->
+        <Rule Id="CA1050" Action="Error"/>
+        <!-- CA1051 - ?? -->
+        <Rule Id="CA1051" Action="Error"/>
+        <!-- CA1052 - ?? -->
+        <Rule Id="CA1052" Action="Error"/>
+        <!-- CA1053 - ?? -->
+        <Rule Id="CA1053" Action="Error"/>
+        <!-- CA1054 - ?? -->
+        <Rule Id="CA1054" Action="None"/>
+        <!-- CA1055 - ?? -->
+        <Rule Id="CA1055" Action="Error"/>
+        <!-- CA1056 - ?? -->
+        <Rule Id="CA1056" Action="Error"/>
+        <!-- CA1057 - ?? -->
+        <Rule Id="CA1057" Action="Error"/>
+        <!-- CA1058 - ?? -->
+        <Rule Id="CA1058" Action="Error"/>
+        <!-- CA1059 - ?? -->
+        <Rule Id="CA1059" Action="Error"/>
+        <!-- CA1060 - ?? -->
+        <Rule Id="CA1060" Action="Error"/>
+        <!-- CA1061 - ?? -->
+        <Rule Id="CA1061" Action="Error"/>
+        <!-- CA1062 - ?? -->
+        <Rule Id="CA1062" Action="None"/>
+        <!-- CA1063 - ?? -->
+        <Rule Id="CA1063" Action="Error"/>
+        <!-- CA1064 - ?? -->
+        <Rule Id="CA1064" Action="Error"/>
+        <!-- CA1065 - ?? -->
+        <Rule Id="CA1065" Action="Error"/>
+        <!-- CA1301 - ?? -->
+        <Rule Id="CA1301" Action="Error"/>
+        <!-- CA1303 - ?? -->
+        <Rule Id="CA1303" Action="None"/>
+        <!-- CA1305 - ?? -->
+        <Rule Id="CA1305" Action="None"/>
+        <!-- CA1306 - ?? -->
+        <Rule Id="CA1306" Action="Error"/>
+        <!-- CA1307 - ?? -->
+        <Rule Id="CA1307" Action="None"/>
+        <!-- CA1308 - ?? -->
+        <Rule Id="CA1308" Action="None"/>
+        <!-- CA1309 - ?? -->
+        <Rule Id="CA1309" Action="Error"/>
+        <!-- CA1400 - ?? -->
+        <Rule Id="CA1400" Action="Error"/>
+        <!-- CA1401 - ?? -->
+        <Rule Id="CA1401" Action="Error"/>
+        <!-- CA1403 - ?? -->
+        <Rule Id="CA1403" Action="Error"/>
+        <!-- CA1403 - ?? -->
+        <Rule Id="CA1404" Action="Error"/>
+        <!-- CA1405 - ?? -->
+        <Rule Id="CA1405" Action="Error"/>
+        <!-- CA1410 - ?? -->
+        <Rule Id="CA1410" Action="Error"/>
+        <!-- CA1415 - ?? -->
+        <Rule Id="CA1415" Action="Error"/>
+        <!-- CA1501 - ?? -->
+        <Rule Id="CA1501" Action="None"/>
+        <!-- CA1502 - ?? -->
+        <Rule Id="CA1502" Action="Error"/>
+        <!-- CA1504 - ?? -->
+        <Rule Id="CA1504" Action="Error"/>
+        <!-- CA1505 - ?? -->
+        <Rule Id="CA1505" Action="Error"/>
+        <!-- CA1506 - ?? -->
+        <Rule Id="CA1506" Action="None"/>
+        <!-- CA1600 - ?? -->
+        <Rule Id="CA1600" Action="Error"/>
+        <!-- CA1601 - ?? -->
+        <Rule Id="CA1601" Action="Error"/>
+        <!-- CA1700 - ?? -->
+        <Rule Id="CA1700" Action="Error"/>
+        <!-- CA1707 - ?? -->
+        <Rule Id="CA1707" Action="None"/>
+        <!-- CA1710 - ?? -->
+        <Rule Id="CA1710" Action="None"/>
+        <!-- CA1712 - ?? -->
+        <Rule Id="CA1712" Action="None"/>
+        <!-- CA1716 - ?? -->
+        <Rule Id="CA1716" Action="None"/>
+        <!-- CA1717 - ?? -->
+        <Rule Id="CA1717" Action="None"/>
+        <!-- CA1724 - ?? -->
+        <Rule Id="CA1724" Action="None"/>
+        <!-- CA1800 - ?? -->
+        <Rule Id="CA1800" Action="Error"/>
+        <!-- CA1801 - ?? -->
+        <Rule Id="CA1801" Action="Error"/>
+        <!-- CA1802 - ?? -->
+        <Rule Id="CA1802" Action="Error"/>
+        <!-- CA1803 - ?? -->
+        <Rule Id="CA1803" Action="Error"/>
+        <!-- CA1804 - ?? -->
+        <Rule Id="CA1804" Action="Error"/>
+        <!-- CA1805 - ?? -->
+        <Rule Id="CA1805" Action="Error"/>
+        <!-- CA1806 - ?? -->
+        <Rule Id="CA1806" Action="Error"/>
+        <!-- CA1807 - ?? -->
+        <Rule Id="CA1807" Action="Error"/>
+        <!-- CA1808 - ?? -->
+        <Rule Id="CA1808" Action="Error"/>
+        <!-- CA1809 - ?? -->
+        <Rule Id="CA1809" Action="Error"/>
+        <!-- CA1810 - ?? -->
+        <Rule Id="CA1810" Action="Error"/>
+        <!-- CA1811 - ?? -->
+        <Rule Id="CA1811" Action="Error"/>
+        <!-- CA1812 - ?? -->
+        <Rule Id="CA1812" Action="Error"/>
+        <!-- CA1813 - ?? -->
+        <Rule Id="CA1813" Action="Error"/>
+        <!-- CA1814 - ?? -->
+        <Rule Id="CA1814" Action="Error"/>
+        <!-- CA1815 - ?? -->
+        <Rule Id="CA1815" Action="Error"/>
+        <!-- CA1816 - ?? -->
+        <Rule Id="CA1816" Action="Error"/>
+        <!-- CA1819 - ?? -->
+        <Rule Id="CA1819" Action="None"/>
+        <!-- CA1820 - ?? -->
+        <Rule Id="CA1820" Action="Error"/>
+        <!-- CA1821 - ?? -->
+        <Rule Id="CA1821" Action="Error"/>
+        <!-- CA1822 - ?? -->
+        <Rule Id="CA1822" Action="Error"/>
+        <!-- CA1823 - ?? -->
+        <Rule Id="CA1823" Action="Error"/>
+        <!-- CA1826 - ?? -->
+        <Rule Id="CA1826" Action="None"/>
+        <!-- CA1900 - ?? -->
+        <Rule Id="CA1900" Action="Error"/>
+        <!-- CA1901 - ?? -->
+        <Rule Id="CA1901" Action="Error"/>
+        <!-- CA2000 - ?? -->
+        <Rule Id="CA2000" Action="Error"/>
+        <!-- CA2001 - ?? -->
+        <Rule Id="CA2001" Action="Error"/>
+        <!-- CA2002 - ?? -->
+        <Rule Id="CA2002" Action="Error"/>
+        <!-- CA2003 - ?? -->
+        <Rule Id="CA2003" Action="Error"/>
+        <!-- CA2004 - ?? -->
+        <Rule Id="CA2004" Action="Error"/>
+        <!-- CA2006 - ?? -->
+        <Rule Id="CA2006" Action="Error"/>
+        <!-- CA2007 - ?? -->
         <Rule Id="CA2007" Action="None"/>
-        <Rule Id="CA2008" Action="Hidden"/>
-        <Rule Id="CA2100" Action="Warning"/>
-        <Rule Id="CA2101" Action="Warning"/>
-        <Rule Id="CA2108" Action="Warning"/>
-        <Rule Id="CA2111" Action="Warning"/>
-        <Rule Id="CA2112" Action="Warning"/>
-        <Rule Id="CA2114" Action="Warning"/>
-        <Rule Id="CA2116" Action="Warning"/>
-        <Rule Id="CA2117" Action="Warning"/>
-        <Rule Id="CA2119" Action="Warning"/>
-        <Rule Id="CA2121" Action="Warning"/>
-        <Rule Id="CA2122" Action="Warning"/>
-        <Rule Id="CA2123" Action="Warning"/>
-        <Rule Id="CA2124" Action="Warning"/>
-        <Rule Id="CA2126" Action="Warning"/>
-        <Rule Id="CA2131" Action="Warning"/>
-        <Rule Id="CA2132" Action="Warning"/>
-        <Rule Id="CA2133" Action="Warning"/>
-        <Rule Id="CA2134" Action="Warning"/>
-        <Rule Id="CA2137" Action="Warning"/>
-        <Rule Id="CA2138" Action="Warning"/>
-        <Rule Id="CA2140" Action="Warning"/>
-        <Rule Id="CA2141" Action="Warning"/>
-        <Rule Id="CA2146" Action="Warning"/>
-        <Rule Id="CA2147" Action="Warning"/>
-        <Rule Id="CA2149" Action="Warning"/>
-        <Rule Id="CA2200" Action="Warning"/>
-        <Rule Id="CA2201" Action="Warning"/>
-        <Rule Id="CA2202" Action="Warning"/>
-        <Rule Id="CA2205" Action="Warning"/>
-        <Rule Id="CA2207" Action="Warning"/>
-        <Rule Id="CA2208" Action="Warning"/>
-        <Rule Id="CA2211" Action="Warning"/>
-        <Rule Id="CA2212" Action="Warning"/>
-        <Rule Id="CA2213" Action="Warning"/>
-        <Rule Id="CA2214" Action="Warning"/>
-        <Rule Id="CA2215" Action="Warning"/>
-        <Rule Id="CA2216" Action="Warning"/>
-        <Rule Id="CA2217" Action="Hidden"/>
-        <Rule Id="CA2218" Action="Warning"/>
-        <Rule Id="CA2219" Action="Warning"/>
-        <Rule Id="CA2220" Action="Warning"/>
-        <Rule Id="CA2221" Action="Warning"/>
-        <Rule Id="CA2224" Action="Warning"/>
-        <Rule Id="CA2225" Action="Hidden"/>
-        <Rule Id="CA2226" Action="Warning"/>
-        <Rule Id="CA2227" Action="Hidden"/>
-        <Rule Id="CA2229" Action="Warning"/>
-        <Rule Id="CA2230" Action="Warning"/>
-        <Rule Id="CA2231" Action="Warning"/>
-        <Rule Id="CA2232" Action="Warning"/>
-        <Rule Id="CA2233" Action="Warning"/>
-        <Rule Id="CA2234" Action="Warning"/>
-        <Rule Id="CA2235" Action="Warning"/>
-        <Rule Id="CA2236" Action="Warning"/>
-        <Rule Id="CA2237" Action="Warning"/>
-        <Rule Id="CA2238" Action="Warning"/>
-        <Rule Id="CA2240" Action="Warning"/>
-        <Rule Id="CA2241" Action="Warning"/>
-        <Rule Id="CA2242" Action="Warning"/>
+        <!-- CA2008 - ?? -->
+        <Rule Id="CA2008" Action="None"/>
+        <!-- CA2100 - ?? -->
+        <Rule Id="CA2100" Action="Error"/>
+        <!-- CA2101 - ?? -->
+        <Rule Id="CA2101" Action="Error"/>
+        <!-- CA2108 - ?? -->
+        <Rule Id="CA2108" Action="Error"/>
+        <!-- CA2111 - ?? -->
+        <Rule Id="CA2111" Action="Error"/>
+        <!-- CA2112 - ?? -->
+        <Rule Id="CA2112" Action="Error"/>
+        <!-- CA2114 - ?? -->
+        <Rule Id="CA2114" Action="Error"/>
+        <!-- CA2116 - ?? -->
+        <Rule Id="CA2116" Action="Error"/>
+        <!-- CA2117 - ?? -->
+        <Rule Id="CA2117" Action="Error"/>
+        <!-- CA2119 - ?? -->
+        <Rule Id="CA2119" Action="Error"/>
+        <!-- CA2121 - ?? -->
+        <Rule Id="CA2121" Action="Error"/>
+        <!-- CA2122 - ?? -->
+        <Rule Id="CA2122" Action="Error"/>
+        <!-- CA2123 - ?? -->
+        <Rule Id="CA2123" Action="Error"/>
+        <!-- CA2124 - ?? -->
+        <Rule Id="CA2124" Action="Error"/>
+        <!-- CA2126 - ?? -->
+        <Rule Id="CA2126" Action="Error"/>
+        <!-- CA2131 - ?? -->
+        <Rule Id="CA2131" Action="Error"/>
+        <!-- CA2132 - ?? -->
+        <Rule Id="CA2132" Action="Error"/>
+        <!-- CA2133 - ?? -->
+        <Rule Id="CA2133" Action="Error"/>
+        <!-- CA2134 - ?? -->
+        <Rule Id="CA2134" Action="Error"/>
+        <!-- CA2137- ?? -->
+        <Rule Id="CA2137" Action="Error"/>
+        <!-- CA2138 - ?? -->
+        <Rule Id="CA2138" Action="Error"/>
+        <!-- CA2140 - ?? -->
+        <Rule Id="CA2140" Action="Error"/>
+        <!-- CA2141 - ?? -->
+        <Rule Id="CA2141" Action="Error"/>
+        <!-- CA2146 - ?? -->
+        <Rule Id="CA2146" Action="Error"/>
+        <!-- CA2147 - ?? -->
+        <Rule Id="CA2147" Action="Error"/>
+        <!-- CA2149 - ?? -->
+        <Rule Id="CA2149" Action="Error"/>
+        <!-- CA2200 - ?? -->
+        <Rule Id="CA2200" Action="Error"/>
+        <!-- CA2201 - ?? -->
+        <Rule Id="CA2201" Action="Error"/>
+        <!-- CA2202 - ?? -->
+        <Rule Id="CA2202" Action="Error"/>
+        <!-- CA2205 - ?? -->
+        <Rule Id="CA2205" Action="Error"/>
+        <!-- CA2207 - ?? -->
+        <Rule Id="CA2207" Action="Error"/>
+        <!-- CA2208 - ?? -->
+        <Rule Id="CA2208" Action="Error"/>
+        <!-- CA2211 - ?? -->
+        <Rule Id="CA2211" Action="Error"/>
+        <!-- CA2212 - ?? -->
+        <Rule Id="CA2212" Action="Error"/>
+        <!-- CA2213 - ?? -->
+        <Rule Id="CA2213" Action="Error"/>
+        <!-- CA2214 - ?? -->
+        <Rule Id="CA2214" Action="Error"/>
+        <!-- CA2215 - ?? -->
+        <Rule Id="CA2215" Action="Error"/>
+        <!-- CA2216 - ?? -->
+        <Rule Id="CA2216" Action="Error"/>
+        <!-- CA2217 - ?? -->
+        <Rule Id="CA2217" Action="None"/>
+        <!-- CA2218 - ?? -->
+        <Rule Id="CA2218" Action="Error"/>
+        <!-- CA2219 - ?? -->
+        <Rule Id="CA2219" Action="Error"/>
+        <!-- CA2220 - ?? -->
+        <Rule Id="CA2220" Action="Error"/>
+        <!-- CA2221 - ?? -->
+        <Rule Id="CA2221" Action="Error"/>
+        <!-- CA2224 - ?? -->
+        <Rule Id="CA2224" Action="Error"/>
+        <!-- CA2225 - ?? -->
+        <Rule Id="CA2225" Action="None"/>
+        <!-- CA2226 - ?? -->
+        <Rule Id="CA2226" Action="Error"/>
+        <!-- CA2227 - ?? -->
+        <Rule Id="CA2227" Action="None"/>
+        <!-- CA2229 - ?? -->
+        <Rule Id="CA2229" Action="Error"/>
+        <!-- CA2230 - ?? -->
+        <Rule Id="CA2230" Action="Error"/>
+        <!-- CA2231 - ?? -->
+        <Rule Id="CA2231" Action="Error"/>
+        <!-- CA2232 - ?? -->
+        <Rule Id="CA2232" Action="Error"/>
+        <!-- CA2233 - ?? -->
+        <Rule Id="CA2233" Action="Error"/>
+        <!-- CA2234 - ?? -->
+        <Rule Id="CA2234" Action="Error"/>
+        <!-- CA2235 - ?? -->
+        <Rule Id="CA2235" Action="Error"/>
+        <!-- CA2236 - ?? -->
+        <Rule Id="CA2236" Action="Error"/>
+        <!-- CA2237 - ?? -->
+        <Rule Id="CA2237" Action="Error"/>
+        <!-- CA2238 - ?? -->
+        <Rule Id="CA2238" Action="Error"/>
+        <!-- CA2240 - ?? -->
+        <Rule Id="CA2240" Action="Error"/>
+        <!-- CA2241 - ?? -->
+        <Rule Id="CA2241" Action="Error"/>
+        <!-- CA2242 - ?? -->
+        <Rule Id="CA2242" Action="Error"/>
     </Rules>
     <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
-        <Rule Id="SA1305" Action="Warning"/>
-        <Rule Id="SA1412" Action="Warning"/>
+        <!-- SA1305 - ?? -->
+        <Rule Id="SA1305" Action="Error"/>
+        <!-- SA1412 - ?? -->
+        <Rule Id="SA1412" Action="Error"/>
+        <!-- SA1600 - ?? -->
         <Rule Id="SA1600" Action="None"/>
-        <Rule Id="SA1609" Action="Warning"/>
+        <!-- SA1609 - ?? -->
+        <Rule Id="SA1609" Action="Error"/>
     </Rules>
     <Rules AnalyzerId="SonarAnalyzer.CSharp" RuleNamespace="SonarAnalyzer.CSharp">
+        <!-- S125 - Commented out code -->
         <Rule Id="S125" Action="None"/>
-        <!-- Commented out code -->
-        <Rule Id="S1075" Action="None"/>
+        <!-- S1066 Collapsible "if" statements should be merged -->
         <Rule Id="S1066" Action="None"/>
+        <!-- S1075 - URIs should not be hardcoded -->
+        <Rule Id="S1075" Action="None"/>
+        <!-- S1118 - Utility classes should not have public constructors -->
         <Rule Id="S1118" Action="None"/>
+        <!-- S1135 - Track uses of "TODO" tags -->
         <Rule Id="S1135" Action="Info"/>
-        <!-- TODO' -->
+        <!-- S1168 - Returning <code>null</code> instead of an actual array or collection forces callers of the method to explicitly test for nullity, making them more complex and less readable. -->
         <Rule Id="S1168" Action="None"/>
+        <!-- S1450 - Private fields only used as local variables in methods should become local variables -->
         <Rule Id="S1450" Action="None"/>
+        <!-- S1764 - Identical expressions should not be used on both sides of a binary operator -->
         <Rule Id="S1764" Action="None"/>
+        <!-- S1854 - Dead stores should be removed -->
         <Rule Id="S1854" Action="None"/>
+        <!-- S2326 - ?? -->
         <Rule Id="S2326" Action="None"/>
+        <!-- S2344 - Enumeration type names should not have "Flags" or "Enum" suffixes -->
         <Rule Id="S2344" Action="Error"/>
-        <!-- Properties should not copy collections -->
+        <!-- S2346 - Flags Enum should have an enum called 'None' with a value 0 -->
+        <Rule Id="S2346" Action="None"/>
+        <!-- S2365 - Properties should not copy collections -->
         <Rule Id="S2365" Action="Error"/>
+        <!-- S2368 - Public methods should not have multidimensional array parameters -->
         <Rule Id="S2368" Action="None"/>
+        <!-- S2583 - Conditionally executed blocks should be reachable -->
         <Rule Id="S2583" Action="Error"/>
+        <!-- S2699 - Tests should include assertion -->
         <Rule Id="S2699" Action="None"/>
+        <!-- S3218 - Inner class members should not shadow outer class "static" or type members -->
         <Rule Id="S3218" Action="None"/>
+        <!-- S3442 - "abstract" classes should not have "public" constructors -->
         <Rule Id="S3442" Action="None"/>
+        <!-- S3459 - Unassigned members should be removed -->
         <Rule Id="S3459" Action="None"/>
+        <!-- S3925 - "ISerializable" should be implemented correctly -->
         <Rule Id="S3925" Action="None"/>
+        <!-- S3963 - "static" fields should be initialized inline -->
         <Rule Id="S3963" Action="None"/>
+        <!-- S4035 - Classes implementing "IEquatable<T>" should be sealed -->
         <Rule Id="S4035" Action="None"/>
-        <Rule Id="S4136" Action="None"/>
+        <!-- S4070 - Non-flags enums should not be marked with "FlagsAttribute" -->
         <Rule Id="S4070" Action="None"/>
+        <!-- S4136 - Method overloads should be grouped together -->
+        <Rule Id="S4136" Action="None"/>
+        <!-- S4275 - Getters and setters should access the expected fields -->
         <Rule Id="S4275" Action="None"/>
+        <!-- S4457 - Parameter validation in "async"/"await" methods should be wrapped -->
         <Rule Id="S4457" Action="None"/>
     </Rules>
     <Rules AnalyzerId="Roslynator.Analyzers" RuleNamespace="Roslynator.Analyzers">
+        <!-- - ?? -->
         <Rule Id="RCS1090" Action="None"/>
     </Rules>
     <Rules AnalyzerId="FunFair.CodeAnalysis" RuleNamespace="FunFair.CodeAnalysis">
+        <!-- FFS0001 - Avoid using DateTime.Now - Use IDateTimeSource.UtcNow() -->
         <Rule Id="FFS0001" Action="Error"/>
+        <!-- FFS0002 - Avoid using DateTime.UtcNow - Use IDateTimeSource.UtcNow() -->
         <Rule Id="FFS0002" Action="Error"/>
+        <!-- FFS0003 - Avoid using DateTime.Today - Use IDateTimeSource.UtcNow().Date -->
         <Rule Id="FFS0003" Action="Error"/>
+        <!-- FFS0004 - Avoid using DateTimeOffset.Now - Use IDateTimeSource.UtcNow() -->
         <Rule Id="FFS0004" Action="Error"/>
+        <!-- FFS0005 - Avoid using DateTimeOffset.UtcNow - Use IDateTimeSource.UtcNow() -->
         <Rule Id="FFS0005" Action="Error"/>
+        <!-- FFS0006 - Avoid using arbitrary SQL for updates -->
         <Rule Id="FFS0006" Action="Error"/>
+        <!-- FFS0007 - Avoid using arbitrary SQL for queries -->
         <Rule Id="FFS0007" Action="Error"/>
-        <!-- Use of non-whitelisted #pragma warning -->
+        <!-- FFS0008 - Do not disable warnings -->
         <Rule Id="FFS0008" Action="Error"/>
+        <!-- FFS0009 - Do not use Assert.True without specifying a message -->
+        <Rule Id="FFS0009" Action="Error"/>
+        <!-- FFS0010 - Do not use Assert.False without specifying a message -->
+        <Rule Id="FFS0010" Action="Error"/>
+        <!-- FFS0011 - Make structs readonly -->
+        <Rule Id="FFS0011" Action="Error"/>
+        <!-- FFS0012 - Classes should be static, sealed or abstract -->
+        <Rule Id="FFS0012" Action="Error"/>
+        <!-- FFS0013 - Test Classes should be sealed or abstract and derived from TestBase -->
+        <Rule Id="FFS0013" Action="Error"/>
+        <!-- FFS0014 - Do not use JsonSerialiser without specifying JsonOptions -->
+        <Rule Id="FFS0014" Action="Error"/>
+        <!-- FFS0015 - Do not use JsonDeserialiser without specifying JsonOptions -->
+        <Rule Id="FFS0015" Action="Error"/>
+        <!-- FFS0016 - Pass parameter name to ArgumentExceptions -->
+        <Rule Id="FFS0016" Action="Error"/>
+        <!-- FFS0017 - Pass inner exception to exceptions thrown in catch block -->
+        <Rule Id="FFS0017" Action="Error"/>
+        <!-- FFS0018 - Don't use NSubstitute's Received() without specifying the number of calls -->
+        <Rule Id="FFS0018" Action="Error"/>
+        <!-- FFS0019 - ILogger parameters should be called logger -->
+        <Rule Id="FFS0019" Action="Error"/>
+        <!-- FFS0020 - Parameters should be in a specified order -->
+        <Rule Id="FFS0020" Action="Error"/>
+        <!-- FFS0021 - Don't use NSubstitute's Received(0) - use DidNotReceive() instead -->
+        <Rule Id="FFS0021" Action="Error"/>
+        <!-- FFS0022 - Don't configure nullable in code - should be a project level. -->
+        <Rule Id="FFS0022" Action="Error"/>
+        <!-- FFS0023 - Logger parameters on base classes should be ILogger not ILogger<ClassName> -->
+        <Rule Id="FFS0023" Action="Error"/>
+        <!-- FFS0024 - Logger parameters on leaf classes should be ILogger<ClassName> not ILogger -->
+        <Rule Id="FFS0024" Action="Error"/>
+        <!-- FFS0025 - Mismatch of generic type -->
+        <Rule Id="FFS0025" Action="Error"/>
+        <!-- FFS0026 - Do not read IPAddress from Connection - use an abstraction -->
+        <Rule Id="FFS0026" Action="Error"/>
+        <!-- FFS0027 - SuppressMessage must specify a justification -->
+        <Rule Id="FFS0027" Action="Error"/>
+        <!-- FFS0028 - Records should be sealed -->
+        <Rule Id="FFS0028" Action="Error"/>
+        <!-- FFS0029 - Classes derived from MockBase<T> should be internal -->
+        <Rule Id="FFS0029" Action="Error"/>
+        <!-- FFS0030 - Classes derived from MockBase<T> should be sealed -->
+        <Rule Id="FFS0030" Action="Error"/>
+        <!-- FFS0031 - Avoid using System.Collections.Concurrent.ConcurrentDictionary<,> - Use NonBlocking.ConcurrentDictionary<,> -->
+        <Rule Id="FFS0031" Action="Error"/>
+        <!-- FFS0032 - Avoid using NonBlocing.ConcurrentDictionary<,>.AddOrUpdate - Use FunFair.Common.Extensions.ConcurrentDictionaryExtensions.AddOrUpdate -->
+        <Rule Id="FFS0032" Action="Error"/>
+        <!-- FFS0033 - Avoid using NonBlocing.ConcurrentDictionary<,>.GetOrAdd - Use FunFair.Common.Extensions.ConcurrentDictionaryExtensions.GetOrAdd -->
+        <Rule Id="FFS0033" Action="Error"/>
+        <!-- FFS0034 - Avoid using Microsoft.Extensions.Configuration.ConfigurationBuilder.AddJsonFile with reload set to true -->
+        <Rule Id="FFS0034" Action="Error"/>
+        <!-- FFS0035 - Checks that test classes do not define mutable fields -->
+        <Rule Id="FFS0035" Action="Error"/>
+        <!-- FFS0036 - Checks that test classes do not define mutable properties -->
+        <Rule Id="FFS0036" Action="Error"/>
+        <!-- FFS0037 - Checks that Guid.Parse is not used and that new Guid or Guid.TryParse is used instead -->
+        <Rule Id="FFS0037" Action="Error"/>
+        <!-- FFS0038 - Records should have DebuggerDisplay attribute on them. -->
+        <Rule Id="FFS0038" Action="Error"/>
     </Rules>
 </RuleSet>
