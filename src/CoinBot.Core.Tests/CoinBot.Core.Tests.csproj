@@ -35,7 +35,7 @@
         <PackageReference Include="coverlet.collector" Version="3.1.0" PrivateAssets="All" />
         <PackageReference Include="coverlet.msbuild" Version="3.1.0" PrivateAssets="All" />
         <PackageReference Include="FunFair.CodeAnalysis" Version="5.5.0.926" PrivateAssets="All" />
-        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="16.10.56" PrivateAssets="All" />
+        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.0.63" PrivateAssets="All" />
         <PackageReference Include="NSubstitute.Analyzers.CSharp" Version="1.0.14" PrivateAssets="All" />
         <PackageReference Include="Roslynator.Analyzers" Version="3.2.2" PrivateAssets="All" />
         <PackageReference Include="SonarAnalyzer.CSharp" Version="8.29.0.36737" PrivateAssets="All" />
