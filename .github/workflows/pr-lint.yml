@@ -8,7 +8,7 @@ on:
 jobs:
   info:
     if: ${{ endsWith(github.repository , '-template') }}
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     steps:
     - run: |
         echo "Branch: ${{ github.head_ref }}"
@@ -18,7 +18,7 @@ jobs:
 
   include-JIRA-ticket:
     if: github.event.pull_request.draft == false
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     steps:
     - if: ${{ !endsWith(github.repository , '-template') && !startsWith(github.head_ref, 'release/') && !startsWith(github.head_ref, 'hotfix/') }}
       uses: seferov/pr-lint-action@v1.1.2
@@ -28,7 +28,7 @@ jobs:
 
   include-changelog-entry:
     if: github.event.pull_request.draft == false
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     steps:
       - if: ${{ github.actor != 'dependabot[bot]' || endsWith(github.repository , '-template') }}
         uses: actions/checkout@v2.3.4
@@ -45,7 +45,7 @@ jobs:
   change-log-entry-is-in-unreleased:
     if: github.event.pull_request.draft == false
     # As LibGit2Sharp doesn't work on 20.04
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     steps:
     - uses: actions/checkout@v2.3.4
       with:
@@ -65,7 +65,7 @@ jobs:
 
   does-not-contain-secrets:
     if: github.event.pull_request.draft == false
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     steps:
     - uses: actions/checkout@v2.3.4
       with:
@@ -76,7 +76,7 @@ jobs:
 
   has-no-merge-conflicts:
     if: github.event.pull_request.draft == false
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     steps:
     - uses: actions/checkout@v2.3.4
       with:
@@ -85,7 +85,7 @@ jobs:
 
   has-no-file-or-folder-case-sensitivity-issues:
     if: github.event.pull_request.draft == false
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     steps:
     - uses: actions/checkout@v2.3.4
       with:
@@ -94,7 +94,7 @@ jobs:
 
   lint-code:
     if: ${{ github.event.pull_request.draft == false && ( !startsWith(github.head_ref, 'release/') && !startsWith(github.head_ref, 'hotfix/') ) }}
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
     steps:
       - uses: actions/checkout@v2.3.4
         with:
