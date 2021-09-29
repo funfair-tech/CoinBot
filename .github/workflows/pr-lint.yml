@@ -11,6 +11,8 @@ jobs:
     runs-on: [self-hosted, linux]
     steps:
     - run: |
+        sudo chown -R $USER:$USER $GITHUB_WORKSPACE
+    - run: |
         echo "Branch: ${{ github.head_ref }}"
         echo "Base Branch: ${{ github.base_ref }}"
         echo "Repo: ${{ github.repository }}"
@@ -20,6 +22,8 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: [self-hosted, linux]
     steps:
+    - run: |
+        sudo chown -R $USER:$USER $GITHUB_WORKSPACE
     - if: ${{ !endsWith(github.repository , '-template') && !startsWith(github.head_ref, 'release/') && !startsWith(github.head_ref, 'hotfix/') }}
       uses: seferov/pr-lint-action@v1.1.2
       with:
@@ -30,6 +34,8 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: [self-hosted, linux]
     steps:
+      - run: |
+          sudo chown -R $USER:$USER $GITHUB_WORKSPACE
       - if: ${{ github.actor != 'dependabot[bot]' || endsWith(github.repository , '-template') }}
         uses: actions/checkout@v2.3.4
         with:
@@ -47,6 +53,8 @@ jobs:
     # As LibGit2Sharp doesn't work on 20.04
     runs-on: [self-hosted, linux]
     steps:
+    - run: |
+          sudo chown -R $USER:$USER $GITHUB_WORKSPACE
     - uses: actions/checkout@v2.3.4
       with:
         fetch-depth: 0
@@ -67,6 +75,8 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: [self-hosted, linux]
     steps:
+    - run: |
+          sudo chown -R $USER:$USER $GITHUB_WORKSPACE
     - uses: actions/checkout@v2.3.4
       with:
         fetch-depth: 0
@@ -78,6 +88,8 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: [self-hosted, linux]
     steps:
+    - run: |
+          sudo chown -R $USER:$USER $GITHUB_WORKSPACE
     - uses: actions/checkout@v2.3.4
       with:
         fetch-depth: 0
@@ -87,6 +99,8 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: [self-hosted, linux]
     steps:
+    - run: |
+          sudo chown -R $USER:$USER $GITHUB_WORKSPACE
     - uses: actions/checkout@v2.3.4
       with:
         fetch-depth: 0
@@ -96,6 +110,8 @@ jobs:
     if: ${{ github.event.pull_request.draft == false && ( !startsWith(github.head_ref, 'release/') && !startsWith(github.head_ref, 'hotfix/') ) }}
     runs-on: [self-hosted, linux]
     steps:
+      - run: |
+          sudo chown -R $USER:$USER $GITHUB_WORKSPACE
       - uses: actions/checkout@v2.3.4
         with:
           fetch-depth: 0
