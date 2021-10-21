@@ -391,8 +391,18 @@
         <Rule Id="S4457" Action="None"/>
     </Rules>
     <Rules AnalyzerId="Roslynator.Analyzers" RuleNamespace="Roslynator.Analyzers">
-        <!-- - ?? -->
+        <!-- RCS1038 - RemoveEmptyStatement -->
+        <Rule Id="RCS1038" Action="Error"/>
+        <!-- RCS1077 - Optimize Linq Method Call -->
+        <Rule Id="RCS1077" Action="Error"/>
+        <!-- RCS1080 - UseCountOrLengthPropertyInsteadOfAnyMethod -->
+        <Rule Id="RCS1080" Action="Error"/>
+        <!-- RCS1090 - AddCallToConfigureAwaitOrViceVersa -->
         <Rule Id="RCS1090" Action="None"/>
+        <!-- RCS1093 - RemoveFileWithNoCode -->
+        <Rule Id="RCS1093" Action="Error"/>
+        <!-- RCS1097 - RemoveRedundantToStringCall -->
+        <Rule Id="RCS1097" Action="Error"/>
     </Rules>
     <Rules AnalyzerId="FunFair.CodeAnalysis" RuleNamespace="FunFair.CodeAnalysis">
         <!-- FFS0001 - Avoid using DateTime.Now - Use IDateTimeSource.UtcNow() -->
