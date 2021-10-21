@@ -34,7 +34,7 @@ namespace CoinBot.Clients.Bittrex
                                            IgnoreNullValues = true,
                                            PropertyNameCaseInsensitive = false,
                                            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                                           Converters = {new DecimalAsStringConverter()}
+                                           Converters = { new DecimalAsStringConverter() }
                                        };
         }
 
@@ -50,7 +50,7 @@ namespace CoinBot.Clients.Bittrex
             {
                 IReadOnlyList<BittrexCurrencyDto> currencies = await this.GetCurrenciesAsync();
 
-                if (!currencies.Any())
+                if (currencies.Count == 0)
                 {
                     return Array.Empty<MarketSummaryDto>();
                 }

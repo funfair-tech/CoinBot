@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 namespace CoinBot.Core.Extensions
 {
@@ -45,7 +44,7 @@ namespace CoinBot.Core.Extensions
                 items.Add(entry);
             }
 
-            if (items.Any())
+            if (items.Count != 0)
             {
                 yield return items;
             }

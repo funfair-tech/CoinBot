@@ -20,7 +20,7 @@ namespace CoinBot.Discord.Commands
         private readonly ILogger<MarketsCommands> _logger;
         private readonly MarketManager _marketManager;
 
-        private readonly char[] _separators = {'-', '/', '\\', ','};
+        private readonly char[] _separators = { '-', '/', '\\', ',' };
 
         public MarketsCommands(CurrencyManager currencyManager, MarketManager marketManager, ILogger<MarketsCommands> logger)
         {
@@ -31,8 +31,7 @@ namespace CoinBot.Discord.Commands
 
         [Command(text: "markets")]
         [Summary(text: "get price details per market for a coin, e.g. `!markets FUN` or `!markets ETH/FUN`.")]
-        public async Task MarketsAsync([Remainder] [Summary(text: "The input as a single coin symbol or a pair")]
-                                       string input)
+        public async Task MarketsAsync([Remainder] [Summary(text: "The input as a single coin symbol or a pair")] string input)
         {
             using (this.Context.Channel.EnterTypingState())
             {
@@ -51,7 +50,7 @@ namespace CoinBot.Discord.Commands
                         : this._marketManager.GetPair(currency1: primaryCurrency, currency2: secondaryCurrency)
                               .ToList();
 
-                    if (!markets.Any())
+                    if (markets.Count == 0)
                     {
                         await this.ReplyAsync($"sorry, no market details found for {input}");
 
