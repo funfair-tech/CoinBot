@@ -403,6 +403,8 @@
         <Rule Id="RCS1093" Action="Error"/>
         <!-- RCS1097 - RemoveRedundantToStringCall -->
         <Rule Id="RCS1097" Action="Error"/>
+        <!-- RCS1197 - OptimizeStringBuilderAppendCall -->
+        <Rule Id="RCS1197" Action="Error"/>
     </Rules>
     <Rules AnalyzerId="FunFair.CodeAnalysis" RuleNamespace="FunFair.CodeAnalysis">
         <!-- FFS0001 - Avoid using DateTime.Now - Use IDateTimeSource.UtcNow() -->
