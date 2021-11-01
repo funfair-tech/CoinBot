@@ -95,15 +95,28 @@ namespace CoinBot.Discord.Commands
                             {
                                 WriteMarketSummaries(builder: marketDetails, group.Take(maxResults));
 
-                                marketDetails.AppendLine();
-                                marketDetails.AppendLine($"Found {diff} more {primaryCurrency.Symbol} market(s) at {exchangeName}:");
-                                marketDetails.AppendLine(string.Join(separator: ", ",
-                                                                     group.Skip(maxResults)
-                                                                          .Select(selector: m => $"{m.BaseCurrency.Symbol}/{m.MarketCurrency.Symbol}")));
+                                marketDetails.AppendLine()
+                                             .Append("Found ")
+                                             .Append(diff)
+                                             .Append(" more ")
+                                             .Append(primaryCurrency.Symbol)
+                                             .Append(" market(s) at ")
+                                             .Append(exchangeName)
+                                             .AppendLine(":")
+                                             .AppendJoin(separator: ", ",
+                                                         group.Skip(maxResults)
+                                                              .Select(selector: m => $"{m.BaseCurrency.Symbol}/{m.MarketCurrency.Symbol}"))
+                                             .AppendLine();
                             }
                             else
                             {
-                                marketDetails.AppendLine($"`Found {diff} more {primaryCurrency.Symbol} market(s) at {exchangeName}.`");
+                                marketDetails.Append("`Found ")
+                                             .Append(diff)
+                                             .Append(" more ")
+                                             .Append(primaryCurrency.Symbol)
+                                             .Append(" market(s) at ")
+                                             .Append(exchangeName)
+                                             .AppendLine(".`");
                             }
                         }
                         else

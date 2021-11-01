@@ -23,9 +23,12 @@ namespace CoinBot.Discord.Extensions
         public static string GetChange(this CoinMarketCapCoin details)
         {
             StringBuilder changeStringBuilder = new();
-            changeStringBuilder.AppendLine($"Hour: {details.HourChange.AsPercentage()}");
-            changeStringBuilder.AppendLine($"Day: {details.DayChange.AsPercentage()}");
-            changeStringBuilder.AppendLine($"Week: {details.WeekChange.AsPercentage()}");
+            changeStringBuilder.Append("Hour: ")
+                               .AppendLine(details.HourChange.AsPercentage())
+                               .Append("Day: ")
+                               .AppendLine(details.DayChange.AsPercentage())
+                               .Append("Week: ")
+                               .AppendLine(details.WeekChange.AsPercentage());
 
             return changeStringBuilder.ToString();
         }
@@ -48,10 +51,15 @@ namespace CoinBot.Discord.Extensions
         public static string GetDescription(this CoinMarketCapCoin details)
         {
             StringBuilder descriptionBuilder = new();
-            descriptionBuilder.AppendLine($"Market cap {details.MarketCap.AsUsdPrice()} (Rank {details.Rank})");
-            descriptionBuilder.AppendLine($"24 hour volume: {details.Volume.AsUsdPrice()}");
 
-            return descriptionBuilder.ToString();
+            return descriptionBuilder.Append("Market cap ")
+                                     .Append(details.MarketCap.AsUsdPrice())
+                                     .Append(" (Rank ")
+                                     .Append(details.Rank)
+                                     .AppendLine(")")
+                                     .Append("24 hour volume: ")
+                                     .AppendLine(details.Volume.AsUsdPrice())
+                                     .ToString();
         }
 
         /// <summary>
@@ -70,12 +78,14 @@ namespace CoinBot.Discord.Extensions
 
             if (details.PriceBtc != null)
             {
-                priceStringBuilder.AppendLine($"{details.PriceBtc} BTC");
+                priceStringBuilder.Append(details.PriceBtc)
+                                  .AppendLine(" BTC");
             }
 
             if (details.PriceEth != null)
             {
-                priceStringBuilder.AppendLine($"{details.PriceEth} ETH");
+                priceStringBuilder.Append(details.PriceEth)
+                                  .AppendLine(" ETH");
             }
 
             return priceStringBuilder.ToString();

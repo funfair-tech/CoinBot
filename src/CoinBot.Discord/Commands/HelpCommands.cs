@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
@@ -23,16 +24,23 @@ namespace CoinBot.Discord.Commands
             AddAuthor(builder);
             AddFooter(builder);
 
-            StringBuilder stringBuilder = new();
-
-            foreach (CommandInfo command in this._commandService.Commands)
-            {
-                stringBuilder.AppendLine($"!{command.Name} - {command.Summary}");
-            }
-
-            builder.WithDescription(stringBuilder.ToString());
+            builder.WithDescription(this.BuildCommandDescription());
 
             return this.ReplyAsync(message: string.Empty, isTTS: false, builder.Build());
+        }
+
+        private string BuildCommandDescription()
+        {
+            static StringBuilder AppendCommand(StringBuilder stringBuilder, CommandInfo command)
+            {
+                return stringBuilder.Append('!')
+                                    .Append(command.Name)
+                                    .Append(" - ")
+                                    .AppendLine(command.Summary);
+            }
+
+            return this._commandService.Commands.Aggregate(new StringBuilder(), func: AppendCommand)
+                       .ToString();
         }
     }
 }
