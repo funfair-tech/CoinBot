@@ -34,7 +34,7 @@
         <PackageReference Include="AsyncFixer" Version="1.5.1" PrivateAssets="All" />
         <PackageReference Include="coverlet.collector" Version="3.1.0" PrivateAssets="All" />
         <PackageReference Include="coverlet.msbuild" Version="3.1.0" PrivateAssets="All" />
-        <PackageReference Include="FunFair.CodeAnalysis" Version="5.6.0.960" PrivateAssets="All" />
+        <PackageReference Include="FunFair.CodeAnalysis" Version="5.6.1.965" PrivateAssets="All" />
         <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.0.63" PrivateAssets="All" />
         <PackageReference Include="NSubstitute.Analyzers.CSharp" Version="1.0.14" PrivateAssets="All" />
         <PackageReference Include="Roslynator.Analyzers" Version="3.2.2" PrivateAssets="All" />
