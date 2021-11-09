@@ -38,6 +38,5 @@
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\CoinBot.Clients\CoinBot.Clients.csproj" />
-        <ProjectReference Include="..\CoinBot.Core\CoinBot.Core.csproj" />
     </ItemGroup>
 </Project>
