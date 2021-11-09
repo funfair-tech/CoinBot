@@ -25,7 +25,7 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="NonBlocking" Version="1.1.2" />
-        <PackageReference Include="System.Threading.Tasks.Dataflow" Version="5.0.0" />
+        <PackageReference Include="System.Threading.Tasks.Dataflow" Version="6.0.0" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="5.0.0" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
