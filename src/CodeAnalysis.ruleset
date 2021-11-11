@@ -187,6 +187,9 @@
         <Rule Id="CA1823" Action="Error"/>
         <!-- CA1826 - ?? -->
         <Rule Id="CA1826" Action="None"/>
+        <!-- CA1848 - For improved performance, use the LoggerMessage delegates instead of calling 'LoggerExtensions.LogXXX(ILogger, string?, params object?[])' -->
+        <!-- TODO: Review whethere there's a better way of doing this that keeps the code readable -->
+        <Rule Id="CA1848" Action="None"/>
         <!-- CA1900 - ?? -->
         <Rule Id="CA1900" Action="Error"/>
         <!-- CA1901 - ?? -->
@@ -325,6 +328,9 @@
         <Rule Id="CA2241" Action="Error"/>
         <!-- CA2242 - ?? -->
         <Rule Id="CA2242" Action="Error"/>
+        <!-- CA2254 The logging message template should not vary between calls to 'LoggerExtensions.LogXXX(ILogger, string?, params object?[]) -->
+        <!-- TODO: Review whethere there's a better way of doing this that keeps the code readable -->
+        <Rule Id="CA2254" Action="None"/>
     </Rules>
     <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
         <!-- SA1305 - ?? -->
