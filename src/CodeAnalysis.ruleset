@@ -493,7 +493,7 @@
         <Rule Id="FFS0038" Action="Error"/>
         <!-- FFS0039 - Only one type should be defined per file. (note class T and class T{T1} are considered ok)  -->
         <Rule Id="FFS0039" Action="Error"/>
-        <!-- FFS0040 - Only one type should be defined per file. (note class T and class T{T1} are considered ok)  -->
+        <!-- FFS0040 - File should have the same name as the type that is defined in it -->
         <Rule Id="FFS0040" Action="Info"/>
     </Rules>
 </RuleSet>
