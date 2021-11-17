@@ -78,6 +78,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated Microsoft.VisualStudio.Threading.Analyzers to 17.0.64
 - FF-1429 - -
 - FF-1429 - Updated FunFair.Test.Common to 5.6.4.1351
+- FF-1429 - Updated FunFair.CodeAnalysis to 5.7.0.995
 ### Removed
 - Unused dependencies
 ### Deployment Changes
