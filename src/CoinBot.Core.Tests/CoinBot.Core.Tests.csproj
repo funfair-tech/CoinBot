@@ -36,7 +36,7 @@
         <PackageReference Include="coverlet.msbuild" Version="3.1.0" PrivateAssets="All" />
         <PackageReference Include="FunFair.CodeAnalysis" Version="5.7.0.995" PrivateAssets="All" />
         <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.0.64" PrivateAssets="All" />
-        <PackageReference Include="NSubstitute.Analyzers.CSharp" Version="1.0.14" PrivateAssets="All" />
+        <PackageReference Include="NSubstitute.Analyzers.CSharp" Version="1.0.15" PrivateAssets="All" />
         <PackageReference Include="Roslynator.Analyzers" Version="3.2.2" PrivateAssets="All" />
         <PackageReference Include="SonarAnalyzer.CSharp" Version="8.30.0.37606" PrivateAssets="All" />
         <PackageReference Include="SourceLink.Create.CommandLine" Version="2.8.3" PrivateAssets="All" />
