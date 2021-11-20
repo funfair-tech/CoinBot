@@ -33,7 +33,7 @@ namespace CoinBot.Clients.Binance
         {
             this._serializerSettings = new JsonSerializerOptions
                                        {
-                                           IgnoreNullValues = true,
+                                           DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                                            PropertyNameCaseInsensitive = false,
                                            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
                                            Converters = {new DecimalAsStringConverter()}

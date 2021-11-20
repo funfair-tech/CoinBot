@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using CoinBot.Core;
 using CoinBot.Core.JsonConverters;
@@ -29,7 +30,7 @@ namespace CoinBot.Clients.CoinMarketCap
         {
             this._serializerSettings = new JsonSerializerOptions
                                        {
-                                           IgnoreNullValues = true,
+                                           DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                                            PropertyNameCaseInsensitive = false,
                                            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
                                            Converters = {new DecimalAsStringConverter()}
