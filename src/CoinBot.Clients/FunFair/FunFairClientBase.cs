@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using CoinBot.Core;
 using CoinBot.Core.Helpers;
@@ -33,7 +34,7 @@ namespace CoinBot.Clients.FunFair
         {
             this._jsonSerializerSettings = new JsonSerializerOptions
                                            {
-                                               IgnoreNullValues = true,
+                                               DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                                                PropertyNameCaseInsensitive = false,
                                                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
                                                Converters = {new DecimalAsStringConverter()}

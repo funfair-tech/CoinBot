@@ -34,7 +34,7 @@ namespace CoinBot.Clients.Kraken
         {
             this._serializerSettings = new JsonSerializerOptions
                                        {
-                                           IgnoreNullValues = true,
+                                           DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                                            PropertyNameCaseInsensitive = false,
                                            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
                                            Converters = {new DecimalAsStringConverter()}
