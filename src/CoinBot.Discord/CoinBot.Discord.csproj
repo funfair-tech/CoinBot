@@ -14,6 +14,9 @@
         <IsPackable>false</IsPackable>
         <IsPublishable>false</IsPublishable>
         <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(MSBuildProjectName).xml</DocumentationFile>
+      <GenerateNeutralResourcesLanguageAttribute>true</GenerateNeutralResourcesLanguageAttribute>
+      <TieredCompilation>true</TieredCompilation>
+      <ImplicitUsings>disable</ImplicitUsings>
     </PropertyGroup>
     <PropertyGroup>
         <AnalysisLevel>latest</AnalysisLevel>

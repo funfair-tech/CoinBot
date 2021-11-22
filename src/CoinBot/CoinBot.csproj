@@ -17,6 +17,10 @@
         <IsPublishable>true</IsPublishable>
         <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(MSBuildProjectName).xml</DocumentationFile>
         <IsTransformWebConfigDisabled>true</IsTransformWebConfigDisabled>
+      <GenerateNeutralResourcesLanguageAttribute>true</GenerateNeutralResourcesLanguageAttribute>
+      <TieredCompilation>true</TieredCompilation>
+      <ImplicitUsings>disable</ImplicitUsings>
+      <ValidateExecutableReferencesMatchSelfContained>true</ValidateExecutableReferencesMatchSelfContained>
     </PropertyGroup>
     <PropertyGroup>
         <AnalysisLevel>latest</AnalysisLevel>
