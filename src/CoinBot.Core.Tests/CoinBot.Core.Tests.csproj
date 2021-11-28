@@ -13,9 +13,9 @@
         <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
         <IsPackable>false</IsPackable>
         <IsPublishable>false</IsPublishable>
-      <GenerateNeutralResourcesLanguageAttribute>true</GenerateNeutralResourcesLanguageAttribute>
-      <TieredCompilation>true</TieredCompilation>
-      <ImplicitUsings>disable</ImplicitUsings>
+        <GenerateNeutralResourcesLanguageAttribute>true</GenerateNeutralResourcesLanguageAttribute>
+        <TieredCompilation>true</TieredCompilation>
+        <ImplicitUsings>disable</ImplicitUsings>
     </PropertyGroup>
     <PropertyGroup>
         <AnalysisLevel>latest</AnalysisLevel>

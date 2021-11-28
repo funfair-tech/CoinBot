@@ -21,7 +21,7 @@ namespace CoinBot.Discord.Commands
             if (dateTime.HasValue)
             {
                 builder.Timestamp = dateTime;
-                builder.Footer = new EmbedFooterBuilder {Text = "Prices updated"};
+                builder.Footer = new EmbedFooterBuilder { Text = "Prices updated" };
             }
         }
     }

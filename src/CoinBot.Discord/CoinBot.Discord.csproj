@@ -14,9 +14,9 @@
         <IsPackable>false</IsPackable>
         <IsPublishable>false</IsPublishable>
         <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(MSBuildProjectName).xml</DocumentationFile>
-      <GenerateNeutralResourcesLanguageAttribute>true</GenerateNeutralResourcesLanguageAttribute>
-      <TieredCompilation>true</TieredCompilation>
-      <ImplicitUsings>disable</ImplicitUsings>
+        <GenerateNeutralResourcesLanguageAttribute>true</GenerateNeutralResourcesLanguageAttribute>
+        <TieredCompilation>true</TieredCompilation>
+        <ImplicitUsings>disable</ImplicitUsings>
     </PropertyGroup>
     <PropertyGroup>
         <AnalysisLevel>latest</AnalysisLevel>
@@ -26,6 +26,9 @@
         <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
         <CodeAnalysisRuleSet>$(SolutionDir)\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\CoinBot.Clients\CoinBot.Clients.csproj" />
+    </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Discord.Net" Version="2.4.0" />
     </ItemGroup>
@@ -38,8 +41,5 @@
         <PackageReference Include="SonarAnalyzer.CSharp" Version="8.32.0.39516" PrivateAssets="All" />
         <PackageReference Include="SourceLink.Create.CommandLine" Version="2.8.3" PrivateAssets="All" />
         <PackageReference Include="ToStringWithoutOverrideAnalyzer" Version="0.6.0" PrivateAssets="All" />
-    </ItemGroup>
-    <ItemGroup>
-        <ProjectReference Include="..\CoinBot.Clients\CoinBot.Clients.csproj" />
     </ItemGroup>
 </Project>

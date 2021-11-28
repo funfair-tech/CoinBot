@@ -33,7 +33,7 @@ namespace CoinBot.Clients.CoinMarketCap
                                            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                                            PropertyNameCaseInsensitive = false,
                                            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                                           Converters = {new DecimalAsStringConverter()}
+                                           Converters = { new DecimalAsStringConverter() }
                                        };
         }
 

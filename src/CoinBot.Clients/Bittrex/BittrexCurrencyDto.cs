@@ -36,8 +36,7 @@ namespace CoinBot.Clients.Bittrex
         public decimal TxFee { get; set; }
 
         [JsonPropertyName(name: @"IsRestricted")]
-
-        // ReSharper disable once MemberCanBePrivate.Global
+        [SuppressMessage(category: "ReSharper", checkId: "MemberCanBePrivate.Global", Justification = "TODO: Review")]
         [SuppressMessage(category: "ReSharper", checkId: "AutoPropertyCanBeMadeGetOnly.Global", Justification = "TODO: Review")]
         public bool IsRestricted { get; init; }
 

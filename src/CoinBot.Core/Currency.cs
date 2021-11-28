@@ -59,5 +59,3 @@ namespace CoinBot.Core
         }
     }
 }
-
-

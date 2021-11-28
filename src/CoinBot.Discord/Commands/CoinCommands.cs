@@ -28,8 +28,7 @@ namespace CoinBot.Discord.Commands
 
         [Command(text: "coin")]
         [Summary(text: "get info for a coin, e.g. !coin FUN")]
-        public async Task CoinAsync([Remainder] [Summary(text: "The symbol for the coin")]
-                                    string symbol)
+        public async Task CoinAsync([Remainder] [Summary(text: "The symbol for the coin")] string symbol)
         {
             using (this.Context.Channel.EnterTypingState())
             {
@@ -94,17 +93,16 @@ namespace CoinBot.Discord.Commands
 
         private ICoinInfo GetCoinInfo(Currency currency)
         {
-            return currency.Getdetails<FunFairWalletCoin>() ?? (ICoinInfo) new InterpretedCoinInfo(currency: currency,
-                                                                                                   marketManager: this._marketManager,
-                                                                                                   this._currencyManager.Get(nameOrSymbol: @"USD"),
-                                                                                                   this._currencyManager.Get(nameOrSymbol: @"ETH"),
-                                                                                                   this._currencyManager.Get(nameOrSymbol: @"BTC"));
+            return currency.Getdetails<FunFairWalletCoin>() ?? (ICoinInfo)new InterpretedCoinInfo(currency: currency,
+                                                                                                  marketManager: this._marketManager,
+                                                                                                  this._currencyManager.Get(nameOrSymbol: @"USD"),
+                                                                                                  this._currencyManager.Get(nameOrSymbol: @"ETH"),
+                                                                                                  this._currencyManager.Get(nameOrSymbol: @"BTC"));
         }
 
         [Command(text: "snapshot")]
         [Summary(text: "get info on a list of coins, !snapshot FUN,BTC,IOTA,ETH,ETC")]
-        public async Task SnapshotAsync([Remainder] [Summary(text: "A comma separated list of coin symbols")]
-                                        string symbols)
+        public async Task SnapshotAsync([Remainder] [Summary(text: "A comma separated list of coin symbols")] string symbols)
         {
             using (this.Context.Channel.EnterTypingState())
             {
@@ -226,7 +224,7 @@ namespace CoinBot.Discord.Commands
 
         private Task MultiCoinReplyAsync(IList<Currency> coins, Color color, string title, string description)
         {
-            EmbedBuilder builder = new() {Color = color};
+            EmbedBuilder builder = new() { Color = color };
             builder.WithTitle(title);
             builder.WithDescription(description);
             AddAuthor(builder);

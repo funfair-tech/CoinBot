@@ -22,8 +22,7 @@ namespace CoinBot.Discord.Commands
 
         [Command(text: "price")]
         [Summary(text: "get price info for a coin, e.g. !price FUN")]
-        public async Task PriceAsync([Remainder] [Summary(text: "The symbol for the coin")]
-                                     string symbol)
+        public async Task PriceAsync([Remainder] [Summary(text: "The symbol for the coin")] string symbol)
         {
             using (this.Context.Channel.EnterTypingState())
             {

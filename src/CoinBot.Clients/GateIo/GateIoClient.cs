@@ -37,7 +37,7 @@ namespace CoinBot.Clients.GateIo
                                            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                                            PropertyNameCaseInsensitive = false,
                                            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                                           Converters = {new DecimalAsStringConverter()}
+                                           Converters = { new DecimalAsStringConverter() }
                                        };
         }
 
