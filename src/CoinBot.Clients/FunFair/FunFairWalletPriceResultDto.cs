@@ -22,5 +22,3 @@ namespace CoinBot.Clients.FunFair
         public DateTime Date { get; set; }
     }
 }
-
-

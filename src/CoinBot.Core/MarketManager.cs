@@ -63,7 +63,7 @@ namespace CoinBot.Core
                     IEnumerable<MarketSummaryDto> markets = exchange.Markets.Where(predicate: m =>
                                                                                               {
                                                                                                   if (m.BaseCurrency.Symbol.Equals(value: currency.Symbol,
-                                                                                                                                   comparisonType: StringComparison.OrdinalIgnoreCase) ||
+                                                                                                          comparisonType: StringComparison.OrdinalIgnoreCase) ||
                                                                                                       m.MarketCurrency.Symbol.Equals(value: currency.Symbol,
                                                                                                           comparisonType: StringComparison.OrdinalIgnoreCase))
                                                                                                   {
@@ -102,11 +102,11 @@ namespace CoinBot.Core
                     IEnumerable<MarketSummaryDto> markets = exchange.Markets.Where(predicate: m =>
                                                                                               {
                                                                                                   if (m.BaseCurrency.Symbol.Equals(value: currency1.Symbol,
-                                                                                                                                   comparisonType: StringComparison.OrdinalIgnoreCase) &&
+                                                                                                          comparisonType: StringComparison.OrdinalIgnoreCase) &&
                                                                                                       m.MarketCurrency.Symbol.Equals(value: currency2.Symbol,
                                                                                                           comparisonType: StringComparison.OrdinalIgnoreCase) ||
                                                                                                       m.BaseCurrency.Symbol.Equals(value: currency2.Symbol,
-                                                                                                                                   comparisonType: StringComparison.OrdinalIgnoreCase) &&
+                                                                                                          comparisonType: StringComparison.OrdinalIgnoreCase) &&
                                                                                                       m.MarketCurrency.Symbol.Equals(value: currency1.Symbol,
                                                                                                           comparisonType: StringComparison.OrdinalIgnoreCase))
                                                                                                   {
@@ -163,7 +163,7 @@ namespace CoinBot.Core
 
             var cryptoInfos = allCoinInfos.SelectMany(selector: ci => ci)
                                           .GroupBy(keySelector: c => c.Symbol)
-                                          .Select(selector: c => new {Symbol = c.Key, Coins = c.ToArray()});
+                                          .Select(selector: c => new { Symbol = c.Key, Coins = c.ToArray() });
 
             foreach (var cryptoInfo in cryptoInfos)
             {

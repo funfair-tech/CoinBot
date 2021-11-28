@@ -36,7 +36,7 @@ namespace CoinBot.Clients.Binance
                                            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                                            PropertyNameCaseInsensitive = false,
                                            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                                           Converters = {new DecimalAsStringConverter()}
+                                           Converters = { new DecimalAsStringConverter() }
                                        };
         }
 
@@ -77,7 +77,12 @@ namespace CoinBot.Clients.Binance
 
             Currency baseCurrency = builder.Get(symbol: product.BaseAsset, name: product.BaseAssetName);
 
-            return new MarketSummaryDto(market: this.Name, baseCurrency: baseCurrency, marketCurrency: marketCurrency, volume: product.Volume, last: product.PrevClose, lastUpdated: null);
+            return new MarketSummaryDto(market: this.Name,
+                                        baseCurrency: baseCurrency,
+                                        marketCurrency: marketCurrency,
+                                        volume: product.Volume,
+                                        last: product.PrevClose,
+                                        lastUpdated: null);
         }
 
         public static void Register(IServiceCollection services)

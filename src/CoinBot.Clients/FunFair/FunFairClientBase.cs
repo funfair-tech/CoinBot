@@ -20,12 +20,12 @@ namespace CoinBot.Clients.FunFair
         /// <summary>
         ///     List of crypto currencies hard coded for now.
         /// </summary>
-        private readonly IReadOnlyList<string> _cryptoSymbols = new[] {@"ETH", @"FUN"};
+        private readonly IReadOnlyList<string> _cryptoSymbols = new[] { @"ETH", @"FUN" };
 
         /// <summary>
         ///     List of fiat currencies hard coded for now.
         /// </summary>
-        private readonly IReadOnlyList<string> _fiatSymbols = new[] {@"USD"};
+        private readonly IReadOnlyList<string> _fiatSymbols = new[] { @"USD" };
 
         private readonly JsonSerializerOptions _jsonSerializerSettings;
 
@@ -37,7 +37,7 @@ namespace CoinBot.Clients.FunFair
                                                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                                                PropertyNameCaseInsensitive = false,
                                                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                                               Converters = {new DecimalAsStringConverter()}
+                                               Converters = { new DecimalAsStringConverter() }
                                            };
         }
 

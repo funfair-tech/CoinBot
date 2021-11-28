@@ -72,7 +72,7 @@ namespace CoinBot.Core
             // restrict the number of parallel tasks executing to 1, and only allow 1 messages per task to prevent
             // tasks submitted here from consuming all the available CPU time.
             bufferBlock.LinkTo(new ActionBlock<Func<Task>>(action: action => action(),
-                                                           new ExecutionDataflowBlockOptions {MaxDegreeOfParallelism = 1, MaxMessagesPerTask = 1, BoundedCapacity = 1}));
+                                                           new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = 1, MaxMessagesPerTask = 1, BoundedCapacity = 1 }));
 
             return bufferBlock;
         }

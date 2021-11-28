@@ -80,5 +80,3 @@ namespace CoinBot.Core
         DateTime? LastUpdated { get; }
     }
 }
-
-
