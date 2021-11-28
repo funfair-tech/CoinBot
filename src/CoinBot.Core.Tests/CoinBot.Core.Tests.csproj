@@ -1,29 +1,29 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <OutputType>Library</OutputType>
-        <TargetFramework>net6.0</TargetFramework>
         <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
-        <WarningsAsErrors />
-        <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-        <LangVersion>latest</LangVersion>
         <Features>strict;flow-analysis</Features>
-        <TreatSpecificWarningsAsErrors />
-        <NoWarn />
-        <Nullable>enable</Nullable>
+        <GenerateNeutralResourcesLanguageAttribute>true</GenerateNeutralResourcesLanguageAttribute>
+        <ImplicitUsings>disable</ImplicitUsings>
         <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
         <IsPackable>false</IsPackable>
         <IsPublishable>false</IsPublishable>
-        <GenerateNeutralResourcesLanguageAttribute>true</GenerateNeutralResourcesLanguageAttribute>
+        <LangVersion>latest</LangVersion>
+        <NoWarn />
+        <Nullable>enable</Nullable>
+        <OutputType>Library</OutputType>
+        <TargetFramework>net6.0</TargetFramework>
         <TieredCompilation>true</TieredCompilation>
-        <ImplicitUsings>disable</ImplicitUsings>
+        <TreatSpecificWarningsAsErrors />
+        <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+        <WarningsAsErrors />
     </PropertyGroup>
     <PropertyGroup>
         <AnalysisLevel>latest</AnalysisLevel>
         <AnalysisMode>AllEnabledByDefault</AnalysisMode>
-        <EnableNETAnalyzers>true</EnableNETAnalyzers>
-        <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
-        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
         <CodeAnalysisRuleSet>$(SolutionDir)\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
+        <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+        <EnableNETAnalyzers>true</EnableNETAnalyzers>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="FunFair.Test.Common" Version="5.6.4.1351" />
