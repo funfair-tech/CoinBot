@@ -55,7 +55,7 @@ namespace CoinBot.Discord.Commands
                 }
                 catch (Exception e)
                 {
-                    this._logger.LogError(new EventId(e.HResult), exception: e, message: e.Message);
+                    this._logger.LogError(new(e.HResult), exception: e, message: e.Message);
                     await this.ReplyAsync(message: "oops, something went wrong, sorry!");
                 }
             }

@@ -46,7 +46,7 @@ namespace CoinBot.Clients.FunFair
                 return null;
             }
 
-            return new MarketSummaryDto(market: this.Name, baseCurrency: baseCurrency, marketCurrency: marketCurrency, volume: 0m, last: pkt.Price, lastUpdated: pkt.LastUpdated);
+            return new(market: this.Name, baseCurrency: baseCurrency, marketCurrency: marketCurrency, volume: 0m, last: pkt.Price, lastUpdated: pkt.LastUpdated);
         }
     }
 }

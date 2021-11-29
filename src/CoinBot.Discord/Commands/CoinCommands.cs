@@ -87,7 +87,7 @@ namespace CoinBot.Discord.Commands
                 }
                 catch (Exception e)
                 {
-                    this._logger.LogError(new EventId(e.HResult), exception: e, message: e.Message);
+                    this._logger.LogError(new(e.HResult), exception: e, message: e.Message);
                     await this.ReplyAsync(message: "oops, something went wrong, sorry!");
                 }
             }
@@ -131,7 +131,7 @@ namespace CoinBot.Discord.Commands
                     }
                     catch (Exception e)
                     {
-                        this._logger.LogError(new EventId(e.HResult), exception: e, message: e.Message);
+                        this._logger.LogError(new(e.HResult), exception: e, message: e.Message);
                         await this.ReplyAsync(message: "oops, something went wrong, sorry!");
 
                         return;
@@ -178,7 +178,7 @@ namespace CoinBot.Discord.Commands
                 }
                 catch (Exception e)
                 {
-                    this._logger.LogError(new EventId(e.HResult), exception: e, message: e.Message);
+                    this._logger.LogError(new(e.HResult), exception: e, message: e.Message);
                     await this.ReplyAsync(message: "oops, something went wrong, sorry!");
 
                     return;
@@ -212,7 +212,7 @@ namespace CoinBot.Discord.Commands
                 }
                 catch (Exception e)
                 {
-                    this._logger.LogError(new EventId(e.HResult), exception: e, message: e.Message);
+                    this._logger.LogError(new(e.HResult), exception: e, message: e.Message);
                     await this.ReplyAsync(message: "oops, something went wrong, sorry!");
 
                     return;
@@ -245,7 +245,7 @@ namespace CoinBot.Discord.Commands
                     continue;
                 }
 
-                builder.Fields.Add(new EmbedFieldBuilder
+                builder.Fields.Add(new()
                                    {
                                        Name = $"{coin.Name} ({coin.Symbol}) | {details.DayChange.AsPercentage()} | {details.GetPriceSummary()}",
                                        Value =

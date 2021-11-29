@@ -31,7 +31,7 @@ namespace CoinBot.Clients.Binance
         public BinanceClient(IHttpClientFactory httpClientFactory, ILogger<BinanceClient> logger)
             : base(httpClientFactory: httpClientFactory, clientName: HTTP_CLIENT_NAME, logger: logger)
         {
-            this._serializerSettings = new JsonSerializerOptions
+            this._serializerSettings = new()
                                        {
                                            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                                            PropertyNameCaseInsensitive = false,
@@ -77,12 +77,7 @@ namespace CoinBot.Clients.Binance
 
             Currency baseCurrency = builder.Get(symbol: product.BaseAsset, name: product.BaseAssetName);
 
-            return new MarketSummaryDto(market: this.Name,
-                                        baseCurrency: baseCurrency,
-                                        marketCurrency: marketCurrency,
-                                        volume: product.Volume,
-                                        last: product.PrevClose,
-                                        lastUpdated: null);
+            return new(market: this.Name, baseCurrency: baseCurrency, marketCurrency: marketCurrency, volume: product.Volume, last: product.PrevClose, lastUpdated: null);
         }
 
         public static void Register(IServiceCollection services)
@@ -114,7 +109,7 @@ namespace CoinBot.Clients.Binance
                 }
                 catch (Exception exception)
                 {
-                    this.Logger.LogCritical(new EventId(exception.HResult), exception: exception, message: "Could not convert packet");
+                    this.Logger.LogCritical(new(exception.HResult), exception: exception, message: "Could not convert packet");
 
                     return Array.Empty<BinanceProduct>();
                 }

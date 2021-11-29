@@ -31,7 +31,7 @@ namespace CoinBot.Clients.Gdax
         public GdaxClient(IHttpClientFactory httpClientFactory, ILogger<GdaxClient> logger)
             : base(httpClientFactory: httpClientFactory, clientName: HTTP_CLIENT_NAME, logger: logger)
         {
-            this._serializerSettings = new JsonSerializerOptions
+            this._serializerSettings = new()
                                        {
                                            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                                            PropertyNameCaseInsensitive = false,
@@ -57,7 +57,7 @@ namespace CoinBot.Clients.Gdax
             }
             catch (Exception e)
             {
-                this.Logger.LogError(new EventId(e.HResult), exception: e, message: e.Message);
+                this.Logger.LogError(new(e.HResult), exception: e, message: e.Message);
 
                 throw;
             }
@@ -80,12 +80,7 @@ namespace CoinBot.Clients.Gdax
                 return null;
             }
 
-            return new MarketSummaryDto(market: this.Name,
-                                        baseCurrency: baseCurrency,
-                                        marketCurrency: marketCurrency,
-                                        volume: ticker.Volume,
-                                        last: ticker.Price,
-                                        lastUpdated: ticker.Time);
+            return new(market: this.Name, baseCurrency: baseCurrency, marketCurrency: marketCurrency, volume: ticker.Volume, last: ticker.Price, lastUpdated: ticker.Time);
         }
 
         /// <summary>
@@ -119,7 +114,7 @@ namespace CoinBot.Clients.Gdax
                     }
                     catch (Exception exception)
                     {
-                        this.Logger.LogError(new EventId(exception.HResult), exception: exception, message: "Failed to Deserialize");
+                        this.Logger.LogError(new(exception.HResult), exception: exception, message: "Failed to Deserialize");
 
                         return null;
                     }
@@ -127,7 +122,7 @@ namespace CoinBot.Clients.Gdax
             }
             catch (Exception exception)
             {
-                this.Logger.LogError(new EventId(exception.HResult), exception: exception, $"Failed to retrieve {productId}: {exception.Message}");
+                this.Logger.LogError(new(exception.HResult), exception: exception, $"Failed to retrieve {productId}: {exception.Message}");
 
                 return null;
             }
@@ -155,7 +150,7 @@ namespace CoinBot.Clients.Gdax
                 }
                 catch (Exception exception)
                 {
-                    this.Logger.LogError(new EventId(exception.HResult), exception: exception, message: "Failed to deserialize");
+                    this.Logger.LogError(new(exception.HResult), exception: exception, message: "Failed to deserialize");
 
                     return Array.Empty<GdaxProduct>();
                 }

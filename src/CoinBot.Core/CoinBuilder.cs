@@ -10,10 +10,10 @@ namespace CoinBot.Core
 
         public CoinBuilder()
         {
-            this._coinsBySymbol = new ConcurrentDictionary<string, Currency>();
+            this._coinsBySymbol = new();
 
-            this._coinsBySymbol.TryAdd(key: @"EUR", new Currency(symbol: "EUR", name: "Euro") { IsFiat = true });
-            this._coinsBySymbol.TryAdd(key: @"USD", new Currency(symbol: "USD", name: "United States dollar") { IsFiat = true });
+            this._coinsBySymbol.TryAdd(key: @"EUR", new(symbol: "EUR", name: "Euro") { IsFiat = true });
+            this._coinsBySymbol.TryAdd(key: @"USD", new(symbol: "USD", name: "United States dollar") { IsFiat = true });
         }
 
         public Currency Get(string symbol, string name)

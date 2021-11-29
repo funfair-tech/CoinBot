@@ -35,7 +35,7 @@ namespace CoinBot.Core
         public void Start()
         {
             // start a timer to fire the tickFunction
-            this._timer = new Timer(callback: this.QueueTick, state: null, dueTime: TimeSpan.Zero, period: Timeout.InfiniteTimeSpan);
+            this._timer = new(callback: this.QueueTick, state: null, dueTime: TimeSpan.Zero, period: Timeout.InfiniteTimeSpan);
         }
 
         public void Stop()
@@ -55,7 +55,7 @@ namespace CoinBot.Core
             }
             catch (Exception e)
             {
-                this.Logger.LogError(new EventId(e.HResult), exception: e, message: e.Message);
+                this.Logger.LogError(new(e.HResult), exception: e, message: e.Message);
             }
             finally
             {
@@ -71,8 +71,7 @@ namespace CoinBot.Core
             // link the buffer block to an action block to process the actions submitted to the buffer.
             // restrict the number of parallel tasks executing to 1, and only allow 1 messages per task to prevent
             // tasks submitted here from consuming all the available CPU time.
-            bufferBlock.LinkTo(new ActionBlock<Func<Task>>(action: action => action(),
-                                                           new ExecutionDataflowBlockOptions { MaxDegreeOfParallelism = 1, MaxMessagesPerTask = 1, BoundedCapacity = 1 }));
+            bufferBlock.LinkTo(new ActionBlock<Func<Task>>(action: action => action(), new() { MaxDegreeOfParallelism = 1, MaxMessagesPerTask = 1, BoundedCapacity = 1 }));
 
             return bufferBlock;
         }

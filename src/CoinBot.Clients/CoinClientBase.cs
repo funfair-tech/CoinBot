@@ -57,7 +57,7 @@ namespace CoinBot.Clients
             void ConfigureClient(HttpClient httpClient)
             {
                 httpClient.BaseAddress = endpoint;
-                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(mediaType: @"application/json"));
+                httpClient.DefaultRequestHeaders.Accept.Add(new(mediaType: @"application/json"));
                 httpClient.DefaultRequestHeaders.Add(name: "User-Agent", value: "CoinBot");
             }
 

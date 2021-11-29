@@ -30,7 +30,7 @@ namespace CoinBot.Clients.Poloniex
         public PoloniexClient(IHttpClientFactory httpClientFactory, ILogger<PoloniexClient> logger)
             : base(httpClientFactory: httpClientFactory, clientName: HTTP_CLIENT_NAME, logger: logger)
         {
-            this._serializerSettings = new JsonSerializerOptions
+            this._serializerSettings = new()
                                        {
                                            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                                            PropertyNameCaseInsensitive = false,
@@ -57,7 +57,7 @@ namespace CoinBot.Clients.Poloniex
             }
             catch (Exception e)
             {
-                this.Logger.LogError(new EventId(e.HResult), exception: e, message: e.Message);
+                this.Logger.LogError(new(e.HResult), exception: e, message: e.Message);
 
                 throw;
             }
@@ -79,12 +79,7 @@ namespace CoinBot.Clients.Poloniex
                 return null;
             }
 
-            return new MarketSummaryDto(market: this.Name,
-                                        baseCurrency: baseCurrency,
-                                        marketCurrency: marketCurrency,
-                                        volume: ticker.BaseVolume,
-                                        last: ticker.Last,
-                                        lastUpdated: null);
+            return new(market: this.Name, baseCurrency: baseCurrency, marketCurrency: marketCurrency, volume: ticker.BaseVolume, last: ticker.Last, lastUpdated: null);
         }
 
         /// <summary>
@@ -119,7 +114,7 @@ namespace CoinBot.Clients.Poloniex
                 }
                 catch (Exception exception)
                 {
-                    this.Logger.LogError(new EventId(exception.HResult), exception: exception, message: "Failed to deserialize");
+                    this.Logger.LogError(new(exception.HResult), exception: exception, message: "Failed to deserialize");
 
                     return Array.Empty<PoloniexTicker>();
                 }

@@ -25,7 +25,7 @@ namespace CoinBot.Core
         {
             this.Name = name;
             this.Symbol = symbol;
-            this._details = new List<ICoinInfo>();
+            this._details = new();
         }
 
         /// <summary>
