@@ -12,7 +12,9 @@ namespace CoinBot.Clients.FunFair
             this.Id = symbol;
             this.Symbol = symbol;
             this.PriceUsd = priceUsd;
-            this.Name = symbol == @"FUN" ? "FunFair" : symbol;
+            this.Name = symbol == @"FUN"
+                ? "FunFair"
+                : symbol;
             this.LastUpdated = lastUpdated;
         }
 

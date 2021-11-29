@@ -20,12 +20,19 @@ namespace CoinBot.Clients.FunFair
         /// <summary>
         ///     List of crypto currencies hard coded for now.
         /// </summary>
-        private readonly IReadOnlyList<string> _cryptoSymbols = new[] { @"ETH", @"FUN" };
+        private readonly IReadOnlyList<string> _cryptoSymbols = new[]
+                                                                {
+                                                                    @"ETH",
+                                                                    @"FUN"
+                                                                };
 
         /// <summary>
         ///     List of fiat currencies hard coded for now.
         /// </summary>
-        private readonly IReadOnlyList<string> _fiatSymbols = new[] { @"USD" };
+        private readonly IReadOnlyList<string> _fiatSymbols = new[]
+                                                              {
+                                                                  @"USD"
+                                                              };
 
         private readonly JsonSerializerOptions _jsonSerializerSettings;
 
@@ -43,8 +50,9 @@ namespace CoinBot.Clients.FunFair
 
         internal async Task<IReadOnlyCollection<FunFairWalletPriceResultPairDto?>> GetBasePricesAsync()
         {
-            List<(string cryptoSymbol, string fiatSymbol)> symbols =
-                (from cryptoSymbol in this._cryptoSymbols from fiatSymbol in this._fiatSymbols select (cryptoSymbol, fiatSymbol)).ToList();
+            List<(string cryptoSymbol, string fiatSymbol)> symbols = (from cryptoSymbol in this._cryptoSymbols
+                                                                      from fiatSymbol in this._fiatSymbols
+                                                                      select (cryptoSymbol, fiatSymbol)).ToList();
 
             try
             {
@@ -135,7 +143,7 @@ namespace CoinBot.Clients.FunFair
 
         private static Uri BuildUri(string tokenSymbol, string fiatCurrencySymbol)
         {
-            return new($"/Dev/token/{tokenSymbol}/{fiatCurrencySymbol}", uriKind: UriKind.Relative);
+            return new Uri($"/Dev/token/{tokenSymbol}/{fiatCurrencySymbol}", uriKind: UriKind.Relative);
         }
     }
 }

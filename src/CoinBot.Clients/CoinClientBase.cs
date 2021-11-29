@@ -71,7 +71,9 @@ namespace CoinBot.Clients
 
         private static TimeSpan Calculate(int attempts)
         {
-            return attempts > 1 ? TimeSpan.FromSeconds(Math.Pow(x: 2.0, y: attempts)) : TimeSpan.Zero;
+            return attempts > 1
+                ? TimeSpan.FromSeconds(Math.Pow(x: 2.0, y: attempts))
+                : TimeSpan.Zero;
         }
     }
 }
