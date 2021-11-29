@@ -45,7 +45,9 @@ namespace CoinBot.Discord.Commands
 
                         if (details != null)
                         {
-                            builder.Color = details.DayChange > 0 ? Color.Green : Color.Red;
+                            builder.Color = details.DayChange > 0
+                                ? Color.Green
+                                : Color.Red;
                             AddAuthor(builder);
 
                             builder.WithDescription(details.GetDescription());
@@ -151,7 +153,9 @@ namespace CoinBot.Discord.Commands
                 double? totalChange = coins.Sum(selector: c => c.Getdetails<CoinMarketCapCoin>()
                                                                 ?.DayChange.GetValueOrDefault(defaultValue: 0d));
                 await this.MultiCoinReplyAsync(coins: coins,
-                                               totalChange > 0 ? Color.Green : Color.Red,
+                                               totalChange > 0
+                                                   ? Color.Green
+                                                   : Color.Red,
                                                title: "Snapshot",
                                                string.Join(separator: ", ", coins.Select(selector: c => c.Symbol)));
             }

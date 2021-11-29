@@ -20,7 +20,13 @@ namespace CoinBot.Discord.Commands
         private readonly ILogger<MarketsCommands> _logger;
         private readonly MarketManager _marketManager;
 
-        private readonly char[] _separators = { '-', '/', '\\', ',' };
+        private readonly char[] _separators =
+        {
+            '-',
+            '/',
+            '\\',
+            ','
+        };
 
         public MarketsCommands(CurrencyManager currencyManager, MarketManager marketManager, ILogger<MarketsCommands> logger)
         {
@@ -130,7 +136,9 @@ namespace CoinBot.Discord.Commands
                     DateTime? lastUpdated = markets.Min(selector: m => m.LastUpdated);
                     AddFooter(builder: builder, dateTime: lastUpdated);
 
-                    string operationName = secondaryCurrency != null ? $"{primaryCurrency.Name}/{secondaryCurrency.Name}" : primaryCurrency.Name;
+                    string operationName = secondaryCurrency != null
+                        ? $"{primaryCurrency.Name}/{secondaryCurrency.Name}"
+                        : primaryCurrency.Name;
 
                     await this.ReplyAsync($"Markets for `{operationName}`:", isTTS: false, builder.Build());
                 }

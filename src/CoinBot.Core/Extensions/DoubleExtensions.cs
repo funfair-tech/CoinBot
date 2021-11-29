@@ -54,7 +54,9 @@ namespace CoinBot.Core.Extensions
         /// <returns></returns>
         public static string AsPercentage(this double? d)
         {
-            return d != null ? $"{d}%" : UNKNOWN_RESPONSE;
+            return d != null
+                ? $"{d}%"
+                : UNKNOWN_RESPONSE;
         }
     }
 }
