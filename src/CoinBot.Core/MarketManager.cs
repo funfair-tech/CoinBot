@@ -134,7 +134,7 @@ namespace CoinBot.Core
             }
             catch (Exception e)
             {
-                this.Logger.LogError(new EventId(e.HResult), exception: e, message: e.Message);
+                this.Logger.LogError(new(e.HResult), exception: e, message: e.Message);
             }
         }
 
@@ -188,7 +188,7 @@ namespace CoinBot.Core
             }
             catch (Exception exception)
             {
-                this.Logger.LogError(new EventId(exception.HResult), exception: exception, $"Failed to update {client.GetType().Name} CoinInfo: {exception.Message}");
+                this.Logger.LogError(new(exception.HResult), exception: exception, $"Failed to update {client.GetType().Name} CoinInfo: {exception.Message}");
 
                 return Array.Empty<ICoinInfo>();
             }
@@ -262,7 +262,7 @@ namespace CoinBot.Core
             }
             catch (Exception exception)
             {
-                this.Logger.LogError(new EventId(exception.HResult), exception: exception, $"Failed to update {client.GetType().Name} GlobalInfo: {exception.Message}");
+                this.Logger.LogError(new(exception.HResult), exception: exception, $"Failed to update {client.GetType().Name} GlobalInfo: {exception.Message}");
 
                 return null;
             }
@@ -272,7 +272,7 @@ namespace CoinBot.Core
         {
             public Exchange()
             {
-                this.Lock = new ReaderWriterLockSlim();
+                this.Lock = new();
                 this.Markets = Array.Empty<MarketSummaryDto>();
             }
 

@@ -28,7 +28,7 @@ namespace CoinBot.Clients.CoinMarketCap
         public CoinMarketCapClient(IHttpClientFactory httpClientFactory, ILogger<CoinMarketCapClient> logger)
             : base(httpClientFactory: httpClientFactory, clientName: HTTP_CLIENT_NAME, logger: logger)
         {
-            this._serializerSettings = new JsonSerializerOptions
+            this._serializerSettings = new()
                                        {
                                            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                                            PropertyNameCaseInsensitive = false,
@@ -59,7 +59,7 @@ namespace CoinBot.Clients.CoinMarketCap
             }
             catch (Exception e)
             {
-                this.Logger.LogError(new EventId(e.HResult), exception: e, message: e.Message);
+                this.Logger.LogError(new(e.HResult), exception: e, message: e.Message);
 
                 throw;
             }
@@ -87,7 +87,7 @@ namespace CoinBot.Clients.CoinMarketCap
             }
             catch (Exception e)
             {
-                this.Logger.LogError(new EventId(e.HResult), exception: e, message: e.Message);
+                this.Logger.LogError(new(e.HResult), exception: e, message: e.Message);
 
                 throw;
             }

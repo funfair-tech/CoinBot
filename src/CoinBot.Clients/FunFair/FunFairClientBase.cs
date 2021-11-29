@@ -39,7 +39,7 @@ namespace CoinBot.Clients.FunFair
         protected FunFairClientBase(IHttpClientFactory httpClientFactory, ILogger logger)
             : base(httpClientFactory: httpClientFactory, clientName: HTTP_CLIENT_NAME, logger: logger)
         {
-            this._jsonSerializerSettings = new JsonSerializerOptions
+            this._jsonSerializerSettings = new()
                                            {
                                                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                                                PropertyNameCaseInsensitive = false,
@@ -128,12 +128,12 @@ namespace CoinBot.Clients.FunFair
 
                     this.Logger.LogDebug($"Retrieved price for {tokenSymbol}.  Currently {pkt.Price} {fiatCurrencySymbol}");
 
-                    return new FunFairWalletPriceResultPairDto(fiatCurrencySymbol: fiatCurrencySymbol, tokenSymbol: pkt.Symbol, price: pkt.Price, lastUpdated: pkt.Date);
+                    return new(fiatCurrencySymbol: fiatCurrencySymbol, tokenSymbol: pkt.Symbol, price: pkt.Price, lastUpdated: pkt.Date);
                 }
             }
             catch (Exception exception)
             {
-                this.Logger.LogError(new EventId(exception.HResult),
+                this.Logger.LogError(new(exception.HResult),
                                      exception: exception,
                                      $"Failed to retrieve prices for {tokenSymbol} in {fiatCurrencySymbol}: Error: {exception.Message}");
 
@@ -143,7 +143,7 @@ namespace CoinBot.Clients.FunFair
 
         private static Uri BuildUri(string tokenSymbol, string fiatCurrencySymbol)
         {
-            return new Uri($"/Dev/token/{tokenSymbol}/{fiatCurrencySymbol}", uriKind: UriKind.Relative);
+            return new($"/Dev/token/{tokenSymbol}/{fiatCurrencySymbol}", uriKind: UriKind.Relative);
         }
     }
 }

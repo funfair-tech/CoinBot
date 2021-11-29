@@ -38,7 +38,7 @@ namespace CoinBot.Core.Extensions
                 {
                     yield return items;
 
-                    items = new List<T>(splitSize);
+                    items = new(splitSize);
                 }
 
                 items.Add(entry);
