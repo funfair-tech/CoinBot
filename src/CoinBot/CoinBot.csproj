@@ -9,7 +9,6 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
     <NoWarn>1591</NoWarn>
-    <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
     <Features>strict;flow-analysis</Features>
     <Nullable>enable</Nullable>
     <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
