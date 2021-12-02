@@ -63,9 +63,9 @@ public sealed class MarketManager : TickingService
                 IEnumerable<MarketSummaryDto> markets = exchange.Markets.Where(predicate: m =>
                                                                                           {
                                                                                               if (m.BaseCurrency.Symbol.Equals(value: currency.Symbol,
-                                                                                                                               comparisonType: StringComparison.OrdinalIgnoreCase) ||
+                                                                                                      comparisonType: StringComparison.OrdinalIgnoreCase) ||
                                                                                                   m.MarketCurrency.Symbol.Equals(value: currency.Symbol,
-                                                                                                                                 comparisonType: StringComparison.OrdinalIgnoreCase))
+                                                                                                      comparisonType: StringComparison.OrdinalIgnoreCase))
                                                                                               {
                                                                                                   return true;
                                                                                               }
@@ -102,13 +102,13 @@ public sealed class MarketManager : TickingService
                 IEnumerable<MarketSummaryDto> markets = exchange.Markets.Where(predicate: m =>
                                                                                           {
                                                                                               if (m.BaseCurrency.Symbol.Equals(value: currency1.Symbol,
-                                                                                                                               comparisonType: StringComparison.OrdinalIgnoreCase) &&
+                                                                                                      comparisonType: StringComparison.OrdinalIgnoreCase) &&
                                                                                                   m.MarketCurrency.Symbol.Equals(value: currency2.Symbol,
-                                                                                                                                 comparisonType: StringComparison.OrdinalIgnoreCase) ||
+                                                                                                      comparisonType: StringComparison.OrdinalIgnoreCase) ||
                                                                                                   m.BaseCurrency.Symbol.Equals(value: currency2.Symbol,
-                                                                                                                               comparisonType: StringComparison.OrdinalIgnoreCase) &&
+                                                                                                      comparisonType: StringComparison.OrdinalIgnoreCase) &&
                                                                                                   m.MarketCurrency.Symbol.Equals(value: currency1.Symbol,
-                                                                                                                                 comparisonType: StringComparison.OrdinalIgnoreCase))
+                                                                                                      comparisonType: StringComparison.OrdinalIgnoreCase))
                                                                                               {
                                                                                                   return true;
                                                                                               }

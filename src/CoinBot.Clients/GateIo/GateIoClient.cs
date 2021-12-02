@@ -82,12 +82,7 @@ public sealed class GateIoClient : CoinClientBase, IMarketClient
             return null;
         }
 
-        return new(market: this.Name,
-                   baseCurrency: baseCurrency,
-                   marketCurrency: marketCurrency,
-                   volume: marketSummary.BaseVolume,
-                   last: marketSummary.Last,
-                   lastUpdated: null);
+        return new(market: this.Name, baseCurrency: baseCurrency, marketCurrency: marketCurrency, volume: marketSummary.BaseVolume, last: marketSummary.Last, lastUpdated: null);
     }
 
     /// <summary>
