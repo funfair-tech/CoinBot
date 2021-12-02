@@ -133,9 +133,7 @@ public abstract class FunFairClientBase : CoinClientBase
         }
         catch (Exception exception)
         {
-            this.Logger.LogError(new(exception.HResult),
-                                 exception: exception,
-                                 $"Failed to retrieve prices for {tokenSymbol} in {fiatCurrencySymbol}: Error: {exception.Message}");
+            this.Logger.LogError(new(exception.HResult), exception: exception, $"Failed to retrieve prices for {tokenSymbol} in {fiatCurrencySymbol}: Error: {exception.Message}");
 
             return null;
         }
