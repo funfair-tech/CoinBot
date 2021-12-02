@@ -1,25 +1,24 @@
 ﻿using System;
 
-namespace CoinBot.Core
+namespace CoinBot.Core;
+
+public interface IMarketInfo
 {
-    public interface IMarketInfo
-    {
-        /// <summary>
-        ///     The market name.
-        /// </summary>
-        string Name { get; }
+    /// <summary>
+    ///     The market name.
+    /// </summary>
+    string Name { get; }
 
-        /// <summary>
-        ///     The 24H volume.
-        /// </summary>
-        decimal? Volume { get; }
+    /// <summary>
+    ///     The 24H volume.
+    /// </summary>
+    decimal? Volume { get; }
 
-        decimal? Bid { get; }
+    decimal? Bid { get; }
 
-        decimal? Ask { get; }
+    decimal? Ask { get; }
 
-        decimal? Last { get; }
+    decimal? Last { get; }
 
-        DateTime? LastUpdated { get; }
-    }
+    DateTime? LastUpdated { get; }
 }

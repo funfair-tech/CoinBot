@@ -4,75 +4,74 @@ using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 
-namespace CoinBot.Core
+namespace CoinBot.Core;
+
+public sealed class CurrencyManager : ICurrencyListUpdater
 {
-    public sealed class CurrencyManager : ICurrencyListUpdater
+    private readonly ILogger<CurrencyManager> _logger;
+
+    /// <summary>
+    ///     The <see cref="Currency" /> list.
+    /// </summary>
+    private IReadOnlyDictionary<string, Currency> _coinInfoByName;
+
+    /// <summary>
+    ///     The <see cref="Currency" /> list.
+    /// </summary>
+    private IReadOnlyDictionary<string, Currency> _coinInfoBySymbol;
+
+    /// <summary>
+    ///     Constructor
+    /// </summary>
+    /// <param name="logger">Logging</param>
+    public CurrencyManager(ILogger<CurrencyManager> logger)
     {
-        private readonly ILogger<CurrencyManager> _logger;
+        this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
-        /// <summary>
-        ///     The <see cref="Currency" /> list.
-        /// </summary>
-        private IReadOnlyDictionary<string, Currency> _coinInfoByName;
+        this._coinInfoByName = ImmutableDictionary<string, Currency>.Empty;
+        this._coinInfoBySymbol = ImmutableDictionary<string, Currency>.Empty;
+    }
 
-        /// <summary>
-        ///     The <see cref="Currency" /> list.
-        /// </summary>
-        private IReadOnlyDictionary<string, Currency> _coinInfoBySymbol;
+    /// <summary>
+    ///     The <see cref="IGlobalInfo" />.
+    /// </summary>
+    public IGlobalInfo? GlobalInfo { get; private set; }
 
-        /// <summary>
-        ///     Constructor
-        /// </summary>
-        /// <param name="logger">Logging</param>
-        public CurrencyManager(ILogger<CurrencyManager> logger)
+    void ICurrencyListUpdater.Update(IReadOnlyList<Currency> currencies, IGlobalInfo? globalInfo)
+    {
+        this._logger.LogInformation(message: "Currencies updated");
+        this._coinInfoBySymbol = currencies.ToDictionary(keySelector: key => key.Symbol, elementSelector: value => value);
+        this._coinInfoByName = currencies.ToDictionary(keySelector: key => key.Name, elementSelector: value => value);
+        this.GlobalInfo = globalInfo;
+    }
+
+    public Currency? Get(string nameOrSymbol)
+    {
+        return this.GetCoinBySymbol(nameOrSymbol) ?? this.GetCoinByName(nameOrSymbol);
+    }
+
+    private Currency? GetCoinBySymbol(string symbol)
+    {
+        if (this._coinInfoBySymbol.TryGetValue(symbol.ToUpperInvariant(), out Currency? currency))
         {
-            this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
-
-            this._coinInfoByName = ImmutableDictionary<string, Currency>.Empty;
-            this._coinInfoBySymbol = ImmutableDictionary<string, Currency>.Empty;
+            return currency;
         }
 
-        /// <summary>
-        ///     The <see cref="IGlobalInfo" />.
-        /// </summary>
-        public IGlobalInfo? GlobalInfo { get; private set; }
+        return null;
+    }
 
-        void ICurrencyListUpdater.Update(IReadOnlyList<Currency> currencies, IGlobalInfo? globalInfo)
+    private Currency? GetCoinByName(string name)
+    {
+        if (this._coinInfoByName.TryGetValue(name.ToUpperInvariant(), out Currency? currency))
         {
-            this._logger.LogInformation(message: "Currencies updated");
-            this._coinInfoBySymbol = currencies.ToDictionary(keySelector: key => key.Symbol, elementSelector: value => value);
-            this._coinInfoByName = currencies.ToDictionary(keySelector: key => key.Name, elementSelector: value => value);
-            this.GlobalInfo = globalInfo;
+            return currency;
         }
 
-        public Currency? Get(string nameOrSymbol)
-        {
-            return this.GetCoinBySymbol(nameOrSymbol) ?? this.GetCoinByName(nameOrSymbol);
-        }
+        return null;
+    }
 
-        private Currency? GetCoinBySymbol(string symbol)
-        {
-            if (this._coinInfoBySymbol.TryGetValue(symbol.ToUpperInvariant(), out Currency? currency))
-            {
-                return currency;
-            }
-
-            return null;
-        }
-
-        private Currency? GetCoinByName(string name)
-        {
-            if (this._coinInfoByName.TryGetValue(name.ToUpperInvariant(), out Currency? currency))
-            {
-                return currency;
-            }
-
-            return null;
-        }
-
-        public IEnumerable<Currency> Get(Func<Currency, bool> predicate)
-        {
-            return this._coinInfoBySymbol.Values.Where(predicate);
-        }
+    public IEnumerable<Currency> Get(Func<Currency, bool> predicate)
+    {
+        return this._coinInfoBySymbol.Values.Where(predicate);
     }
 }

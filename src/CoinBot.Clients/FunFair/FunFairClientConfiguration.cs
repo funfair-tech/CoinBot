@@ -1,9 +1,8 @@
-﻿namespace CoinBot.Clients.FunFair
-{
-    public sealed class FunFairClientConfiguration
-    {
-        public string? Endpoint { get; set; }
+﻿namespace CoinBot.Clients.FunFair;
 
-        // TODO: Add currency mappings here.
-    }
+public sealed class FunFairClientConfiguration
+{
+    public string? Endpoint { get; set; }
+
+    // TODO: Add currency mappings here.
 }

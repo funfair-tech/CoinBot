@@ -6,37 +6,36 @@ using CoinBot.Core;
 using CoinBot.Core.Extensions;
 using Microsoft.Extensions.Logging;
 
-namespace CoinBot.Clients.FunFair
+namespace CoinBot.Clients.FunFair;
+
+public sealed class FunFairClientCoin : FunFairClientBase, ICoinClient
 {
-    public sealed class FunFairClientCoin : FunFairClientBase, ICoinClient
+    public FunFairClientCoin(IHttpClientFactory httpClientFactory, ILogger<FunFairClientCoin> logger)
+        : base(httpClientFactory: httpClientFactory, logger: logger)
     {
-        public FunFairClientCoin(IHttpClientFactory httpClientFactory, ILogger<FunFairClientCoin> logger)
-            : base(httpClientFactory: httpClientFactory, logger: logger)
-        {
-        }
+    }
 
-        /// <inheritdoc />
-        public async Task<IReadOnlyCollection<ICoinInfo>> GetCoinInfoAsync()
-        {
-            IReadOnlyCollection<FunFairWalletPriceResultPairDto?> source = await this.GetBasePricesAsync();
+    /// <inheritdoc />
+    public async Task<IReadOnlyCollection<ICoinInfo>> GetCoinInfoAsync()
+    {
+        IReadOnlyCollection<FunFairWalletPriceResultPairDto?> source = await this.GetBasePricesAsync();
 
-            return source.RemoveNulls()
-                         .Where(predicate: price => price.FiatCurrencySymbol == @"USD")
-                         .Select(this.CreateCoinInfo)
-                         .ToList();
-        }
+        return source.RemoveNulls()
+                     .Where(predicate: price => price.FiatCurrencySymbol == @"USD")
+                     .Select(this.CreateCoinInfo)
+                     .ToList();
+    }
 
-        /// <inheritdoc />
-        public Task<IGlobalInfo?> GetGlobalInfoAsync()
-        {
-            IGlobalInfo? none = null;
+    /// <inheritdoc />
+    public Task<IGlobalInfo?> GetGlobalInfoAsync()
+    {
+        IGlobalInfo? none = null;
 
-            return Task.FromResult(none);
-        }
+        return Task.FromResult(none);
+    }
 
-        private ICoinInfo CreateCoinInfo(FunFairWalletPriceResultPairDto item)
-        {
-            return new FunFairWalletCoin(priceUsd: item.Price, symbol: item.TokenSymbol, lastUpdated: item.LastUpdated);
-        }
+    private ICoinInfo CreateCoinInfo(FunFairWalletPriceResultPairDto item)
+    {
+        return new FunFairWalletCoin(priceUsd: item.Price, symbol: item.TokenSymbol, lastUpdated: item.LastUpdated);
     }
 }

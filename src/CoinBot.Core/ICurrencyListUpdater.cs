@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace CoinBot.Core
+namespace CoinBot.Core;
+
+public interface ICurrencyListUpdater
 {
-    public interface ICurrencyListUpdater
-    {
-        void Update(IReadOnlyList<Currency> currencies, IGlobalInfo? globalInfo);
-    }
+    void Update(IReadOnlyList<Currency> currencies, IGlobalInfo? globalInfo);
 }
