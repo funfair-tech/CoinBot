@@ -9,8 +9,11 @@ on:
 
 jobs:
   pull-request:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
+
     steps:
+    - run: |
+        sudo chown -R $USER:$USER $GITHUB_WORKSPACE
     - uses: jwalton/gh-find-current-pr@v1.2.1
       id: findPr
 
