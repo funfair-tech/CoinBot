@@ -13,9 +13,11 @@ jobs:
   standardise-yaml-files:
 
     if: ${{ github.event.pull_request.draft == false && ( !startsWith(github.head_ref, 'release/') && !startsWith(github.head_ref, 'hotfix/') ) }}
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
 
     steps:
+    - run: |
+        sudo chown -R $USER:$USER $GITHUB_WORKSPACE
     - uses: actions/checkout@v2.4.0
       with:
         fetch-depth: 0
