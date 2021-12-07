@@ -27,5 +27,5 @@ jobs:
     steps:
     - run: |
         sudo chown -R $USER:$USER $GITHUB_WORKSPACE
-      - name: Always run
-        run: echo "This job is used to prevent the workflow to fail when all other jobs are skipped [MR1]."
+    - name: Always run
+      run: echo "This job is used to prevent the workflow to fail when all other jobs are skipped [MR1]."
