@@ -8,6 +8,14 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
+### Removed
+### Deployment Changes
+
+<!--
+Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
+-->
+## [1.3.16] - 2021-12-17
+### Changed
 - FF-1429 - Updated Roslynator.Analyzers to 3.3.0
 - FF-1429 - Updated FunFair.CodeAnalysis to 5.7.2.1044
 - FF-1429 - Updated TeamCity.VSTest.TestAdapter to 1.0.29
@@ -19,12 +27,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated FunFair.Test.Common to 5.7.2.1514
 - FF-1429 - Updated Microsoft.Extensions to 6.0.1
 - FF-3881 - Updated DotNet SDK to 6.0.101
-### Removed
-### Deployment Changes
 
-<!--
-Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
--->
 ## [1.3.0] - 2021-11-20
 ### Changed
 - FF-1429 - Updated Microsoft.Extensions to 5.0.1
