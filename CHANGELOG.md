@@ -9,6 +9,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Fixed
 ### Changed
 - FF-1429 - Updated Discord.Net to 3.0.0
+- FF-1429 - Updated Discord.Net.Analyzers to 3.0.0
 ### Removed
 ### Deployment Changes
 
