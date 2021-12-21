@@ -8,15 +8,18 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
-- FF-1429 - Updated Discord.Net to 3.0.0
-- FF-1429 - Updated Discord.Net.Analyzers to 3.0.0
-- FF-1429 - Updated TeamCity.VSTest.TestAdapter to 1.0.31
 ### Removed
 ### Deployment Changes
 
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [1.3.17] - 2021-12-21
+### Changed
+- FF-1429 - Updated Discord.Net to 3.0.0
+- FF-1429 - Updated Discord.Net.Analyzers to 3.0.0
+- FF-1429 - Updated TeamCity.VSTest.TestAdapter to 1.0.31
+
 ## [1.3.16] - 2021-12-17
 ### Changed
 - FF-1429 - Updated Roslynator.Analyzers to 3.3.0
