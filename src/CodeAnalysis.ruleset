@@ -405,7 +405,8 @@
         <!-- RCS1038 - RemoveEmptyStatement -->
         <Rule Id="RCS1038" Action="Error"/>
         <!-- RCS1056 - Avoid usage of using alias directive -->
-        <Rule Id="RCS1056" Action="Error"/>
+        <!-- TODO-->
+        <Rule Id="RCS1056" Action="Info"/>
         <!-- RCS1060 - DeclareEachTypeInSeparateFile n.b. this is too agresssive as it wants Type and Type{T} to be in different files. -->
         <Rule Id="RCS1060" Action="Info"/>
         <!-- RCS1077 - Optimize Linq Method Call -->
@@ -463,7 +464,8 @@
         <!-- RCS1221 - Use pattern matching instead of combination of 'as' operator and null check -->
         <Rule Id="RCS1221" Action="Error"/>
         <!-- RCS1231 - Make parameter ref read-only -->
-        <Rule Id="RCS1231" Action="Error"/>
+        <!-- TODO - make an error -->
+        <Rule Id="RCS1231" Action="Info"/>
         <!-- RCS1233 - Use short-circuiting operator -->
         <Rule Id="RCS1233" Action="Error"/>
         <!-- RCS1234 - Duplicate enum value -->
