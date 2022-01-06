@@ -465,7 +465,7 @@
         <Rule Id="RCS1221" Action="Error"/>
         <!-- RCS1231 - Make parameter ref read-only -->
         <!-- TODO - make an error -->
-        <Rule Id="RCS1231" Action="Info"/>
+        <Rule Id="RCS1231" Action="Error"/>
         <!-- RCS1233 - Use short-circuiting operator -->
         <Rule Id="RCS1233" Action="Error"/>
         <!-- RCS1234 - Duplicate enum value -->
