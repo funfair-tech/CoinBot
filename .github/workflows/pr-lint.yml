@@ -93,7 +93,7 @@ jobs:
     - uses: actions/checkout@v2.4.0
       with:
         fetch-depth: 0
-    - uses: olivernybroe/action-conflict-finder@v2.0
+    - uses: olivernybroe/action-conflict-finder@v3.0
 
   has-no-file-or-folder-case-sensitivity-issues:
     if: github.event.pull_request.draft == false
