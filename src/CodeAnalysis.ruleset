@@ -361,6 +361,8 @@
         <Rule Id="S1764" Action="None"/>
         <!-- S1854 - Dead stores should be removed -->
         <Rule Id="S1854" Action="None"/>
+        <!-- S2190 - Add a way to break out of this methods recursion -->
+        <Rule Id="S2190" Action="Error"/>
         <!-- S2326 - ?? -->
         <Rule Id="S2326" Action="None"/>
         <!-- S2344 - Enumeration type names should not have "Flags" or "Enum" suffixes -->
