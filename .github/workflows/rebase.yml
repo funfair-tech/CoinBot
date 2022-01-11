@@ -6,7 +6,7 @@ on:
 jobs:
   rebase:
     name: Rebase
-    if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '/rebase')
+    if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '/rebase' && github.actor != 'dependabot[bot]'
     runs-on: [self-hosted, linux]
 
     steps:
