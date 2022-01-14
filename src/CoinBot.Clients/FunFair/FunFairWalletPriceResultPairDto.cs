@@ -4,7 +4,7 @@ namespace CoinBot.Clients.FunFair;
 
 internal sealed class FunFairWalletPriceResultPairDto
 {
-    public FunFairWalletPriceResultPairDto(string fiatCurrencySymbol, string tokenSymbol, decimal price, DateTime lastUpdated)
+    public FunFairWalletPriceResultPairDto(string fiatCurrencySymbol, string tokenSymbol, decimal price, in DateTime lastUpdated)
     {
         this.FiatCurrencySymbol = fiatCurrencySymbol;
         this.TokenSymbol = tokenSymbol;

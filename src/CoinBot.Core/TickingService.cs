@@ -20,7 +20,7 @@ public abstract class TickingService
     /// </summary>
     private Timer? _timer;
 
-    protected TickingService(TimeSpan tickInterval, ILogger logger)
+    protected TickingService(in TimeSpan tickInterval, ILogger logger)
     {
         this._tickInterval = tickInterval;
         this.Logger = logger ?? throw new ArgumentNullException(nameof(logger));

@@ -51,60 +51,58 @@ public sealed class DiscordBot : DiscordSocketClient
     ///     Handles the <paramref name="logParam" />.
     /// </summary>
     /// <param name="logParam">The <see cref="LogMessage" />.</param>
-    /// <returns></returns>
     private Task HandleLogAsync(LogMessage logParam)
     {
-        switch (logParam.Severity)
+        return logParam.Severity switch
         {
-            case LogSeverity.Debug:
-            {
-                this._logger.LogDebug(logParam.Message);
+            LogSeverity.Debug => this.LogDebugAsync(logParam),
+            LogSeverity.Verbose => this.LogInformationAsync(logParam),
+            LogSeverity.Info => this.LogInformationAsync(logParam),
+            LogSeverity.Warning => this.LogWarningAsync(logParam),
+            LogSeverity.Error => this.LogErrorAsync(logParam),
+            LogSeverity.Critical => this.LogCriticalAsync(logParam),
+            _ => this.LogCriticalAsync(logParam)
+        };
+    }
 
-                break;
-            }
+    private Task LogCriticalAsync(LogMessage logParam)
+    {
+        this._logger.LogCritical(logParam.Message);
 
-            case LogSeverity.Verbose:
-            {
-                this._logger.LogInformation(logParam.Message);
+        return Task.CompletedTask;
+    }
 
-                break;
-            }
-
-            case LogSeverity.Info:
-            {
-                this._logger.LogInformation(logParam.Message);
-
-                break;
-            }
-
-            case LogSeverity.Warning:
-            {
-                this._logger.LogWarning(logParam.Message);
-
-                break;
-            }
-
-            case LogSeverity.Error:
-            {
-                if (logParam.Exception != null)
-                {
-                    this._logger.LogError(new EventId(logParam.Exception.HResult), message: logParam.Message, logParam.Exception);
-                }
-                else
-                {
-                    this._logger.LogError(logParam.Message);
-                }
-
-                break;
-            }
-
-            case LogSeverity.Critical:
-            {
-                this._logger.LogCritical(logParam.Message);
-
-                break;
-            }
+    private Task LogErrorAsync(LogMessage logParam)
+    {
+        if (logParam.Exception != null)
+        {
+            this._logger.LogError(new EventId(logParam.Exception.HResult), message: logParam.Message, logParam.Exception);
         }
+        else
+        {
+            this._logger.LogError(logParam.Message);
+        }
+
+        return Task.CompletedTask;
+    }
+
+    private Task LogWarningAsync(LogMessage logParam)
+    {
+        this._logger.LogWarning(logParam.Message);
+
+        return Task.CompletedTask;
+    }
+
+    private Task LogInformationAsync(LogMessage logParam)
+    {
+        this._logger.LogInformation(logParam.Message);
+
+        return Task.CompletedTask;
+    }
+
+    private Task LogDebugAsync(LogMessage logParam)
+    {
+        this._logger.LogDebug(logParam.Message);
 
         return Task.CompletedTask;
     }

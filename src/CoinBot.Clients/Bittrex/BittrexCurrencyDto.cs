@@ -25,15 +25,15 @@ internal sealed class BittrexCurrencyDto
 
     [JsonPropertyName(name: @"MinConfirmation")]
     [SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Local", Justification = "TODO: Review")]
-    private int MinConfirmations { get; set; }
+    private int MinConfirmations { get; init; }
 
     [JsonPropertyName(name: @"IsActive")]
     [SuppressMessage(category: "ReSharper", checkId: "UnusedAutoPropertyAccessor.Global", Justification = "TODO: Review")]
-    public bool IsActive { get; set; }
+    public bool IsActive { get; init; }
 
     [JsonPropertyName(name: @"TxFee")]
     [SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Global", Justification = "TODO: Review")]
-    public decimal TxFee { get; set; }
+    public decimal TxFee { get; init; }
 
     [JsonPropertyName(name: @"IsRestricted")]
     [SuppressMessage(category: "ReSharper", checkId: "MemberCanBePrivate.Global", Justification = "TODO: Review")]
@@ -42,13 +42,13 @@ internal sealed class BittrexCurrencyDto
 
     [JsonPropertyName(name: @"CoinType")]
     [SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Local", Justification = "TODO: Review")]
-    private string CoinType { get; set; } = default!;
+    private string CoinType { get; init; } = default!;
 
     [JsonPropertyName(name: @"BaseAddress")]
     [SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Local", Justification = "TODO: Review")]
-    private string? BaseAddress { get; set; }
+    private string? BaseAddress { get; init; }
 
     [JsonPropertyName(name: @"BaseAddress")]
     [SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Local", Justification = "TODO: Review")]
-    private string? Notice { get; set; }
+    private string? Notice { get; init; }
 }

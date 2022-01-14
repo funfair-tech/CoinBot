@@ -7,7 +7,7 @@ namespace CoinBot.Clients.FunFair;
 
 public sealed class FunFairWalletCoin : ICoinInfo
 {
-    public FunFairWalletCoin(string symbol, DateTime lastUpdated, decimal priceUsd)
+    public FunFairWalletCoin(string symbol, in DateTime lastUpdated, decimal priceUsd)
     {
         this.Id = symbol;
         this.Symbol = symbol;
