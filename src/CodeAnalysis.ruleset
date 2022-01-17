@@ -485,8 +485,14 @@
         <!-- See https://code-cracker.github.io/diagnostics.html -->
         <!-- CC0001 - Use var instead of specifying type name -->
         <Rule Id="CC0001" Action="None"/>
+        <!-- CC0021 - use nameof(X) rather than "X" -->
+        <Rule Id="CC0021" Action="None"/>
+        <!-- CC0022 - X should be disposed -->
+        <Rule Id="CC0022" Action="None"/>
         <!-- CC0031 - Validate delegates for null before using -->
         <Rule Id="CC0031" Action="None"/>
+        <!-- CC0057 - Review unused parameters -->
+        <Rule Id="CC0057" Action="None"/>
         <!-- CC0105 - Use var instead of specifying type name -->
         <Rule Id="CC0105" Action="None"/>
     </Rules>
