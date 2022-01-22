@@ -103,6 +103,7 @@ dotnet_code_quality.PH2092.max_operators=10
 # ROSLYNATOR SETTINGS
 roslynator_accessibility_modifiers=explicit
 roslynator_enum_has_flag_style=operator
+roslynator_array_creation_type_style=implicit_when_type_is_obvious
 
 [*.{appxmanifest,asax,ascx,aspx,build,cshtml,dtd,fs,fsi,fsscript,fsx,master,ml,mli,nuspec,razor,resw,resx,skin,vb,xaml,xamlx,xoml,xsd}]
 indent_style=space
