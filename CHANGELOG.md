@@ -8,6 +8,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
+- FF-1429 - Updated FunFair.Test.Common to 5.8.2.1613
 ### Removed
 ### Deployment Changes
 
