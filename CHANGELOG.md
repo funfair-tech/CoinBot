@@ -10,6 +10,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Changed
 - FF-1429 - Updated Roslynator.Analyzers to 4.0.2
 - FF-1429 - Updated Discord.Net to 3.2.1
+- FF-1429 - Updated coverlet to 3.1.1
 ### Removed
 ### Deployment Changes
 
