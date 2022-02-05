@@ -8,14 +8,17 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
-- FF-1429 - Updated TeamCity.VSTest.TestAdapter to 1.0.34
-- FF-1429 - Updated FunFair.Test.Common to 5.8.4.1638
 ### Removed
 ### Deployment Changes
 
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [1.3.23] - 2022-02-05
+### Changed
+- FF-1429 - Updated TeamCity.VSTest.TestAdapter to 1.0.34
+- FF-1429 - Updated FunFair.Test.Common to 5.8.4.1638
+
 ## [1.3.22] - 2022-02-02
 ### Changed
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.35.0.42613
