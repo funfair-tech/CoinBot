@@ -35,7 +35,7 @@
     <ItemGroup>
         <PackageReference Include="AsyncFixer" Version="1.5.1" PrivateAssets="All" />
         <PackageReference Include="Discord.Net.Analyzers" Version="3.2.0" PrivateAssets="All" />
-        <PackageReference Include="FunFair.CodeAnalysis" Version="5.7.3.1052" PrivateAssets="All" />
+        <PackageReference Include="FunFair.CodeAnalysis" Version="5.8.0.1196" PrivateAssets="All" />
         <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.0.64" PrivateAssets="All" />
         <PackageReference Include="Roslynator.Analyzers" Version="4.0.2" PrivateAssets="All" />
         <PackageReference Include="SonarAnalyzer.CSharp" Version="8.35.0.42613" PrivateAssets="All" />
