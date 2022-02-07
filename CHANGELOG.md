@@ -10,6 +10,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Changed
 - FF-1429 - Updated coverlet to 3.1.2
 - FF-1429 - Updated FunFair.Test.Common to 5.8.5.1649
+- FF-1429 - Updated FunFair.Test.Common to 5.9.0.1658
 ### Removed
 ### Deployment Changes
 
