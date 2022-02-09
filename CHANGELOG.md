@@ -15,6 +15,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated Microsoft.Extensions to 6.0.2
 - FF-1429 - Updated Discord.Net to 3.3.0
 - FF-1429 - Updated Discord.Net.Analyzers to 3.3.0
+- FF-3881 - Updated DotNet SDK to 6.0.102
 ### Removed
 ### Deployment Changes
 
