@@ -13,6 +13,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated Discord.Net to 3.3.1
 - FF-1429 - Updated Discord.Net.Analyzers to 3.3.1
 - FF-1429 - Updated Discord.Net to 3.3.2
+- FF-1429 - Updated Microsoft.NET.Test.Sdk to 17.1.0
 ### Removed
 ### Deployment Changes
 
