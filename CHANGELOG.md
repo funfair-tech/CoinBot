@@ -14,6 +14,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated TeamCity.VSTest.TestAdapter to 1.0.35
 - FF-1429 - Updated TeamCity.VSTest.TestAdapter to 1.0.36
 - FF-1429 - Updated Discord.Net to 3.4.0
+- FF-1429 - Updated Discord.Net.Analyzers to 3.4.0
 ### Removed
 ### Deployment Changes
 
