@@ -13,6 +13,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.36.0.43782
 - FF-1429 - Updated TeamCity.VSTest.TestAdapter to 1.0.35
 - FF-1429 - Updated TeamCity.VSTest.TestAdapter to 1.0.36
+- FF-1429 - Updated Discord.Net to 3.4.0
 ### Removed
 ### Deployment Changes
 
