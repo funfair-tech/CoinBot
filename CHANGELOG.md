@@ -8,6 +8,14 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
+### Removed
+### Deployment Changes
+
+<!--
+Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
+-->
+## [1.3.26] - 2022-03-04
+### Changed
 - FF-1429 - Updated Microsoft.VisualStudio.Threading.Analyzers to 17.1.46
 - FF-1429 - Updated FunFair.Test.Common to 5.9.2.1676
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.36.0.43782
@@ -15,12 +23,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated TeamCity.VSTest.TestAdapter to 1.0.36
 - FF-1429 - Updated Discord.Net to 3.4.0
 - FF-1429 - Updated Discord.Net.Analyzers to 3.4.0
-### Removed
-### Deployment Changes
 
-<!--
-Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
--->
 ## [1.3.25] - 2022-02-17
 ### Changed
 - FF-1429 - Updated FunFair.Test.Common to 5.9.1.1665
