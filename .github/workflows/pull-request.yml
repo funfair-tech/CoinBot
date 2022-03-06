@@ -18,7 +18,7 @@ jobs:
       id: findPr
 
     - if: ${{ steps.findPr.outputs.number == '' }}
-      uses: actions/checkout@v2.4.0
+      uses: actions/checkout@v3
       with:
         fetch-depth: 1
 
