@@ -41,7 +41,7 @@ jobs:
       - run: |
           sudo chown -R $USER:$USER $GITHUB_WORKSPACE
       - if: ${{ github.actor != 'dependabot[bot]' || endsWith(github.repository , '-template') }}
-        uses: actions/checkout@v2.4.0
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - if: ${{ github.actor != 'dependabot[bot]' || endsWith(github.repository , '-template') }}
@@ -61,7 +61,7 @@ jobs:
     steps:
       - run: |
           sudo chown -R $USER:$USER $GITHUB_WORKSPACE
-      - uses: actions/checkout@v2.4.0
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - uses: credfeto/action-dotnet-version-detect@v1.2.0
@@ -85,7 +85,7 @@ jobs:
     steps:
       - run: |
           sudo chown -R $USER:$USER $GITHUB_WORKSPACE
-      - uses: actions/checkout@v2.4.0
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - uses: zricethezav/gitleaks-action@v1.6.0
@@ -100,7 +100,7 @@ jobs:
     steps:
       - run: |
           sudo chown -R $USER:$USER $GITHUB_WORKSPACE
-      - uses: actions/checkout@v2.4.0
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - uses: olivernybroe/action-conflict-finder@v3.0
@@ -113,7 +113,7 @@ jobs:
     steps:
       - run: |
           sudo chown -R $USER:$USER $GITHUB_WORKSPACE
-      - uses: actions/checkout@v2.4.0
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - uses: credfeto/action-case-checker@v1.2.0
@@ -126,7 +126,7 @@ jobs:
     steps:
       - run: |
           sudo chown -R $USER:$USER $GITHUB_WORKSPACE
-      - uses: actions/checkout@v2.4.0
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - uses: github/super-linter@v4.9.0
