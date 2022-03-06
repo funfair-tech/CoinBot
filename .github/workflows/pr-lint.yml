@@ -65,7 +65,7 @@ jobs:
         with:
           fetch-depth: 0
       - uses: credfeto/action-dotnet-version-detect@v1.2.0
-      - uses: actions/setup-dotnet@v1.9.0
+      - uses: actions/setup-dotnet@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
