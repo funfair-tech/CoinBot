@@ -10,6 +10,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Changed
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.36.1.44192
 - FF-1429 - Updated Microsoft.Extensions to 6.0.3
+- FF-1429 - Updated FunFair.Test.Common to 5.9.3.1699
 ### Removed
 ### Deployment Changes
 
