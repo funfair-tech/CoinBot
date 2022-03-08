@@ -9,6 +9,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Fixed
 ### Changed
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.36.1.44192
+- FF-1429 - Updated Microsoft.Extensions to 6.0.3
 ### Removed
 ### Deployment Changes
 
