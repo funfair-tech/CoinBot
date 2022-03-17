@@ -14,6 +14,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated Discord.Net to 3.4.1
 - FF-1429 - Updated Discord.Net.Analyzers to 3.4.1
 - FF-3881 - Updated DotNet SDK to 6.0.201
+- FF-1429 - Updated NonBlocking to 2.0.0
 ### Removed
 ### Deployment Changes
 
