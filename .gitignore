@@ -314,13 +314,14 @@ src/Data
 /.gtm/
 .config
 
+# Redgate
 *.sdsc
-.idea/workspace.xml
-
+.redgate
 
 ################################################################
 # RIDER settings
 
+.idea/workspace.xml
 */.idea/*
 !/src/.idea/*
 
