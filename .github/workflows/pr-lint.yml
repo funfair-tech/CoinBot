@@ -120,6 +120,19 @@ jobs:
       - uses: colpal/actions-clean@v1
         if: ${{ always() }} # To ensure this step runs even when earlier steps fail
 
+  no-ignored-files:
+    if: github.event.pull_request.draft == false
+    runs-on: [self-hosted, linux]
+    steps:
+      - run: |
+          sudo chown -R $USER:$USER $GITHUB_WORKSPACE
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: credfeto/action-no-ignored-files@v1.0.0
+      - uses: colpal/actions-clean@v1
+        if: ${{ always() }} # To ensure this step runs even when earlier steps fail
+        
   lint-code:
     if: ${{ github.event.pull_request.draft == false && ( !startsWith(github.head_ref, 'release/') && !startsWith(github.head_ref, 'hotfix/') ) }}
     runs-on: [self-hosted, linux]
