@@ -25,7 +25,7 @@ jobs:
         echo Current Branch ${GITHUB_REF#refs/heads/}
         echo GIT_BRANCH=$(echo ${GITHUB_REF#refs/heads/}) >> $GITHUB_ENV
     - name: Reformat
-      uses: credfeto/action-sql-format@v1.3.0
+      uses: credfeto/action-sql-format@v1.3.1
     - uses: stefanzweifel/git-auto-commit-action@v4.14.0
       with:
         commit_message: "[FF-2107] Reformat SQL Files to common format"
