@@ -1,49 +1,49 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
-    <Features>strict;flow-analysis</Features>
-    <GenerateNeutralResourcesLanguageAttribute>true</GenerateNeutralResourcesLanguageAttribute>
-    <ImplicitUsings>disable</ImplicitUsings>
-    <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
-    <IsPackable>false</IsPackable>
-    <IsPublishable>false</IsPublishable>
-    <LangVersion>latest</LangVersion>
-    <NoWarn />
-    <Nullable>enable</Nullable>
-    <OutputType>Library</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
-    <TieredCompilation>true</TieredCompilation>
-    <TreatSpecificWarningsAsErrors />
-    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-    <WarningsAsErrors />
-  </PropertyGroup>
-  <PropertyGroup>
-    <AnalysisLevel>latest</AnalysisLevel>
-    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
-    <CodeAnalysisRuleSet>$(SolutionDir)\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
-    <EnableNETAnalyzers>true</EnableNETAnalyzers>
-    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="FunFair.Test.Common" Version="5.9.3.1699" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
-    <PackageReference Include="NSubstitute" Version="4.3.0" />
-    <PackageReference Include="TeamCity.VSTest.TestAdapter" Version="1.0.36" />
-    <PackageReference Include="xunit" Version="2.4.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="AsyncFixer" Version="1.5.1" PrivateAssets="All" />
-    <PackageReference Include="coverlet.collector" Version="3.1.2" PrivateAssets="All" />
-    <PackageReference Include="coverlet.msbuild" Version="3.1.2" PrivateAssets="All" />
-    <PackageReference Include="FunFair.CodeAnalysis" Version="5.8.1.1203" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.1.46" PrivateAssets="All" />
-    <PackageReference Include="NSubstitute.Analyzers.CSharp" Version="1.0.15" PrivateAssets="All" />
-    <PackageReference Include="Roslynator.Analyzers" Version="4.0.2" PrivateAssets="All" />
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.36.1.44192" PrivateAssets="All" />
-    <PackageReference Include="SourceLink.Create.CommandLine" Version="2.8.3" PrivateAssets="All" />
-    <PackageReference Include="ToStringWithoutOverrideAnalyzer" Version="0.6.0" PrivateAssets="All" />
-    <PackageReference Include="xunit.analyzers" Version="0.10.0" PrivateAssets="All" />
-  </ItemGroup>
+    <PropertyGroup>
+        <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
+        <Features>strict;flow-analysis</Features>
+        <GenerateNeutralResourcesLanguageAttribute>true</GenerateNeutralResourcesLanguageAttribute>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
+        <IsPackable>false</IsPackable>
+        <IsPublishable>false</IsPublishable>
+        <LangVersion>latest</LangVersion>
+        <NoWarn />
+        <Nullable>enable</Nullable>
+        <OutputType>Library</OutputType>
+        <TargetFramework>net6.0</TargetFramework>
+        <TieredCompilation>true</TieredCompilation>
+        <TreatSpecificWarningsAsErrors />
+        <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+        <WarningsAsErrors />
+    </PropertyGroup>
+    <PropertyGroup>
+        <AnalysisLevel>latest</AnalysisLevel>
+        <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+        <CodeAnalysisRuleSet>$(SolutionDir)\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
+        <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+        <EnableNETAnalyzers>true</EnableNETAnalyzers>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="FunFair.Test.Common" Version="5.9.4.1729" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
+        <PackageReference Include="NSubstitute" Version="4.3.0" />
+        <PackageReference Include="TeamCity.VSTest.TestAdapter" Version="1.0.36" />
+        <PackageReference Include="xunit" Version="2.4.1" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="AsyncFixer" Version="1.5.1" PrivateAssets="All" />
+        <PackageReference Include="coverlet.collector" Version="3.1.2" PrivateAssets="All" />
+        <PackageReference Include="coverlet.msbuild" Version="3.1.2" PrivateAssets="All" />
+        <PackageReference Include="FunFair.CodeAnalysis" Version="5.8.1.1203" PrivateAssets="All" />
+        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.1.46" PrivateAssets="All" />
+        <PackageReference Include="NSubstitute.Analyzers.CSharp" Version="1.0.15" PrivateAssets="All" />
+        <PackageReference Include="Roslynator.Analyzers" Version="4.0.2" PrivateAssets="All" />
+        <PackageReference Include="SonarAnalyzer.CSharp" Version="8.36.1.44192" PrivateAssets="All" />
+        <PackageReference Include="SourceLink.Create.CommandLine" Version="2.8.3" PrivateAssets="All" />
+        <PackageReference Include="ToStringWithoutOverrideAnalyzer" Version="0.6.0" PrivateAssets="All" />
+        <PackageReference Include="xunit.analyzers" Version="0.10.0" PrivateAssets="All" />
+    </ItemGroup>
 </Project>
