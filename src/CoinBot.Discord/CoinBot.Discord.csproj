@@ -1,45 +1,45 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(MSBuildProjectName).xml</DocumentationFile>
-    <Features>strict;flow-analysis</Features>
-    <GenerateNeutralResourcesLanguageAttribute>true</GenerateNeutralResourcesLanguageAttribute>
-    <ImplicitUsings>disable</ImplicitUsings>
-    <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
-    <IsPackable>false</IsPackable>
-    <IsPublishable>false</IsPublishable>
-    <LangVersion>latest</LangVersion>
-    <NoWarn>1591</NoWarn>
-    <Nullable>enable</Nullable>
-    <OutputType>Library</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
-    <TieredCompilation>true</TieredCompilation>
-    <TreatSpecificWarningsAsErrors />
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningsAsErrors />
-  </PropertyGroup>
-  <PropertyGroup>
-    <AnalysisLevel>latest</AnalysisLevel>
-    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
-    <CodeAnalysisRuleSet>$(SolutionDir)\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
-    <EnableNETAnalyzers>true</EnableNETAnalyzers>
-    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-  </PropertyGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CoinBot.Clients\CoinBot.Clients.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Discord.Net" Version="3.4.1" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="AsyncFixer" Version="1.5.1" PrivateAssets="All" />
-    <PackageReference Include="Discord.Net.Analyzers" Version="3.4.1" PrivateAssets="All" />
-    <PackageReference Include="FunFair.CodeAnalysis" Version="5.8.1.1203" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.1.46" PrivateAssets="All" />
-    <PackageReference Include="Roslynator.Analyzers" Version="4.1.0" PrivateAssets="All" />
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.37.0.45539" PrivateAssets="All" />
-    <PackageReference Include="SourceLink.Create.CommandLine" Version="2.8.3" PrivateAssets="All" />
-    <PackageReference Include="ToStringWithoutOverrideAnalyzer" Version="0.6.0" PrivateAssets="All" />
-  </ItemGroup>
+    <PropertyGroup>
+        <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
+        <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(MSBuildProjectName).xml</DocumentationFile>
+        <Features>strict;flow-analysis</Features>
+        <GenerateNeutralResourcesLanguageAttribute>true</GenerateNeutralResourcesLanguageAttribute>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
+        <IsPackable>false</IsPackable>
+        <IsPublishable>false</IsPublishable>
+        <LangVersion>latest</LangVersion>
+        <NoWarn>1591</NoWarn>
+        <Nullable>enable</Nullable>
+        <OutputType>Library</OutputType>
+        <TargetFramework>net6.0</TargetFramework>
+        <TieredCompilation>true</TieredCompilation>
+        <TreatSpecificWarningsAsErrors />
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <WarningsAsErrors />
+    </PropertyGroup>
+    <PropertyGroup>
+        <AnalysisLevel>latest</AnalysisLevel>
+        <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+        <CodeAnalysisRuleSet>$(SolutionDir)\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
+        <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+        <EnableNETAnalyzers>true</EnableNETAnalyzers>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\CoinBot.Clients\CoinBot.Clients.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Discord.Net" Version="3.5.0" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="AsyncFixer" Version="1.5.1" PrivateAssets="All" />
+        <PackageReference Include="Discord.Net.Analyzers" Version="3.4.1" PrivateAssets="All" />
+        <PackageReference Include="FunFair.CodeAnalysis" Version="5.8.1.1203" PrivateAssets="All" />
+        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.1.46" PrivateAssets="All" />
+        <PackageReference Include="Roslynator.Analyzers" Version="4.1.0" PrivateAssets="All" />
+        <PackageReference Include="SonarAnalyzer.CSharp" Version="8.37.0.45539" PrivateAssets="All" />
+        <PackageReference Include="SourceLink.Create.CommandLine" Version="2.8.3" PrivateAssets="All" />
+        <PackageReference Include="ToStringWithoutOverrideAnalyzer" Version="0.6.0" PrivateAssets="All" />
+    </ItemGroup>
 </Project>
