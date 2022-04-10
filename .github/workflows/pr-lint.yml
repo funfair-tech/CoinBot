@@ -4,7 +4,11 @@ on:
     types: [opened, edited, synchronize, reopened, ready_for_review, unlocked]
     branches:
       - master
+      - main
 
+permissions:
+  contents: read
+  
 jobs:
   info:
     if: ${{ endsWith(github.repository , '-template') }}
@@ -133,6 +137,22 @@ jobs:
       - uses: colpal/actions-clean@v1
         if: ${{ always() }} # To ensure this step runs even when earlier steps fail
         
+  dependency-review:
+    # Check that there are no dependencies with security problems in the PR
+    if: github.event.pull_request.draft == false
+    runs-on: [self-hosted, linux]
+    steps:
+      - run: |
+          sudo chown -R $USER:$USER $GITHUB_WORKSPACE
+      - name: 'Checkout Repository'
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: 'Dependency Review'
+        uses: actions/dependency-review-action@v1
+      - uses: colpal/actions-clean@v1
+        if: ${{ always() }} # To ensure this step runs even when earlier steps fail
+
   lint-code:
     if: ${{ github.event.pull_request.draft == false && ( !startsWith(github.head_ref, 'release/') && !startsWith(github.head_ref, 'hotfix/') ) }}
     runs-on: [self-hosted, linux]
