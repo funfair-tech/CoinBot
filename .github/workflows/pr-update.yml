@@ -6,7 +6,7 @@ on:
       - reopened
       - synchronize
     branches:
-      - master
+      - main
 
 jobs:
   info:
