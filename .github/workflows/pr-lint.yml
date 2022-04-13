@@ -3,7 +3,6 @@ on:
   pull_request:
     types: [opened, edited, synchronize, reopened, ready_for_review, unlocked]
     branches:
-      - master
       - main
 
 permissions:
@@ -164,7 +163,7 @@ jobs:
           fetch-depth: 0
       - uses: github/super-linter@v4.9.2
         env:
-          DEFAULT_BRANCH: master
+          DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.SOURCE_PUSH_TOKEN }}
           MULTI_STATUS: true
           VALIDATE_ALL_CODEBASE: false
