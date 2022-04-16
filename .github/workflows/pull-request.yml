@@ -15,7 +15,7 @@ jobs:
     steps:
     - run: |
         sudo chown -R $USER:$USER $GITHUB_WORKSPACE
-    - uses: jwalton/gh-find-current-pr@v1.2.1
+    - uses: jwalton/gh-find-current-pr@v1.3.0
       id: findPr
 
     - if: ${{ steps.findPr.outputs.number == '' }}
