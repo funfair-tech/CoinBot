@@ -13,8 +13,9 @@ jobs:
     runs-on: [self-hosted, linux]
 
     steps:
-    - run: |
-        sudo chown -R $USER:$USER $GITHUB_WORKSPACE
+#    - run: |
+#        sudo chown -R $USER:$USER $GITHUB_WORKSPACE
+
     - uses: jwalton/gh-find-current-pr@v1.3.0
       id: findPr
 
@@ -22,6 +23,7 @@ jobs:
       uses: actions/checkout@v3
       with:
         fetch-depth: 1
+        token: ${{ secrets.SOURCE_PUSH_TOKEN }}
 
     - if: ${{ steps.findPr.outputs.number != '' }}
       run: |
@@ -39,6 +41,7 @@ jobs:
         echo COMMIT_MSG=`git log -1 --pretty=%B` >> $GITHUB_ENV
 
     - if: ${{ steps.findPr.outputs.number == '' }}
+      id: open-pr
       uses: repo-sync/pull-request@v2.6
       with:
         source_branch: ""                     # If blank, default: triggered branch
@@ -50,5 +53,21 @@ jobs:
         pr_body: "${{ steps.pr-template.outputs.content }}"
         github_token: ${{ secrets.GITHUB_TOKEN }}
 
+    - if: ${{ steps.findPr.outputs.number == '' }}
+      name: Details
+      run: |
+          echo "URL: ${{steps.open-pr.outputs.pr_url}}"
+          echo "PR: ${{steps.open-pr.outputs.pr_number}}"
+          echo "CF: ${{steps.open-pr.outputs.has_changed_files}}"
+
+    # TODO: Switch to actions/labeler@Vx.y if https://github.com/actions/labeler/pull/349 is merged and a release created
+    - if: ${{ steps.findPr.outputs.number == '' }}
+      uses: credfeto/labeler@feature/pass-in-pull-request-or-issue
+      with:
+        repo-token: "${{ secrets.GITHUB_TOKEN }}"
+        configuration-path: .github/labeler.yml
+        sync-labels: true
+        pr-number: ${{steps.open-pr.outputs.pr_number}}
+        
     - uses: colpal/actions-clean@v1
       if: ${{ always() }} # To ensure this step runs even when earlier steps fail
