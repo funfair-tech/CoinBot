@@ -25,6 +25,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated coverlet to Tool 'credfeto.package.update' (version '1.8.5.24') was restored. Available commands: updatepackages Tool 'credfeto.changelog.cmd' (version '1.8.3.31') was restored. Available commands: changelog Tool 'funfair.buildversion' (version '3.4.0.401') was restored. Available commands: buildversion  Restore was successful. 
 - FF-1429 - Updated Discord.Net to Tool 'credfeto.package.update' (version '1.8.5.24') was restored. Available commands: updatepackages Tool 'credfeto.changelog.cmd' (version '1.8.3.31') was restored. Available commands: changelog Tool 'funfair.buildversion' (version '3.4.0.401') was restored. Available commands: buildversion  Restore was successful. 
 - FF-1429 - Updated FunFair.Test.Common to Tool 'credfeto.package.update' (version '1.8.5.24') was restored. Available commands: updatepackages Tool 'credfeto.changelog.cmd' (version '1.8.3.31') was restored. Available commands: changelog Tool 'funfair.buildversion' (version '3.4.0.401') was restored. Available commands: buildversion  Restore was successful. 
+- FF-1429 - Updated Microsoft.Extensions to Tool 'credfeto.package.update' (version '1.8.5.24') was restored. Available commands: updatepackages Tool 'credfeto.changelog.cmd' (version '1.8.3.31') was restored. Available commands: changelog Tool 'funfair.buildversion' (version '3.4.0.401') was restored. Available commands: buildversion  Restore was successful. 
 ### Removed
 ### Deployment Changes
 
