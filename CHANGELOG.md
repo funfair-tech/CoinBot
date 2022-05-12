@@ -31,6 +31,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated Microsoft.Extensions to 6.0.5
 - FF-1429 - Updated AsyncFixer to 1.6.0
 - FF-1429 - Updated Microsoft.NET.Test.Sdk to 17.2.0
+- FF-1429 - Updated SonarAnalyzer.CSharp to 8.39.0.47922
 ### Removed
 ### Deployment Changes
 
