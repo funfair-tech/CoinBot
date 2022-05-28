@@ -37,6 +37,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated FunFair.Test.Common to 5.9.5.1833
 - FF-1429 - Updated Discord.Net to 3.7.0
 - FF-1429 - Updated Discord.Net.Analyzers to 3.7.0
+- FF-1429 - Updated Discord.Net to 3.7.1
 ### Removed
 ### Deployment Changes
 
