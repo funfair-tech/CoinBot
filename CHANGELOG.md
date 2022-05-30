@@ -38,6 +38,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated Discord.Net to 3.7.0
 - FF-1429 - Updated Discord.Net.Analyzers to 3.7.0
 - FF-1429 - Updated Discord.Net to 3.7.1
+- FF-1429 - Updated Roslynator.Analyzers to 4.1.1
 ### Removed
 ### Deployment Changes
 
