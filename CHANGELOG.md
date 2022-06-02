@@ -40,6 +40,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated Discord.Net to 3.7.1
 - FF-1429 - Updated Roslynator.Analyzers to 4.1.1
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.40.0.48530
+- FF-1429 - Updated Discord.Net to 3.7.2
 ### Removed
 ### Deployment Changes
 

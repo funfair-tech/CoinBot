@@ -30,7 +30,7 @@
         <ProjectReference Include="..\CoinBot.Clients\CoinBot.Clients.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Discord.Net" Version="3.7.1" />
+        <PackageReference Include="Discord.Net" Version="3.7.2" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="AsyncFixer" Version="1.6.0" PrivateAssets="All" />
