@@ -149,14 +149,23 @@ jobs:
     steps:
       - run: |
           sudo chown -R $USER:$USER $GITHUB_WORKSPACE
-      - name: 'Checkout Repository'
+      - uses: credfeto/action-repo-visibility@v1.0.0
+        id: visibility
+        with: 
+          # optional parameter defaults to the current repo
+          repository: ${{ github.repository }}
+          # optional parameter defaults to the current user
+          token: ${{ github.token }}
+      - if: ${{ steps.visibility.outputs.is_public == 'true' }}
+        name: 'Checkout Repository'
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: 'Dependency Review'
+      - if: ${{ steps.visibility.outputs.is_public == 'true' }}
+        name: 'Dependency Review'
         uses: actions/dependency-review-action@v1
-      - uses: colpal/actions-clean@v1
-        if: ${{ always() }} # To ensure this step runs even when earlier steps fail
+      - if: ${{ steps.visibility.outputs.is_public == 'true' && always()}}
+        uses: colpal/actions-clean@v1
 
   lint-code:
     if: ${{ github.event.pull_request.draft == false && ( !startsWith(github.head_ref, 'release/') && !startsWith(github.head_ref, 'hotfix/') ) }}
