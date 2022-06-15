@@ -41,6 +41,11 @@ jobs:
         echo COMMIT_MSG=`git log -1 --pretty=%B` >> $GITHUB_ENV
 
     - if: ${{ steps.findPr.outputs.number == '' }}
+      run: |
+         echo "Workspace: ${{ github.workspace }}"
+         git config --global --add safe.directory ${{ github.workspace }}
+
+    - if: ${{ steps.findPr.outputs.number == '' }}
       id: open-pr
       uses: repo-sync/pull-request@v2.6
       with:
@@ -69,5 +74,5 @@ jobs:
         sync-labels: true
         pr-number: ${{steps.open-pr.outputs.pr_number}}
         
-    - uses: colpal/actions-clean@v1
+    - uses: colpal/actions-clean@v1.1.1
       if: ${{ always() }} # To ensure this step runs even when earlier steps fail
