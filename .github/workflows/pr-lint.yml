@@ -29,6 +29,9 @@ jobs:
     steps:
       - run: |
           sudo chown -R $USER:$USER $GITHUB_WORKSPACE
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - if: ${{ !endsWith(github.repository , '-template') && !startsWith(github.head_ref, 'release/') && !startsWith(github.head_ref, 'hotfix/') }}
         uses: seferov/pr-lint-action@v1.1.2
         with:
@@ -48,13 +51,8 @@ jobs:
         with:
           fetch-depth: 0
       - if: ${{ github.actor != 'dependabot[bot]' || endsWith(github.repository , '-template') }}
-        uses: Zomzog/changelog-checker@v1.2.0
-        with:
-          fileName: CHANGELOG.md
-          noChangelogLabel: Changelog Not Required
-          checkNotification: Simple
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: 
+          |  git diff --quiet origin/main CHANGELOG.md || (echo "CHANGELOG NOT CHANGED" && exit -1) && echo "Changelog updated"
       - uses: colpal/actions-clean@v1.1.1
         if: ${{ always() }} # To ensure this step runs even when earlier steps fail
 
@@ -101,13 +99,13 @@ jobs:
           redact: true
           verbose: true
           log_level: info
-      - if: ${{ always() }} # reason - https://github.com/zricethezav/gitleaks/issues/782
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: ${{ steps.gitleaks.outputs.report }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: colpal/actions-clean@v1.1.1
-        if: ${{ always() }} # To ensure this step runs even when earlier steps fail
+      # - if: ${{ always() }} # reason - https://github.com/zricethezav/gitleaks/issues/782
+      #   uses: github/codeql-action/upload-sarif@v2
+      #   with:
+      #     sarif_file: ${{ steps.gitleaks.outputs.report }}
+      #     token: ${{ secrets.GITHUB_TOKEN }}
+      # - uses: colpal/actions-clean@v1.1.1
+      #   if: ${{ always() }} # To ensure this step runs even when earlier steps fail
 
   has-no-merge-conflicts:
     if: github.event.pull_request.draft == false
