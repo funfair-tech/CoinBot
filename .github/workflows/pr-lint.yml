@@ -105,6 +105,7 @@ jobs:
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: ${{ steps.gitleaks.outputs.report }}
+          token: ${{ secrets.GITHUB_TOKEN }}
       - uses: colpal/actions-clean@v1.1.1
         if: ${{ always() }} # To ensure this step runs even when earlier steps fail
 
