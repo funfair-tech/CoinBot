@@ -51,8 +51,9 @@ jobs:
         with:
           fetch-depth: 0
       - if: ${{ github.actor != 'dependabot[bot]' || endsWith(github.repository , '-template') }}
-        run: 
-          |  git diff --quiet origin/main CHANGELOG.md || (echo "CHANGELOG NOT CHANGED" && exit -1) && echo "Changelog updated"
+        run: |
+           [[ $(git diff --exit-code origin/main CHANGELOG.md) == 0 ]] && (echo "Error: Changelog unchanged" && exit -1)
+           [[ $(git diff --quiet origin/main CHANGELOG.md) != 0 ]] && echo "OK: Changelog updated"
       - uses: colpal/actions-clean@v1.1.1
         if: ${{ always() }} # To ensure this step runs even when earlier steps fail
 
