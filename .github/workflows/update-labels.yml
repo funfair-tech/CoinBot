@@ -30,5 +30,3 @@ jobs:
         exclude: |
           help*
           *issue
-    - uses: colpal/actions-clean@v1.1.1
-      if: ${{ always() }} # To ensure this step runs even when earlier steps fail
