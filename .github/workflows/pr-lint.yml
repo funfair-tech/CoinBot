@@ -20,8 +20,6 @@ jobs:
           echo "Base Branch: ${{ github.base_ref }}"
           echo "Repo: ${{ github.repository }}"
           echo "Owner: ${{ github.repository_owner }}"
-      - uses: colpal/actions-clean@v1.1.1
-        if: ${{ always() }} # To ensure this step runs even when earlier steps fail
 
   include-JIRA-ticket:
     if: github.event.pull_request.draft == false
@@ -37,8 +35,6 @@ jobs:
         with:
           title-regex: '^\[FF\-\d*?\](:)?(\ )'
           error-message: 'Add Jira Ticket ID to your title'
-      - uses: colpal/actions-clean@v1.1.1
-        if: ${{ always() }} # To ensure this step runs even when earlier steps fail
 
   include-changelog-entry:
     if: github.event.pull_request.draft == false
@@ -54,8 +50,6 @@ jobs:
         run: |
            [[ $(git diff --exit-code origin/main CHANGELOG.md) == 0 ]] && (echo "Error: Changelog unchanged" && exit -1)
            [[ $(git diff --quiet origin/main CHANGELOG.md) != 0 ]] && echo "OK: Changelog updated"
-      - uses: colpal/actions-clean@v1.1.1
-        if: ${{ always() }} # To ensure this step runs even when earlier steps fail
 
   change-log-entry-is-in-unreleased:
     if: github.event.pull_request.draft == false
@@ -79,8 +73,6 @@ jobs:
         run: dotnet tool install --local Credfeto.ChangeLog.Cmd
       - name: Check Changelog
         run: dotnet changelog --changelog CHANGELOG.md --check-insert "origin/${{ github.base_ref }}"
-      - uses: colpal/actions-clean@v1.1.1
-        if: ${{ always() }} # To ensure this step runs even when earlier steps fail
 
   does-not-contain-secrets:
     if: github.event.pull_request.draft == false
@@ -105,8 +97,6 @@ jobs:
       #   with:
       #     sarif_file: ${{ steps.gitleaks.outputs.report }}
       #     token: ${{ secrets.GITHUB_TOKEN }}
-      # - uses: colpal/actions-clean@v1.1.1
-      #   if: ${{ always() }} # To ensure this step runs even when earlier steps fail
 
   has-no-merge-conflicts:
     if: github.event.pull_request.draft == false
@@ -118,8 +108,6 @@ jobs:
         with:
           fetch-depth: 0
       - uses: olivernybroe/action-conflict-finder@v3.0
-      - uses: colpal/actions-clean@v1.1.1
-        if: ${{ always() }} # To ensure this step runs even when earlier steps fail
 
   has-no-file-or-folder-case-sensitivity-issues:
     if: github.event.pull_request.draft == false
@@ -131,8 +119,6 @@ jobs:
         with:
           fetch-depth: 0
       - uses: credfeto/action-case-checker@v1.2.1
-      - uses: colpal/actions-clean@v1.1.1
-        if: ${{ always() }} # To ensure this step runs even when earlier steps fail
 
   no-ignored-files:
     if: github.event.pull_request.draft == false
@@ -144,8 +130,6 @@ jobs:
         with:
           fetch-depth: 0
       - uses: credfeto/action-no-ignored-files@v1.0.0
-      - uses: colpal/actions-clean@v1.1.1
-        if: ${{ always() }} # To ensure this step runs even when earlier steps fail
         
   dependency-review:
     # Check that there are no dependencies with security problems in the PR
@@ -169,8 +153,6 @@ jobs:
       - if: ${{ steps.visibility.outputs.is_public == 'true' }}
         name: 'Dependency Review'
         uses: actions/dependency-review-action@v2
-      - if: ${{ steps.visibility.outputs.is_public == 'true' && always()}}
-        uses: colpal/actions-clean@v1.1.1
 
   lint-code:
     if: ${{ github.event.pull_request.draft == false && ( !startsWith(github.head_ref, 'release/') && !startsWith(github.head_ref, 'hotfix/') ) }}
@@ -200,5 +182,3 @@ jobs:
           VALIDATE_TYPESCRIPT_ES: true
           VALIDATE_XML: true
           VALIDATE_YAML: true
-      - uses: colpal/actions-clean@v1.1.1
-        if: ${{ always() }} # To ensure this step runs even when earlier steps fail
