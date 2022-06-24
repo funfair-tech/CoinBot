@@ -40,14 +40,14 @@ jobs:
       run: |
         echo COMMIT_MSG=`git log -1 --pretty=%B` >> $GITHUB_ENV
 
-    - if: ${{ steps.findPr.outputs.number == '' }}
-      run: |
-         echo "Workspace: ${{ github.workspace }}"
-         git config --global --add safe.directory ${{ github.workspace }}
+    # - if: ${{ steps.findPr.outputs.number == '' }}
+    #   run: |
+    #      echo "Workspace: ${{ github.workspace }}"
+    #      git config --global --add safe.directory ${{ github.workspace }}
 
     - if: ${{ steps.findPr.outputs.number == '' }}
       id: open-pr
-      uses: repo-sync/pull-request@v2.6
+      uses: repo-sync/pull-request@v2.6.2
       with:
         source_branch: ""                     # If blank, default: triggered branch
         destination_branch: "main"            # If blank, default: master
@@ -59,7 +59,7 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
 
     - if: ${{ steps.findPr.outputs.number == '' }}
-      name: Details
+      name: New PR Details
       run: |
           echo "URL: ${{steps.open-pr.outputs.pr_url}}"
           echo "PR: ${{steps.open-pr.outputs.pr_number}}"
