@@ -8,15 +8,18 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
-- FF-1429 - Updated FunFair.Test.Common to 5.9.7.1871
-- FF-1429 - Updated FunFair.CodeAnalysis to 5.8.3.1353
-- FF-1429 - Updated NonBlocking to 2.1.0
 ### Removed
 ### Deployment Changes
 
 <!--
 Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
 -->
+## [1.3.28] - 2022-06-25
+### Changed
+- FF-1429 - Updated FunFair.Test.Common to 5.9.7.1871
+- FF-1429 - Updated FunFair.CodeAnalysis to 5.8.3.1353
+- FF-1429 - Updated NonBlocking to 2.1.0
+
 ## [1.3.27] - 2022-06-16
 ### Changed
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.36.1.44192
