@@ -13,8 +13,10 @@ jobs:
     runs-on: [self-hosted, linux]
 
     steps:
-#    - run: |
-#        sudo chown -R $USER:$USER $GITHUB_WORKSPACE
+    - name: Cleanup Repo
+      run: |
+        sudo chown -R $USER:$USER $GITHUB_WORKSPACE
+        rm -fr $GITHUB_WORKSPACE/*
 
     - uses: jwalton/gh-find-current-pr@v1.3.0
       id: findPr
