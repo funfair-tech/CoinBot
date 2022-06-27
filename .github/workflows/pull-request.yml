@@ -8,6 +8,13 @@ on:
     - "hotfix/**"
     - "feature/**"
 
+permissions:
+  contents: read
+  
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   pull-request:
     runs-on: [self-hosted, linux]
