@@ -8,6 +8,10 @@ on:
     branches:
       - main
 
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   info:
     if: ${{ endsWith(github.repository , '-template') }}
