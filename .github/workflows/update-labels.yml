@@ -8,6 +8,10 @@ on:
     - '.github/labels.yml'
     - '.github/workflows/update-labels.yml'
 
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   update-labels-config:
 
