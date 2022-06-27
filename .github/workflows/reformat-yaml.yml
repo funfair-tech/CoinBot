@@ -9,6 +9,10 @@ on:
     - '**.yml'
     - '**.yaml'
 
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   standardise-yaml-files:
 
