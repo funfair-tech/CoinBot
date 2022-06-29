@@ -344,3 +344,9 @@ src/Data
 ################################################################
 # Angular Settings
 .angular
+
+# AWS
+.aws-sam
+
+# Mac files
+.DS_Store
