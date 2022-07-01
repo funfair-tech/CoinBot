@@ -28,6 +28,7 @@ jobs:
     - uses: juliangruber/find-pull-request-action@v1
       id: findPr
       with:
+        github-token: ${{ secrets.SOURCE_PUSH_TOKEN }}
         branch: ${{ github.ref_name }}
 
     - if: ${{ steps.findPr.outputs.number == '' }}
