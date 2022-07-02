@@ -8,6 +8,9 @@ jobs:
   build-matrix:
     runs-on: [self-hosted, linux]
 
+    permissions:
+      contents: read
+
     steps:
       - uses: actions/checkout@v3
         with:
@@ -21,6 +24,11 @@ jobs:
   check-branch:
     needs: build-matrix
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pull-requests: write
+
     strategy:
       matrix:
         branch: ${{ fromJson(needs.build-matrix.outputs.branches) }}
