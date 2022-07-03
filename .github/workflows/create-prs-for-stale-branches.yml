@@ -42,7 +42,7 @@ jobs:
     # runs-on: ubuntu-latest
 
     permissions:
-      contents: read
+      contents: write
       pull-requests: write
 
     strategy:
@@ -93,6 +93,7 @@ jobs:
           git rev-list --left-right --count origin/${{steps.detection.outputs.defaultbranch}}...origin/${{matrix.branch}} | awk '{ print "${{matrix.branch}} is ahead of ${{steps.detection.outputs.defaultbranch}} by "$2" commit(s)" }'
           git rev-list --left-right --count origin/${{steps.detection.outputs.defaultbranch}}...origin/${{matrix.branch}} | awk '{ print "::set-output name=ahead::"$2 }'
           echo "::set-output name=dayssinceupdate::$((($(date +%s)-$(date +%s --date @$(git log -1 --format=%ct origin/${{matrix.branch}})))/(3600*24)))"
+          echo "::set-output name=COMMIT_MSG::$(git log -1 --pretty=%B origin/${{matrix.branch}})"
 
       # Non-default - ahead of default branch, and no -re-existing PR then create one.
       - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch && steps.find-pull-request.outputs.number == '' && steps.aheadbehind.outputs.ahead != 0 && steps.aheadbehind.outputs.dayssinceupdate > 7 }}
@@ -103,7 +104,7 @@ jobs:
 
       - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch && steps.find-pull-request.outputs.number == '' && steps.aheadbehind.outputs.ahead != 0 && steps.aheadbehind.outputs.dayssinceupdate > 7 }}
         name: Get last commit message
-        run: echo "COMMIT_MSG=$(git log -1 --pretty=%B ${{matrix.branch}})" >> $GITHUB_ENV
+        run: echo "COMMIT_MSG=$(git log -1 --pretty=%B origin/${{matrix.branch}})" >> $GITHUB_ENV
 
       - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch && steps.find-pull-request.outputs.number == '' && steps.aheadbehind.outputs.ahead != 0 && steps.aheadbehind.outputs.dayssinceupdate > 7 }}
         id: open-pr
@@ -114,7 +115,7 @@ jobs:
           pr_assignee: "${{ github.actor }}"    # Comma-separated list (no spaces)
           pr_label: "auto-pr,stale"             # Comma-separated list (no spaces)
           pr_draft: true                        # Creates pull request as draft
-          pr_title: "${{ env.COMMIT_MSG }} [No commits for ${{steps.aheadbehind.outputs.dayssinceupdate}} days]"
+          pr_title: "${{ steps.aheadbehind.outputs.COMMIT_MSG }} [No commits for ${{steps.aheadbehind.outputs.dayssinceupdate}} days]"
           pr_body: "${{ steps.pr-template.outputs.content }}"
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -138,9 +139,12 @@ jobs:
         name: Rebase
         run: echo "Rebase?"
 
-      - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch && steps.find-pull-request.outputs.number == '' && steps.aheadbehind.outputs.ahead == '0' && steps.aheadbehind.outputs.dayssinceupdate > 7 }}
+      - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch && steps.find-pull-request.outputs.number == '' && steps.aheadbehind.outputs.ahead == '0' && steps.aheadbehind.outputs.dayssinceupdate > 60 }}
         name: Delete Branch
-        run: echo "Delete?"
+        uses: dawidd6/action-delete-branch@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branches: ${{ matrix.branch }}
         
       - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch && steps.find-pull-request.outputs.number == '' }}
         run: |
