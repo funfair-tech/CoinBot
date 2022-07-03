@@ -11,16 +11,19 @@ on:
 
 jobs:
   build-matrix:
-    # runs-on: [self-hosted, linux]
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
+    # runs-on: ubuntu-latest
 
     permissions:
       contents: read
 
     steps:
       - run: |
+          sudo chown -R $USER:$USER $GITHUB_WORKSPACE
+      - run: |
           echo "Repo: ${{ github.repository }}"
           echo "Owner: ${{ github.repository_owner }}"
+      - run: sudo apt install -y jq
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
@@ -34,7 +37,8 @@ jobs:
 
   check-branch:
     needs: build-matrix
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux]
+    # runs-on: ubuntu-latest
 
     permissions:
       contents: read
@@ -44,6 +48,8 @@ jobs:
       matrix:
         branch: ${{ fromJson(needs.build-matrix.outputs.branches) }}
     steps:
+      - run: |
+          sudo chown -R $USER:$USER $GITHUB_WORKSPACE
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
@@ -79,7 +85,8 @@ jobs:
         name: Check Ahead\Behind Status
         run: |
           echo "Check to see if ${{steps.detection.outputs.defaultbranch}} is ahead or behind ${{matrix.branch}}..."
-          git rev-list --left-right --count  origin/${{steps.detection.outputs.defaultbranch}}...origin/${{matrix.branch}} | awk '{
+          git rev-list --left-right --count origin/${{steps.detection.outputs.defaultbranch}}...origin/${{matrix.branch}}
+          git rev-list --left-right --count origin/${{steps.detection.outputs.defaultbranch}}...origin/${{matrix.branch}} | awk '{
                       print "${{matrix.branch}} is behind ${{steps.detection.outputs.defaultbranch}} by "$1" commit(s)"
                       print "::set-output name=behind::"$1
                       print "${{matrix.branch}} is ahead of ${{steps.detection.outputs.defaultbranch}} by "$2" commit(s)"
@@ -107,7 +114,7 @@ jobs:
           pr_assignee: "${{ github.actor }}"    # Comma-separated list (no spaces)
           pr_label: "auto-pr,stale"             # Comma-separated list (no spaces)
           pr_draft: true                        # Creates pull request as draft
-          pr_title: "${{ env.COMMIT_MSG }}"
+          pr_title: "${{ env.COMMIT_MSG }} [No commits for ${{steps.aheadbehind.outputs.dayssinceupdate}} days]"
           pr_body: "${{ steps.pr-template.outputs.content }}"
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
