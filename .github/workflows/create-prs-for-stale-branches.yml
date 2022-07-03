@@ -135,10 +135,18 @@ jobs:
           pr-number: ${{steps.open-pr.outputs.pr_number}}
 
 
-      - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch && steps.find-pull-request.outputs.number == '' && steps.aheadbehind.outputs.behind != 0 && steps.aheadbehind.outputs.dayssinceupdate > 7 }}
+      - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch && steps.find-pull-request.outputs.number == '' && steps.aheadbehind.outputs.behind != 0 && steps.aheadbehind.outputs.ahead != 0 && steps.aheadbehind.outputs.dayssinceupdate > 7 }}
         name: Rebase
         run: echo "Rebase?"
       - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch && steps.find-pull-request.outputs.number == '' }}
         run: |
           echo "Ahead: ${{steps.aheadbehind.outputs.ahead}}"
           echo "Behind: ${{steps.aheadbehind.outputs.behind}}"
+
+      - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch && steps.find-pull-request.outputs.number == '' && steps.aheadbehind.outputs.behind == 0 && steps.aheadbehind.outputs.ahead != 0 && steps.aheadbehind.outputs.dayssinceupdate > 7 }}
+        name: Delete Branch
+        run: echo "Delete?"
+      - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch && steps.find-pull-request.outputs.number == '' }}
+        run: |
+          echo "Ahead: ${{steps.aheadbehind.outputs.ahead}}"
+          echo "Behind: ${{steps.aheadbehind.outputs.behind}}"          
