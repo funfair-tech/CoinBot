@@ -92,7 +92,7 @@ jobs:
           git rev-list --left-right --count origin/${{steps.detection.outputs.defaultbranch}}...origin/${{matrix.branch}} | awk '{ print "::set-output name=behind::"$1 }'
           git rev-list --left-right --count origin/${{steps.detection.outputs.defaultbranch}}...origin/${{matrix.branch}} | awk '{ print "${{matrix.branch}} is ahead of ${{steps.detection.outputs.defaultbranch}} by "$2" commit(s)" }'
           git rev-list --left-right --count origin/${{steps.detection.outputs.defaultbranch}}...origin/${{matrix.branch}} | awk '{ print "::set-output name=ahead::"$2 }'
-          echo "::set-output name=dayssinceupdate=$((($(date +%s)-$(date +%s --date @$(git log -1 --format=%ct origin/${{matrix.branch}})))/(3600*24)))"
+          echo "::set-output name=dayssinceupdate::$((($(date +%s)-$(date +%s --date @$(git log -1 --format=%ct origin/${{matrix.branch}})))/(3600*24)))"
 
       # Non-default - ahead of default branch, and no -re-existing PR then create one.
       - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch && steps.find-pull-request.outputs.number == '' && steps.aheadbehind.outputs.ahead != 0 && steps.aheadbehind.outputs.dayssinceupdate > 7 }}
@@ -134,19 +134,16 @@ jobs:
           sync-labels: true
           pr-number: ${{steps.open-pr.outputs.pr_number}}
 
-
       - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch && steps.find-pull-request.outputs.number == '' && steps.aheadbehind.outputs.behind != 0 && steps.aheadbehind.outputs.ahead != 0 && steps.aheadbehind.outputs.dayssinceupdate > 7 }}
         name: Rebase
         run: echo "Rebase?"
-      - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch && steps.find-pull-request.outputs.number == '' }}
-        run: |
-          echo "Ahead: ${{steps.aheadbehind.outputs.ahead}}"
-          echo "Behind: ${{steps.aheadbehind.outputs.behind}}"
 
-      - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch && steps.find-pull-request.outputs.number == '' && steps.aheadbehind.outputs.behind == 0 && steps.aheadbehind.outputs.ahead != 0 && steps.aheadbehind.outputs.dayssinceupdate > 7 }}
+      - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch && steps.find-pull-request.outputs.number == '' && steps.aheadbehind.outputs.ahead == '0' && steps.aheadbehind.outputs.dayssinceupdate > 7 }}
         name: Delete Branch
         run: echo "Delete?"
+        
       - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch && steps.find-pull-request.outputs.number == '' }}
         run: |
-          echo "Ahead: ${{steps.aheadbehind.outputs.ahead}}"
-          echo "Behind: ${{steps.aheadbehind.outputs.behind}}"          
+          echo "Ahead: ${{ steps.aheadbehind.outputs.ahead }}"
+          echo "Behind: ${{ steps.aheadbehind.outputs.behind }}"          
+          echo "Last Commit: ${{ steps.aheadbehind.outputs.dayssinceupdate }} days ago"          
