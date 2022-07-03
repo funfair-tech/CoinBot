@@ -88,13 +88,11 @@ jobs:
         run: |
           echo "Check to see if ${{steps.detection.outputs.defaultbranch}} is ahead or behind ${{matrix.branch}}..."
           git rev-list --left-right --count origin/${{steps.detection.outputs.defaultbranch}}...origin/${{matrix.branch}}
-          git rev-list --left-right --count origin/${{steps.detection.outputs.defaultbranch}}...origin/${{matrix.branch}} | awk '{
-                      print "${{matrix.branch}} is behind ${{steps.detection.outputs.defaultbranch}} by "$1" commit(s)"
-                      print "::set-output name=behind::"$1
-                      print "${{matrix.branch}} is ahead of ${{steps.detection.outputs.defaultbranch}} by "$2" commit(s)"
-                      print "::set-output name=ahead::"$2
-                      }'
-          echo ""::set-output name=dayssinceupdate=$((($(date +%s)-$(date +%s --date @$(git log -1 --format=%ct origin/${{matrix.branch}})))/(3600*24)))"
+          git rev-list --left-right --count origin/${{steps.detection.outputs.defaultbranch}}...origin/${{matrix.branch}} | awk '{ print "${{matrix.branch}} is behind ${{steps.detection.outputs.defaultbranch}} by "$1" commit(s)" }'
+          git rev-list --left-right --count origin/${{steps.detection.outputs.defaultbranch}}...origin/${{matrix.branch}} | awk '{ print "::set-output name=behind::"$1 }'
+          git rev-list --left-right --count origin/${{steps.detection.outputs.defaultbranch}}...origin/${{matrix.branch}} | awk '{ print "${{matrix.branch}} is ahead of ${{steps.detection.outputs.defaultbranch}} by "$2" commit(s)" }'
+          git rev-list --left-right --count origin/${{steps.detection.outputs.defaultbranch}}...origin/${{matrix.branch}} | awk '{ print "::set-output name=ahead::"$2 }'
+          echo "::set-output name=dayssinceupdate=$((($(date +%s)-$(date +%s --date @$(git log -1 --format=%ct origin/${{matrix.branch}})))/(3600*24)))"
 
       # Non-default - ahead of default branch, and no -re-existing PR then create one.
       - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch && steps.find-pull-request.outputs.number == '' && steps.aheadbehind.outputs.ahead != 0 && steps.aheadbehind.outputs.dayssinceupdate > 7 }}
