@@ -38,7 +38,7 @@
     <PackageReference Include="FunFair.CodeAnalysis" Version="5.8.3.1353" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.2.32" PrivateAssets="All" />
     <PackageReference Include="Roslynator.Analyzers" Version="4.1.1" PrivateAssets="All" />
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.40.0.48530" PrivateAssets="All" />
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="8.41.0.50478" PrivateAssets="All" />
     <PackageReference Include="SourceLink.Create.CommandLine" Version="2.8.3" PrivateAssets="All" />
     <PackageReference Include="ToStringWithoutOverrideAnalyzer" Version="0.6.0" PrivateAssets="All" />
   </ItemGroup>
