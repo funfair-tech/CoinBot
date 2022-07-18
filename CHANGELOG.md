@@ -9,6 +9,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Fixed
 ### Changed
 - FF-1429 - Updated FunFair.Test.Common to 6.0.1.1951
+- FF-1429 - Updated SonarAnalyzer.CSharp to 8.42.0.51121
 ### Removed
 ### Deployment Changes
 
