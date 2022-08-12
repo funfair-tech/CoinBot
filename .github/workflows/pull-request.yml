@@ -26,17 +26,16 @@ jobs:
         sudo chown -R $USER:$USER $GITHUB_WORKSPACE
         rm -fr $GITHUB_WORKSPACE/*
 
-    - uses: juliangruber/find-pull-request-action@v1
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 1
+        # token: ${{ secrets.SOURCE_PUSH_TOKEN }}
+
+    - uses: juliangruber/find-pull-request-action@v1.6.0
       id: findPr
       with:
         github-token: ${{ secrets.SOURCE_PUSH_TOKEN }}
         branch: ${{ github.ref_name }}
-
-    - if: ${{ steps.findPr.outputs.number == '' }}
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 1
-        # token: ${{ secrets.SOURCE_PUSH_TOKEN }}
 
     - if: ${{ steps.findPr.outputs.number != '' }}
       run: |
