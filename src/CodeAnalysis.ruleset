@@ -510,6 +510,8 @@
         <Rule Id="MA0004" Action="None"/>
         <!-- MA0006 - Use string.Equals instead of the comparison operator -->
         <Rule Id="MA0006" Action="Info"/>
+        <!-- MA0016 - Prefer using collection abstraction instead of implementation -->
+        <Rule Id="MA0016" Action="Info"/>
         <!-- MA0026 - Don't leave TODO's scattered around -->
         <Rule Id="MA0026" Action="Info"/>
     </Rules>
