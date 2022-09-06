@@ -706,5 +706,9 @@
         <Rule Id="FFS0039" Action="Error"/>
         <!-- FFS0040 - File should have the same name as the type that is defined in it -->
         <Rule Id="FFS0040" Action="Info"/>
+        <!-- FFS0041 - Do not use System.Console in test assemblies -->
+        <Rule Id="FFS0041" Action="Error"/>
+        <!-- FFS0042 - Do not have TODO's in SuppressMessage justifications. -->
+        <Rule Id="FFS0042" Action="Info"/>
     </Rules>
 </RuleSet>
