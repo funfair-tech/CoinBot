@@ -356,7 +356,7 @@
         <!-- S1168 - Returning <code>null</code> instead of an actual array or collection forces callers of the method to explicitly test for nullity, making them more complex and less readable. -->
         <Rule Id="S1168" Action="None"/>
         <!-- S1172 - Remove Unused method parameter-->
-        <Rule Id="S1172" Action="Error"/>        
+        <Rule Id="S1172" Action="Error"/>
         <!-- S1450 - Private fields only used as local variables in methods should become local variables -->
         <Rule Id="S1450" Action="None"/>
         <!-- S1764 - Identical expressions should not be used on both sides of a binary operator -->
@@ -508,8 +508,10 @@
         <!-- See https://github.com/meziantou/Meziantou.Analyzer/tree/main/docs -->
         <!-- MA0004 - Use ConfigureAwait(false) as the current SynchronizationContext is not needed -->
         <Rule Id="MA0004" Action="None"/>
-        <!-- MA0005 - Use string.Equals instead of the comparaison operator -->
+        <!-- MA0006 - Use string.Equals instead of the comparison operator -->
         <Rule Id="MA0006" Action="Info"/>
+        <!-- MA0026 - Don't leave TODO's scattered around -->
+        <Rule Id="MA0026" Action="Info"/>
     </Rules>
     <Rules AnalyzerId="Philips.CodeAnalysis.DuplicateCodeAnalyzer" RuleNamespace="Philips.CodeAnalysis.DuplicateCodeAnalyzer">
         <!-- See https://github.com/philips-software/roslyn-analyzers/blob/master/Philips.CodeAnalysis.DuplicateCodeAnalyzer/Philips.CodeAnalysis.DuplicateCodeAnalyzer.md -->
