@@ -14,6 +14,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated Microsoft.NET.Test.Sdk to 17.3.1
 - FF-1429 - Updated Serilog.Sinks.Console to 4.1.0
 - FF-1429 - Updated FunFair.CodeAnalysis to 5.9.0.1493
+- FF-1429 - Updated Microsoft.Extensions to 6.0.9
 ### Removed
 ### Deployment Changes
 
@@ -26,7 +27,6 @@ Releases that have at least been deployed to staging, BUT NOT necessarily releas
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.42.0.51121
 - FF-1429 - Updated xunit.analyzers to 1.0.0
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.43.0.51858
-- FF-1429 - Updated Microsoft.Extensions to 6.0.8
 - FF-3881 - Updated DotNet SDK to 6.0.400
 
 ## [1.3.30] - 2022-07-13
