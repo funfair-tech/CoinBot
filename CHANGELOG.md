@@ -8,6 +8,14 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
+### Removed
+### Deployment Changes
+
+<!--
+Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
+-->
+## [1.3.32] - 2022-09-13
+### Changed
 - FF-1429 - Updated Microsoft.VisualStudio.Threading.Analyzers to 17.3.44
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.44.0.52574
 - FF-1429 - Updated Discord.Net to 3.8.0
@@ -16,12 +24,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated FunFair.CodeAnalysis to 5.9.0.1493
 - FF-1429 - Updated Microsoft.Extensions to 6.0.9
 - FF-3881 - Updated DotNet SDK to 6.0.401
-### Removed
-### Deployment Changes
 
-<!--
-Releases that have at least been deployed to staging, BUT NOT necessarily released to live.  Changes should be moved from [Unreleased] into here as they are merged into the appropriate release branch
--->
 ## [1.3.31] - 2022-08-09
 ### Changed
 - FF-1429 - Updated FunFair.Test.Common to 6.0.1.1951
