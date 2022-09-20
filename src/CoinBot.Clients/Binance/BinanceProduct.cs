@@ -6,95 +6,151 @@ namespace CoinBot.Clients.Binance;
 [SuppressMessage(category: "Microsoft.Performance", checkId: "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Used as data packet")]
 internal sealed class BinanceProduct
 {
+    public BinanceProduct(string symbol,
+                          string quoteAssetName,
+                          double tradedMoney,
+                          string baseAssetUnit,
+                          string baseAssetName,
+                          string baseAsset,
+                          string tickSize,
+                          decimal? prevClose,
+                          decimal activeBuy,
+                          string high,
+                          long lastAggTradeId,
+                          string low,
+                          string matchingUnitType,
+                          string close,
+                          string quoteAsset,
+                          bool active,
+                          decimal minTrade,
+                          double activeSell,
+                          string withdrawFee,
+                          decimal volume,
+                          long decimalPlaces,
+                          string quoteAssetUnit,
+                          string open,
+                          string status,
+                          double minQty)
+    {
+        this.Symbol = symbol;
+        this.QuoteAssetName = quoteAssetName;
+        this.TradedMoney = tradedMoney;
+        this.BaseAssetUnit = baseAssetUnit;
+        this.BaseAssetName = baseAssetName;
+        this.BaseAsset = baseAsset;
+        this.TickSize = tickSize;
+        this.PrevClose = prevClose;
+        this.ActiveBuy = activeBuy;
+        this.High = high;
+        this.LastAggTradeId = lastAggTradeId;
+        this.Low = low;
+        this.MatchingUnitType = matchingUnitType;
+        this.Close = close;
+        this.QuoteAsset = quoteAsset;
+        this.Active = active;
+        this.MinTrade = minTrade;
+        this.ActiveSell = activeSell;
+        this.WithdrawFee = withdrawFee;
+        this.Volume = volume;
+        this.DecimalPlaces = decimalPlaces;
+        this.QuoteAssetUnit = quoteAssetUnit;
+        this.Open = open;
+        this.Status = status;
+        this.MinQty = minQty;
+    }
+
     [JsonPropertyName(name: @"symbol")]
-    [SuppressMessage(category: "ReSharper", checkId: "RedundantDefaultMemberInitializer", Justification = "TODO: Review")]
-    public string Symbol { get; set; } = default!;
+    [SuppressMessage(category: "ReSharper", checkId: "UnusedAutoPropertyAccessor.Global", Justification = "For expansion")]
+    public string Symbol { get; }
 
     [JsonPropertyName(name: @"quoteAssetName")]
-    [SuppressMessage(category: "ReSharper", checkId: "RedundantDefaultMemberInitializer", Justification = "TODO: Review")]
-    public string QuoteAssetName { get; set; } = default!;
+    [SuppressMessage(category: "ReSharper", checkId: "UnusedAutoPropertyAccessor.Global", Justification = "For expansion")]
+    public string QuoteAssetName { get; }
 
     [JsonPropertyName(name: @"tradedMoney")]
-    public double TradedMoney { get; set; }
+    [SuppressMessage(category: "ReSharper", checkId: "UnusedAutoPropertyAccessor.Global", Justification = "For expansion")]
+    public double TradedMoney { get; }
 
     [JsonPropertyName(name: @"baseAssetUnit")]
-    [SuppressMessage(category: "ReSharper", checkId: "RedundantDefaultMemberInitializer", Justification = "TODO: Review")]
-    public string BaseAssetUnit { get; set; } = default!;
+    [SuppressMessage(category: "ReSharper", checkId: "UnusedAutoPropertyAccessor.Global", Justification = "For expansion")]
+    public string BaseAssetUnit { get; }
 
     [JsonPropertyName(name: @"baseAssetName")]
-    [SuppressMessage(category: "ReSharper", checkId: "RedundantDefaultMemberInitializer", Justification = "TODO: Review")]
-    public string BaseAssetName { get; set; } = default!;
+    public string BaseAssetName { get; }
 
     [JsonPropertyName(name: @"baseAsset")]
-    [SuppressMessage(category: "ReSharper", checkId: "RedundantDefaultMemberInitializer", Justification = "TODO: Review")]
-    public string BaseAsset { get; set; } = default!;
+    public string BaseAsset { get; }
 
     [JsonPropertyName(name: @"tickSize")]
-    [SuppressMessage(category: "ReSharper", checkId: "RedundantDefaultMemberInitializer", Justification = "TODO: Review")]
-    public string TickSize { get; set; } = default!;
+    [SuppressMessage(category: "ReSharper", checkId: "UnusedAutoPropertyAccessor.Global", Justification = "For expansion")]
+    public string TickSize { get; }
 
     [JsonPropertyName(name: @"prevClose")]
-    public decimal? PrevClose { get; set; }
+    public decimal? PrevClose { get; }
 
     [JsonPropertyName(name: @"activeBuy")]
-    public decimal ActiveBuy { get; set; }
+    [SuppressMessage(category: "ReSharper", checkId: "UnusedAutoPropertyAccessor.Global", Justification = "For expansion")]
+    public decimal ActiveBuy { get; }
 
     [JsonPropertyName(name: @"high")]
-    [SuppressMessage(category: "ReSharper", checkId: "RedundantDefaultMemberInitializer", Justification = "TODO: Review")]
-    public string High { get; set; } = default!;
+    [SuppressMessage(category: "ReSharper", checkId: "UnusedAutoPropertyAccessor.Global", Justification = "For expansion")]
+    public string High { get; }
 
     [JsonPropertyName(name: @"lastAggTradeId")]
-    public long LastAggTradeId { get; set; }
+    [SuppressMessage(category: "ReSharper", checkId: "UnusedAutoPropertyAccessor.Global", Justification = "For expansion")]
+    public long LastAggTradeId { get; }
 
     [JsonPropertyName(name: @"low")]
-    [SuppressMessage(category: "ReSharper", checkId: "RedundantDefaultMemberInitializer", Justification = "TODO: Review")]
-    public string Low { get; set; } = default!;
+    [SuppressMessage(category: "ReSharper", checkId: "UnusedAutoPropertyAccessor.Global", Justification = "For expansion")]
+    public string Low { get; }
 
     [JsonPropertyName(name: @"matchingUnitType")]
-    [SuppressMessage(category: "ReSharper", checkId: "RedundantDefaultMemberInitializer", Justification = "TODO: Review")]
-    public string MatchingUnitType { get; set; } = default!;
+    [SuppressMessage(category: "ReSharper", checkId: "UnusedAutoPropertyAccessor.Global", Justification = "For expansion")]
+    public string MatchingUnitType { get; }
 
     [JsonPropertyName(name: @"close")]
-    [SuppressMessage(category: "ReSharper", checkId: "RedundantDefaultMemberInitializer", Justification = "TODO: Review")]
-    public string Close { get; set; } = default!;
+    [SuppressMessage(category: "ReSharper", checkId: "UnusedAutoPropertyAccessor.Global", Justification = "For expansion")]
+    public string Close { get; }
 
     [JsonPropertyName(name: @"quoteAsset")]
-    [SuppressMessage(category: "ReSharper", checkId: "RedundantDefaultMemberInitializer", Justification = "TODO: Review")]
-    public string QuoteAsset { get; set; } = default!;
+    public string QuoteAsset { get; }
 
     [JsonPropertyName(name: @"active")]
-    public bool Active { get; set; }
+    [SuppressMessage(category: "ReSharper", checkId: "UnusedAutoPropertyAccessor.Global", Justification = "For expansion")]
+    public bool Active { get; }
 
     [JsonPropertyName(name: @"minTrade")]
-    [SuppressMessage(category: "ReSharper", checkId: "RedundantDefaultMemberInitializer", Justification = "TODO: Review")]
-    public decimal MinTrade { get; set; }
+    [SuppressMessage(category: "ReSharper", checkId: "UnusedAutoPropertyAccessor.Global", Justification = "For expansion")]
+    public decimal MinTrade { get; }
 
     [JsonPropertyName(name: @"activeSell")]
-    public double ActiveSell { get; set; }
+    [SuppressMessage(category: "ReSharper", checkId: "UnusedAutoPropertyAccessor.Global", Justification = "For expansion")]
+    public double ActiveSell { get; }
 
     [JsonPropertyName(name: @"withdrawFee")]
-    [SuppressMessage(category: "ReSharper", checkId: "RedundantDefaultMemberInitializer", Justification = "TODO: Review")]
-    public string WithdrawFee { get; set; } = default!;
+    [SuppressMessage(category: "ReSharper", checkId: "UnusedAutoPropertyAccessor.Global", Justification = "For expansion")]
+    public string WithdrawFee { get; }
 
     [JsonPropertyName(name: @"volume")]
-    public decimal Volume { get; set; }
+    public decimal Volume { get; }
 
     [JsonPropertyName(name: @"decimalPlaces")]
-    public long DecimalPlaces { get; set; }
+    [SuppressMessage(category: "ReSharper", checkId: "UnusedAutoPropertyAccessor.Global", Justification = "For expansion")]
+    public long DecimalPlaces { get; }
 
     [JsonPropertyName(name: @"quoteAssetUnit")]
-    [SuppressMessage(category: "ReSharper", checkId: "RedundantDefaultMemberInitializer", Justification = "TODO: Review")]
-    public string QuoteAssetUnit { get; set; } = default!;
+    [SuppressMessage(category: "ReSharper", checkId: "UnusedAutoPropertyAccessor.Global", Justification = "For expansion")]
+    public string QuoteAssetUnit { get; }
 
     [JsonPropertyName(name: @"open")]
-    [SuppressMessage(category: "ReSharper", checkId: "RedundantDefaultMemberInitializer", Justification = "TODO: Review")]
-    public string Open { get; set; } = default!;
+    [SuppressMessage(category: "ReSharper", checkId: "UnusedAutoPropertyAccessor.Global", Justification = "For expansion")]
+    public string Open { get; }
 
     [JsonPropertyName(name: @"status")]
-    [SuppressMessage(category: "ReSharper", checkId: "RedundantDefaultMemberInitializer", Justification = "TODO: Review")]
-    public string Status { get; set; } = default!;
+    [SuppressMessage(category: "ReSharper", checkId: "UnusedAutoPropertyAccessor.Global", Justification = "For expansion")]
+    public string Status { get; }
 
     [JsonPropertyName(name: @"minQty")]
-    [SuppressMessage(category: "ReSharper", checkId: "RedundantDefaultMemberInitializer", Justification = "TODO: Review")]
-    public double MinQty { get; set; } = default!;
+    [SuppressMessage(category: "ReSharper", checkId: "UnusedAutoPropertyAccessor.Global", Justification = "For expansion")]
+    public double MinQty { get; }
 }
