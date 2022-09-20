@@ -37,6 +37,7 @@ public sealed class DiscordBot : DiscordSocketClient
     /// <param name="serviceProvider">The <see cref="IServiceProvider" />.</param>
     /// <param name="commandService">The <see cref="CommandService" />.</param>
     public DiscordBot(IServiceProvider serviceProvider, CommandService commandService)
+        : base(new() { GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.MessageContent })
     {
         this._serviceProvider = serviceProvider;
         this._logger = this._serviceProvider.GetRequiredService<ILogger<DiscordBot>>();
