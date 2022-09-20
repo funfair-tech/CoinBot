@@ -8,7 +8,15 @@ namespace CoinBot.Clients.Bittrex;
 internal sealed class BittrexMarketSummaryDto
 {
     [JsonConstructor]
-    public BittrexMarketSummaryDto(string marketName, decimal? high, decimal? low, decimal? volume, decimal? last, decimal? baseVolume, DateTime? timeStamp, decimal? bid, decimal? ask)
+    public BittrexMarketSummaryDto(string marketName,
+                                   decimal? high,
+                                   decimal? low,
+                                   decimal? volume,
+                                   decimal? last,
+                                   decimal? baseVolume,
+                                   DateTime? timeStamp,
+                                   decimal? bid,
+                                   decimal? ask)
     {
         this.MarketName = marketName;
         this.High = high;

@@ -14,7 +14,10 @@ internal sealed class FunFairWalletPriceResultDto
     public FunFairWalletPriceResultDto(string? status,
                                        decimal price,
                                        string? symbol,
-                                       [SuppressMessage(category: "Roslynator.Analyzers", checkId: "RCS1231: make ref read-only", Justification = "Can't be for json serialisatio")] DateTime date)
+                                       [SuppressMessage(category: "Roslynator.Analyzers",
+                                                        checkId: "RCS1231: make ref read-only",
+                                                        Justification = "Can't be for json serialisatio")]
+                                       DateTime date)
     {
         this.Status = status;
         this.Price = price;

@@ -9,7 +9,15 @@ namespace CoinBot.Clients.Bittrex;
 internal sealed class BittrexCurrencyDto
 {
     [JsonConstructor]
-    public BittrexCurrencyDto(string symbol, string name, int minConfirmations, bool isActive, decimal txFee, bool isRestricted, string coinType, string? baseAddress, string? notice)
+    public BittrexCurrencyDto(string symbol,
+                              string name,
+                              int minConfirmations,
+                              bool isActive,
+                              decimal txFee,
+                              bool isRestricted,
+                              string coinType,
+                              string? baseAddress,
+                              string? notice)
     {
         this.Symbol = symbol;
         this.Name = name;
