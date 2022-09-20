@@ -11,7 +11,7 @@
     <NoWarn>1591</NoWarn>
     <Nullable>enable</Nullable>
     <OutputType>Library</OutputType>
-    <RunAOTCompilation>true</RunAOTCompilation>
+    <RunAOTCompilation>fale</RunAOTCompilation>
     <TargetFramework>net6.0</TargetFramework>
     <TieredCompilation>true</TieredCompilation>
     <TreatSpecificWarningsAsErrors />
