@@ -311,24 +311,39 @@ public sealed class KrakenClient : CoinClientBase, IMarketClient
     [SuppressMessage(category: "Microsoft.Performance", checkId: "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Used as data packet")]
     private sealed class KrakenPairWrapper
     {
+        [JsonConstructor]
+        public KrakenPairWrapper(Dictionary<string, KrakenPair>? result)
+        {
+            this.Result = result;
+        }
+
         [JsonPropertyName(name: @"result")]
-        [SuppressMessage(category: "ReSharper", checkId: "UnusedAutoPropertyAccessor.Local", Justification = "TODO: Review")]
-        public Dictionary<string, KrakenPair>? Result { get; set; }
+        public Dictionary<string, KrakenPair>? Result { get; }
     }
 
     [SuppressMessage(category: "Microsoft.Performance", checkId: "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Used as data packet")]
     private sealed class KrakenTickerWrapper
     {
+        [JsonConstructor]
+        public KrakenTickerWrapper(Dictionary<string, KrakenTicker>? result)
+        {
+            this.Result = result;
+        }
+
         [JsonPropertyName(name: @"result")]
-        [SuppressMessage(category: "ReSharper", checkId: "UnusedAutoPropertyAccessor.Local", Justification = "TODO: Review")]
-        public Dictionary<string, KrakenTicker>? Result { get; set; }
+        public Dictionary<string, KrakenTicker>? Result { get; }
     }
 
     [SuppressMessage(category: "Microsoft.Performance", checkId: "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Used as data packet")]
     private sealed class KrakenAssetResultWrapper
     {
+        [JsonConstructor]
+        public KrakenAssetResultWrapper(Dictionary<string, KrakenAsset>? result)
+        {
+            this.Result = result;
+        }
+
         [JsonPropertyName(name: @"result")]
-        [SuppressMessage(category: "ReSharper", checkId: "UnusedAutoPropertyAccessor.Local", Justification = "TODO: Review")]
-        public Dictionary<string, KrakenAsset>? Result { get; set; }
+        public Dictionary<string, KrakenAsset>? Result { get; }
     }
 }

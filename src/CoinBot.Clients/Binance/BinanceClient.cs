@@ -119,8 +119,15 @@ public sealed class BinanceClient : CoinClientBase, IMarketClient
     [SuppressMessage(category: "Microsoft.Performance", checkId: "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Used as data packet")]
     private sealed class Wrapper
     {
+        [JsonConstructor]
+        public Wrapper(BinanceProduct[]? data)
+        {
+            this.Data = data;
+        }
+
         [JsonPropertyName(name: @"data")]
-        [SuppressMessage(category: "ReSharper", checkId: "UnusedAutoPropertyAccessor.Local", Justification = "TODO: Review")]
-        public BinanceProduct[]? Data { get; set; }
+        [SuppressMessage(category: "ReSharper", checkId: "UnusedAutoPropertyAccessor.Local", Justification = "For expansion")]
+
+        public BinanceProduct[]? Data { get; }
     }
 }

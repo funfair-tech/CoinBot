@@ -5,15 +5,15 @@ using System.IO;
 namespace CoinBot;
 
 /// <summary>
-///     Application configuration helpers
+///     Locator of the application configuration
 /// </summary>
+[SuppressMessage(category: "ReSharper", checkId: "UnusedType.Global", Justification = "Used in exe code. Not possible to unit test.")]
 public static class ApplicationConfig
 {
-    // really should be using AppContext.BaseDirectory, but this seems to break sometimes when running unit tests with dotnet-xuint.
-
     /// <summary>
     ///     The base path of the folder with the configuration files in them.
     /// </summary>
+    [SuppressMessage(category: "ReSharper", checkId: "UnusedMember.Global", Justification = "Used in exe code. Not possible to unit test.")]
     public static string ConfigurationFilesPath { get; } = LookupConfigurationFilesPath();
 
     private static string LookupConfigurationFilesPath()
@@ -23,17 +23,15 @@ public static class ApplicationConfig
         if (path == null)
         {
             // https://stackoverflow.com/questions/57222718/how-to-configure-self-contained-single-file-program
-            path = Environment.CurrentDirectory;
+            return Environment.CurrentDirectory;
         }
-
-        Console.WriteLine($"Loading Appsettings from {path}");
 
         return path;
     }
 
     private static string? LookupAppSettingsLocationByAssemblyName()
     {
-        string location = AppLocation();
+        string location = AppContext.BaseDirectory;
 
         string? path = Path.GetDirectoryName(location);
 
@@ -48,13 +46,5 @@ public static class ApplicationConfig
         }
 
         return path;
-    }
-
-    [SuppressMessage(category: "FunFair.CodeAnalysis", checkId: "FFS0008: Don't disable warnings", Justification = "TODO: Review")]
-    private static string AppLocation()
-    {
-#pragma warning disable IL3000
-        return typeof(ApplicationConfig).Assembly.Location;
-#pragma warning restore IL3000
     }
 }

@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace CoinBot.Clients.Kraken;
@@ -7,11 +6,15 @@ namespace CoinBot.Clients.Kraken;
 [DebuggerDisplay(value: "{Altname} : ID: {Id}")]
 public sealed class KrakenAsset
 {
-    [SuppressMessage(category: "ReSharper", checkId: "RedundantDefaultMemberInitializer", Justification = "TODO: Review")]
-    public string Id { get; set; } = default!;
+    [JsonConstructor]
+    public KrakenAsset(string id, string altname)
+    {
+        this.Id = id;
+        this.Altname = altname;
+    }
+
+    public string Id { get; set; }
 
     [JsonPropertyName(name: @"altname")]
-    [SuppressMessage(category: "ReSharper", checkId: "RedundantDefaultMemberInitializer", Justification = "TODO: Review")]
-    [SuppressMessage(category: "ReSharper", checkId: "AutoPropertyCanBeMadeGetOnly.Global", Justification = "TODO: Review")]
-    public string Altname { get; set; } = default!;
+    public string Altname { get; }
 }

@@ -1,29 +1,31 @@
-using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace CoinBot.Clients.Kraken;
 
 public sealed class KrakenTicker
 {
-    [SuppressMessage(category: "ReSharper", checkId: "RedundantDefaultMemberInitializer", Justification = "TODO: Review")]
-    public string BaseCurrency { get; set; } = default!;
+    [JsonConstructor]
+    public KrakenTicker(string baseCurrency, string quoteCurrency, decimal[]? last, decimal[]? volume)
+    {
+        this.BaseCurrency = baseCurrency;
+        this.QuoteCurrency = quoteCurrency;
+        this.Last = last;
+        this.Volume = volume;
+    }
 
-    [SuppressMessage(category: "ReSharper", checkId: "RedundantDefaultMemberInitializer", Justification = "TODO: Review")]
-    public string QuoteCurrency { get; set; } = default!;
+    public string BaseCurrency { get; set; }
+
+    public string QuoteCurrency { get; set; }
 
     /// <summary>
     ///     last trade closed array(price, lot volume)
     /// </summary>
     [JsonPropertyName(name: @"c")]
-    [SuppressMessage(category: "ReSharper", checkId: "RedundantDefaultMemberInitializer", Justification = "TODO: Review")]
-    [SuppressMessage(category: "ReSharper", checkId: "AutoPropertyCanBeMadeGetOnly.Global", Justification = "TODO: Review")]
-    public decimal[]? Last { get; set; } = default!;
+    public decimal[]? Last { get; }
 
     /// <summary>
     ///     24 Hour volume array(today, last 24 hours)
     /// </summary>
     [JsonPropertyName(name: @"v")]
-    [SuppressMessage(category: "ReSharper", checkId: "RedundantDefaultMemberInitializer", Justification = "TODO: Review")]
-    [SuppressMessage(category: "ReSharper", checkId: "AutoPropertyCanBeMadeGetOnly.Global", Justification = "TODO: Review")]
-    public decimal[]? Volume { get; set; } = default!;
+    public decimal[]? Volume { get; }
 }

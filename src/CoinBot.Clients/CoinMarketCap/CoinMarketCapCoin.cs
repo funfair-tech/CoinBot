@@ -9,21 +9,59 @@ namespace CoinBot.Clients.CoinMarketCap;
 
 public sealed class CoinMarketCapCoin : ICoinInfo
 {
+    [JsonConstructor]
+    public CoinMarketCapCoin(decimal? availableSupply,
+                             decimal? totalSupply,
+                             decimal? maxSupply,
+                             string id,
+                             string name,
+                             string symbol,
+                             int? rank,
+                             decimal? priceUsd,
+                             decimal? priceBtc,
+                             decimal? priceEth,
+                             double? volume,
+                             double? marketCap,
+                             double? hourChange,
+                             double? dayChange,
+                             double? weekChange,
+                             DateTime? lastUpdated)
+    {
+        this.AvailableSupply = availableSupply;
+        this.TotalSupply = totalSupply;
+        this.MaxSupply = maxSupply;
+        this.Id = id;
+        this.Name = name;
+        this.Symbol = symbol;
+        this.Rank = rank;
+        this.PriceUsd = priceUsd;
+        this.PriceBtc = priceBtc;
+        this.PriceEth = priceEth;
+        this.Volume = volume;
+        this.MarketCap = marketCap;
+        this.HourChange = hourChange;
+        this.DayChange = dayChange;
+        this.WeekChange = weekChange;
+        this.LastUpdated = lastUpdated;
+    }
+
     [SuppressMessage(category: "Microsoft.Design", checkId: "CA1056:UriPropertiesShouldNotBeStrings", Justification = "Model for serialization")]
     public string Url => $"https://coinmarketcap.com/currencies/{this.Id}";
 
     [JsonPropertyName(name: @"available_supply")]
-    public decimal? AvailableSupply { get; set; }
+    [SuppressMessage(category: "ReSharper", checkId: "UnusedAutoPropertyAccessor.Global", Justification = "For expansion")]
+    public decimal? AvailableSupply { get; }
 
     [JsonPropertyName(name: @"total_supply")]
-    public decimal? TotalSupply { get; set; }
+    [SuppressMessage(category: "ReSharper", checkId: "UnusedAutoPropertyAccessor.Global", Justification = "For expansion")]
+    public decimal? TotalSupply { get; }
 
     [JsonPropertyName(name: @"max_supply")]
-    public decimal? MaxSupply { get; set; }
+    [SuppressMessage(category: "ReSharper", checkId: "UnusedAutoPropertyAccessor.Global", Justification = "For expansion")]
+    public decimal? MaxSupply { get; }
 
     [JsonPropertyName(name: @"id")]
-    [SuppressMessage(category: "ReSharper", checkId: "RedundantDefaultMemberInitializer", Justification = "TODO: Review")]
-    public string Id { get; set; } = default!;
+    public string Id { get; }
 
     [SuppressMessage(category: "Microsoft.Design", checkId: "CA1056:UriPropertiesShouldNotBeStrings", Justification = "Model for serialization")]
     public string ImageUrl =>
@@ -31,41 +69,39 @@ public sealed class CoinMarketCapCoin : ICoinInfo
               .ToString();
 
     [JsonPropertyName(name: @"name")]
-    [SuppressMessage(category: "ReSharper", checkId: "RedundantDefaultMemberInitializer", Justification = "TODO: Review")]
-    public string Name { get; set; } = default!;
+    public string Name { get; }
 
     [JsonPropertyName(name: @"symbol")]
-    [SuppressMessage(category: "ReSharper", checkId: "RedundantDefaultMemberInitializer", Justification = "TODO: Review")]
-    public string Symbol { get; set; } = default!;
+    public string Symbol { get; }
 
     [JsonPropertyName(name: @"rank")]
-    public int? Rank { get; set; }
+    public int? Rank { get; }
 
     [JsonPropertyName(name: @"price_usd")]
-    public decimal? PriceUsd { get; set; }
+    public decimal? PriceUsd { get; }
 
     [JsonPropertyName(name: @"price_btc")]
-    public decimal? PriceBtc { get; set; }
+    public decimal? PriceBtc { get; }
 
     [JsonPropertyName(name: @"price_eth")]
-    public decimal? PriceEth { get; set; }
+    public decimal? PriceEth { get; }
 
     [JsonPropertyName(name: @"24h_volume_usd")]
-    public double? Volume { get; set; }
+    public double? Volume { get; }
 
     [JsonPropertyName(name: @"market_cap_usd")]
-    public double? MarketCap { get; set; }
+    public double? MarketCap { get; }
 
     [JsonPropertyName(name: @"percent_change_1h")]
-    public double? HourChange { get; set; }
+    public double? HourChange { get; }
 
     [JsonPropertyName(name: @"percent_change_24h")]
-    public double? DayChange { get; set; }
+    public double? DayChange { get; }
 
     [JsonPropertyName(name: @"percent_change_7d")]
-    public double? WeekChange { get; set; }
+    public double? WeekChange { get; }
 
     [JsonPropertyName(name: @"last_updated")]
     [JsonConverter(typeof(UnixTimeConverter))]
-    public DateTime? LastUpdated { get; set; }
+    public DateTime? LastUpdated { get; }
 }

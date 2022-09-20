@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace CoinBot.Clients.Kraken;
@@ -7,16 +6,19 @@ namespace CoinBot.Clients.Kraken;
 [DebuggerDisplay(value: "{BaseCurrency} > {QuoteCurrency} : ID: {PairId}")]
 public sealed class KrakenPair
 {
-    [SuppressMessage(category: "ReSharper", checkId: "RedundantDefaultMemberInitializer", Justification = "TODO: Review")]
-    public string PairId { get; set; } = default!;
+    [JsonConstructor]
+    public KrakenPair(string pairId, string baseCurrency, string quoteCurrency)
+    {
+        this.PairId = pairId;
+        this.BaseCurrency = baseCurrency;
+        this.QuoteCurrency = quoteCurrency;
+    }
+
+    public string PairId { get; set; }
 
     [JsonPropertyName(name: @"base")]
-    [SuppressMessage(category: "ReSharper", checkId: "RedundantDefaultMemberInitializer", Justification = "TODO: Review")]
-    [SuppressMessage(category: "ReSharper", checkId: "AutoPropertyCanBeMadeGetOnly.Global", Justification = "TODO: Review")]
-    public string BaseCurrency { get; set; } = default!;
+    public string BaseCurrency { get; }
 
     [JsonPropertyName(name: @"quote")]
-    [SuppressMessage(category: "ReSharper", checkId: "RedundantDefaultMemberInitializer", Justification = "TODO: Review")]
-    [SuppressMessage(category: "ReSharper", checkId: "AutoPropertyCanBeMadeGetOnly.Global", Justification = "TODO: Review")]
-    public string QuoteCurrency { get; set; } = default!;
+    public string QuoteCurrency { get; }
 }

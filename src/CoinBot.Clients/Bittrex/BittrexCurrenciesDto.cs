@@ -7,8 +7,12 @@ namespace CoinBot.Clients.Bittrex;
 [SuppressMessage(category: "Microsoft.Performance", checkId: "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Used as data packet")]
 internal sealed class BittrexCurrenciesDto
 {
+    public BittrexCurrenciesDto(List<BittrexCurrencyDto> result)
+    {
+        this.Result = result;
+    }
+
     [JsonPropertyName(name: @"result")]
-    [SuppressMessage(category: "ReSharper", checkId: "RedundantDefaultMemberInitializer", Justification = "TODO: Review")]
-    [SuppressMessage(category: "ReSharper", checkId: "AutoPropertyCanBeMadeGetOnly.Global", Justification = "TODO: Review")]
-    public List<BittrexCurrencyDto> Result { get; set; } = default!;
+    [SuppressMessage(category: "ReSharper", checkId: "UnusedAutoPropertyAccessor.Global", Justification = "For expansion")]
+    public List<BittrexCurrencyDto> Result { get; }
 }
