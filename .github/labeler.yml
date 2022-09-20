@@ -7,11 +7,11 @@
 "Powershell":
  - any: [ './**/*.ps1', './**/*.psm1' ]
 "SQL":
- - any: [ './**/*.sql', 'db/**/*' ]
+ - any: [ 'db/**/*', './**/*.sql' ]
 "Solidity":
  - any: [ './**/*.sol' ]
 "unit-tests":
- - any: [ 'src/*.Tests.*/**/*', 'src/*.Tests.Integration.*/**/*', 'src/*.Tests.Integration/**/*', 'src/*.Tests/**/*' ]
+ - any: [ 'src/*.Tests.*/**/*', 'src/*.Tests/**/*', 'src/*.Tests.Integration.*/**/*', 'src/*.Tests.Integration/**/*' ]
 ".NET update":
  - any: [ 'src/global.json' ]
 "Config Change":
