@@ -12,7 +12,7 @@
     <Nullable>enable</Nullable>
     <OutputType>Library</OutputType>
     <RunAOTCompilation>fale</RunAOTCompilation>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <TieredCompilation>true</TieredCompilation>
     <TreatSpecificWarningsAsErrors />
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
