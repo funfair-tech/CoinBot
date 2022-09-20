@@ -513,7 +513,7 @@
         <!-- MA0016 - Prefer using collection abstraction instead of implementation -->
         <Rule Id="MA0016" Action="Info"/>
         <!-- MA0026 - Don't leave TODO's scattered around -->
-        <Rule Id="MA0026" Action="Error"/>
+        <Rule Id="MA0026" Action="Info"/>
     </Rules>
     <Rules AnalyzerId="Philips.CodeAnalysis.DuplicateCodeAnalyzer" RuleNamespace="Philips.CodeAnalysis.DuplicateCodeAnalyzer">
         <!-- See https://github.com/philips-software/roslyn-analyzers/blob/master/Philips.CodeAnalysis.DuplicateCodeAnalyzer/Philips.CodeAnalysis.DuplicateCodeAnalyzer.md -->
@@ -713,6 +713,6 @@
         <!-- FFS0041 - Do not use System.Console in test assemblies -->
         <Rule Id="FFS0041" Action="Error"/>
         <!-- FFS0042 - Do not have TODO's in SuppressMessage justifications. -->
-        <Rule Id="FFS0042" Action="Error"/>
+        <Rule Id="FFS0042" Action="Info"/>
     </Rules>
 </RuleSet>
