@@ -72,7 +72,7 @@ jobs:
         run: echo "On non-default branch"
 
       - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch }}
-        uses: juliangruber/find-pull-request-action@v1.6.0
+        uses: juliangruber/find-pull-request-action@v1.7.0
         id: find-pull-request
         with:
           github-token: ${{ secrets.SOURCE_PUSH_TOKEN }}        
