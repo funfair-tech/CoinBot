@@ -35,7 +35,7 @@ jobs:
         with:
           fetch-depth: 0
       - if: ${{ !endsWith(github.repository , '-template') && !startsWith(github.head_ref, 'release/') && !startsWith(github.head_ref, 'hotfix/') }}
-        uses: seferov/pr-lint-action@v1.1.2
+        uses: seferov/pr-lint-action@v1.2.0
         with:
           title-regex: '^\[FF\-\d*?\](:)?(\ )'
           error-message: 'Add Jira Ticket ID to your title'
@@ -66,7 +66,7 @@ jobs:
         with:
           fetch-depth: 0
       - uses: credfeto/action-dotnet-version-detect@v1.2.1
-      - uses: actions/setup-dotnet@v2
+      - uses: actions/setup-dotnet@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
