@@ -350,3 +350,6 @@ src/Data
 
 # Mac files
 .DS_Store
+
+# Dotnet 
+.dotnet/
