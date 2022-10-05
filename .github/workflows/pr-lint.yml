@@ -69,14 +69,33 @@ jobs:
       - uses: actions/setup-dotnet@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DOTNET_INSTALL_DIR: ${{ github.workspace }}/.dotnet
+          DOTNET_NOLOGO: true
+          DOTNET_CLI_TELEMETRY_OPTOUT: false
+          DOTNET_MULTILEVEL_LOOKUP: false
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
       - name: Enable dotnet tools
         run: dotnet new tool-manifest
+        env:
+          DOTNET_INSTALL_DIR: ${{ github.workspace }}/.dotnet
+          DOTNET_NOLOGO: true
+          DOTNET_CLI_TELEMETRY_OPTOUT: false
+          DOTNET_MULTILEVEL_LOOKUP: false
       - name: Install Changelog tool
         run: dotnet tool install --local Credfeto.ChangeLog.Cmd
+        env:
+          DOTNET_INSTALL_DIR: ${{ github.workspace }}/.dotnet
+          DOTNET_NOLOGO: true
+          DOTNET_CLI_TELEMETRY_OPTOUT: false
+          DOTNET_MULTILEVEL_LOOKUP: false
       - name: Check Changelog
         run: dotnet changelog --changelog CHANGELOG.md --check-insert "origin/${{ github.base_ref }}"
+        env:
+          DOTNET_INSTALL_DIR: ${{ github.workspace }}/.dotnet
+          DOTNET_NOLOGO: true
+          DOTNET_CLI_TELEMETRY_OPTOUT: false
+          DOTNET_MULTILEVEL_LOOKUP: false
 
   does-not-contain-secrets:
     if: github.event.pull_request.draft == false
