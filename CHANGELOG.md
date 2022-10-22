@@ -9,6 +9,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Fixed
 ### Changed
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.47.0.55603
+- FF-1429 - Updated Microsoft.VisualStudio.Threading.Analyzers to 17.3.48
 ### Removed
 ### Deployment Changes
 
