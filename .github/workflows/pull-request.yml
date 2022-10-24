@@ -31,7 +31,7 @@ jobs:
         fetch-depth: 1
         # token: ${{ secrets.SOURCE_PUSH_TOKEN }}
 
-    - uses: juliangruber/find-pull-request-action@v1.7.0
+    - uses: juliangruber/find-pull-request-action@v1.7.2
       id: findPr
       with:
         branch: ${{ github.ref_name }}
