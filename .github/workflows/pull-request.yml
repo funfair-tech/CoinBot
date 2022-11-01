@@ -26,7 +26,7 @@ jobs:
         sudo chown -R $USER:$USER $GITHUB_WORKSPACE
         rm -fr $GITHUB_WORKSPACE/*
 
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v3.1.0
       with:
         fetch-depth: 1
         # token: ${{ secrets.SOURCE_PUSH_TOKEN }}
@@ -44,7 +44,7 @@ jobs:
 
     - if: ${{ steps.findPr.outputs.number == '' }}
       id: pr-template
-      uses: juliangruber/read-file-action@v1
+      uses: juliangruber/read-file-action@v1.1.6
       with:
         path: ./.github/PULL_REQUEST_TEMPLATE.md
 
@@ -59,7 +59,7 @@ jobs:
 
     - if: ${{ steps.findPr.outputs.number == '' }}
       id: open-pr
-      uses: repo-sync/pull-request@v2.6.2
+      uses: repo-sync/pull-request@v2.8
       with:
         source_branch: ""                     # If blank, default: triggered branch
         destination_branch: "main"            # If blank, default: master
