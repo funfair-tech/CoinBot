@@ -24,7 +24,7 @@ jobs:
           echo "Repo: ${{ github.repository }}"
           echo "Owner: ${{ github.repository_owner }}"
       - run: sudo apt install -y jq
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3.1.0
         with:
           fetch-depth: 0
           ref: main
@@ -51,7 +51,7 @@ jobs:
     steps:
       - run: |
           sudo chown -R $USER:$USER $GITHUB_WORKSPACE
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3.1.0
         with:
           fetch-depth: 0
           ref: main
@@ -95,7 +95,7 @@ jobs:
       # Non-default - ahead of default branch, and no -re-existing PR then create one.
       - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch && steps.find-pull-request.outputs.number == '' && steps.aheadbehind.outputs.ahead != 0 && steps.aheadbehind.outputs.dayssinceupdate > 7 }}
         id: pr-template
-        uses: juliangruber/read-file-action@v1
+        uses: juliangruber/read-file-action@v1.1.6
         with:
           path: ./.github/PULL_REQUEST_TEMPLATE.md
 
@@ -105,7 +105,7 @@ jobs:
 
       - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch && steps.find-pull-request.outputs.number == '' && steps.aheadbehind.outputs.ahead != 0 && steps.aheadbehind.outputs.dayssinceupdate > 7 }}
         id: open-pr
-        uses: repo-sync/pull-request@v2.6.2
+        uses: repo-sync/pull-request@v2.8
         with:
           source_branch: ${{matrix.branch}}       # If blank, default: triggered branch
           destination_branch: ${{steps.detection.outputs.defaultbranch}}            # If blank, default: master
@@ -138,7 +138,7 @@ jobs:
 
       - if: ${{ steps.detection.outputs.defaultbranch != matrix.branch && steps.find-pull-request.outputs.number == '' && steps.aheadbehind.outputs.ahead == '0' && steps.aheadbehind.outputs.dayssinceupdate > 60 }}
         name: Delete Branch
-        uses: dawidd6/action-delete-branch@v3
+        uses: dawidd6/action-delete-branch@v3.1.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branches: ${{ matrix.branch }}
