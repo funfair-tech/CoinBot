@@ -195,16 +195,21 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.SOURCE_PUSH_TOKEN }}
           MULTI_STATUS: true
           VALIDATE_ALL_CODEBASE: false
+          VALIDATE_ANSIBLE: true
           VALIDATE_BASH: true
           VALIDATE_CSS: true
+          VALIDATE_ENV: true
           VALIDATE_DOCKERFILE: true
           VALIDATE_DOCKERFILE_HADOLINT: true
+          VALIDATE_EDITORCONFIG: true
+          VALIDATE_GITHUB_ACTIONS: true
           VALIDATE_JSON: true
           VALIDATE_MD: true
+          VALIDATE_POWERSHELL: true
           VALIDATE_PYTHON: true
           VALIDATE_PYTHON_PYLINT: true
-          VALIDATE_POWERSHELL: true
           VALIDATE_SHELL_SHFMT: true
+          VALIDATE_SQL: true
           VALIDATE_TYPESCRIPT_ES: true
           VALIDATE_XML: true
           VALIDATE_YAML: true
