@@ -118,11 +118,6 @@ jobs:
           redact: true
           verbose: true
           log_level: info
-      # - if: ${{ always() }} # reason - https://github.com/zricethezav/gitleaks/issues/782
-      #   uses: github/codeql-action/upload-sarif@v2
-      #   with:
-      #     sarif_file: ${{ steps.gitleaks.outputs.report }}
-      #     token: ${{ secrets.GITHUB_TOKEN }}
 
   has-no-merge-conflicts:
     if: github.event.pull_request.draft == false
@@ -201,8 +196,7 @@ jobs:
           VALIDATE_ENV: true
           VALIDATE_DOCKERFILE: true
           VALIDATE_DOCKERFILE_HADOLINT: true
-          VALIDATE_EDITORCONFIG: true
-          VALIDATE_GITHUB_ACTIONS: true
+           VALIDATE_GITHUB_ACTIONS: true
           VALIDATE_JSON: true
           VALIDATE_MD: true
           VALIDATE_POWERSHELL: true
