@@ -14,6 +14,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-1429 - Updated Roslynator.Analyzers to 4.1.2
 - FF-1429 - Updated FunFair.Test.Common to 6.0.6.2271
 - FF-1429 - Updated Microsoft.NET.Test.Sdk to 17.4.0
+- FF-1429 - Updated Microsoft.Extensions to 7.0.0
 ### Removed
 ### Deployment Changes
 
