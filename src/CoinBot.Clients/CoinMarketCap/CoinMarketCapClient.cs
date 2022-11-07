@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -42,6 +43,7 @@ public sealed class CoinMarketCapClient : CoinClientBase, ICoinClient
     ///     get the list of coin info from coinmarketcap
     /// </summary>
     /// <returns></returns>
+    [SuppressMessage(category: "codecracker.CSharp", checkId: "CSE007: Handle disposal correctly", Justification = "Handled by the using statement.")]
     public async Task<IReadOnlyCollection<ICoinInfo>> GetCoinInfoAsync()
     {
         try
@@ -70,6 +72,7 @@ public sealed class CoinMarketCapClient : CoinClientBase, ICoinClient
     ///     update the global info from coinmarketcap
     /// </summary>
     /// <returns></returns>
+    [SuppressMessage(category: "codecracker.CSharp", checkId: "CSE007: Handle disposal correctly", Justification = "Handled by the using statement.")]
     public async Task<IGlobalInfo?> GetGlobalInfoAsync()
     {
         try

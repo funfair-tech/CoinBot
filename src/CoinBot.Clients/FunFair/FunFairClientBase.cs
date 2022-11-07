@@ -103,7 +103,7 @@ public abstract class FunFairClientBase : CoinClientBase
             {
                 if (!response.IsSuccessStatusCode)
                 {
-                    this.Logger.LogError($"Failed to retrieve prices for {tokenSymbol} in {fiatCurrencySymbol}: Http Error: {response.StatusCode}");
+                    this.Logger.LogError($"Failed to retrieve prices for {tokenSymbol} in {fiatCurrencySymbol}: Http Error: {response.StatusCode.GetName()}");
 
                     return null;
                 }

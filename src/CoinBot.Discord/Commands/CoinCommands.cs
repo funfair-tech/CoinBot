@@ -38,45 +38,7 @@ public sealed class CoinCommands : CommandBase
 
                 if (currency?.IsFiat == false)
                 {
-                    EmbedBuilder builder = new();
-                    builder.WithTitle(currency.GetTitle());
-
-                    CoinMarketCapCoin? details = currency.Getdetails<CoinMarketCapCoin>();
-
-                    if (details != null)
-                    {
-                        builder.Color = details.DayChange > 0
-                            ? Color.Green
-                            : Color.Red;
-                        AddAuthor(builder);
-
-                        builder.WithDescription(details.GetDescription());
-                        builder.WithUrl(details.Url);
-
-                        if (currency.ImageUrl != null)
-                        {
-                            builder.WithThumbnailUrl(currency.ImageUrl);
-                        }
-
-                        builder.AddField(name: "Price", details.GetPrice());
-                        builder.AddField(name: "Change", details.GetChange());
-                        AddFooter(builder: builder, dateTime: details.LastUpdated);
-                    }
-                    else
-                    {
-                        ICoinInfo walletDetails = this.GetCoinInfo(currency);
-
-                        AddAuthor(builder);
-
-                        if (currency.ImageUrl != null)
-                        {
-                            builder.WithThumbnailUrl(currency.ImageUrl);
-                        }
-
-                        builder.AddField(name: "Price", walletDetails.GetPrice());
-
-                        AddFooter(builder: builder, dateTime: walletDetails.LastUpdated);
-                    }
+                    EmbedBuilder builder = this.BuildEmbed(currency);
 
                     await this.ReplyAsync(message: string.Empty, isTTS: false, builder.Build());
                 }
@@ -91,6 +53,51 @@ public sealed class CoinCommands : CommandBase
                 await this.ReplyAsync(message: "oops, something went wrong, sorry!");
             }
         }
+    }
+
+    private EmbedBuilder BuildEmbed(Currency currency)
+    {
+        EmbedBuilder builder = new();
+        builder.WithTitle(currency.GetTitle());
+
+        CoinMarketCapCoin? details = currency.Getdetails<CoinMarketCapCoin>();
+
+        if (details != null)
+        {
+            builder.Color = details.DayChange > 0
+                ? Color.Green
+                : Color.Red;
+            AddAuthor(builder);
+
+            builder.WithDescription(details.GetDescription());
+            builder.WithUrl(details.Url);
+
+            if (currency.ImageUrl != null)
+            {
+                builder.WithThumbnailUrl(currency.ImageUrl);
+            }
+
+            builder.AddField(name: "Price", details.GetPrice());
+            builder.AddField(name: "Change", details.GetChange());
+            AddFooter(builder: builder, dateTime: details.LastUpdated);
+        }
+        else
+        {
+            ICoinInfo walletDetails = this.GetCoinInfo(currency);
+
+            AddAuthor(builder);
+
+            if (currency.ImageUrl != null)
+            {
+                builder.WithThumbnailUrl(currency.ImageUrl);
+            }
+
+            builder.AddField(name: "Price", walletDetails.GetPrice());
+
+            AddFooter(builder: builder, dateTime: walletDetails.LastUpdated);
+        }
+
+        return builder;
     }
 
     private ICoinInfo GetCoinInfo(Currency currency)

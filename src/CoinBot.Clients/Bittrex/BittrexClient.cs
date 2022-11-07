@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
@@ -75,6 +76,7 @@ public sealed class BittrexClient : CoinClientBase, IMarketClient
         }
     }
 
+    [SuppressMessage(category: "codecracker.CSharp", checkId: "CSE007: Handle disposal correctly", Justification = "Handled by the using statement.")]
     private async Task<IReadOnlyList<BittrexCurrencyDto>> GetCurrenciesAsync()
     {
         HttpClient httpClient = this.CreateHttpClient();
@@ -102,6 +104,7 @@ public sealed class BittrexClient : CoinClientBase, IMarketClient
         }
     }
 
+    [SuppressMessage(category: "Philips.CodeAnalysis.DuplicateCodeAnalyzer", checkId: "PH2071: Duplicate shape", Justification = "Needs review")]
     private MarketSummaryDto? CreateMarketSummaryDto(BittrexMarketSummaryDto marketSummary, ICoinBuilder builder)
     {
         // always look at the quoted currency first as if that does not exist, then no point creating doing any more
@@ -119,18 +122,15 @@ public sealed class BittrexClient : CoinClientBase, IMarketClient
             return null;
         }
 
-        return new(market: this.Name,
-                   baseCurrency: baseCurrency,
-                   marketCurrency: marketCurrency,
-                   volume: marketSummary.BaseVolume,
-                   last: marketSummary.Last,
-                   lastUpdated: marketSummary.TimeStamp);
+        return new(market: this.Name, baseCurrency: baseCurrency, marketCurrency: marketCurrency, volume: marketSummary.BaseVolume, last: marketSummary.Last, lastUpdated: marketSummary.TimeStamp);
     }
 
     /// <summary>
     ///     Get the market summaries.
     /// </summary>
     /// <returns></returns>
+    [SuppressMessage(category: "Philips.CodeAnalysis.DuplicateCodeAnalyzer", checkId: "PH2071: Duplicate shape", Justification = "Needs review")]
+    [SuppressMessage(category: "codecracker.CSharp", checkId: "CSE007: Handle disposal correctly", Justification = "Handled by the using statement.")]
     private async Task<IReadOnlyList<BittrexMarketSummaryDto>> GetMarketSummariesAsync()
     {
         HttpClient httpClient = this.CreateHttpClient();

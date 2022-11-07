@@ -40,8 +40,8 @@ public sealed class CurrencyManager : ICurrencyListUpdater
     void ICurrencyListUpdater.Update(IReadOnlyList<Currency> currencies, IGlobalInfo? globalInfo)
     {
         this._logger.LogInformation(message: "Currencies updated");
-        this._coinInfoBySymbol = currencies.ToDictionary(keySelector: key => key.Symbol, elementSelector: value => value);
-        this._coinInfoByName = currencies.ToDictionary(keySelector: key => key.Name, elementSelector: value => value);
+        this._coinInfoBySymbol = currencies.ToDictionary(keySelector: key => key.Symbol, elementSelector: value => value, comparer: StringComparer.Ordinal);
+        this._coinInfoByName = currencies.ToDictionary(keySelector: key => key.Name, elementSelector: value => value, comparer: StringComparer.Ordinal);
         this.GlobalInfo = globalInfo;
     }
 

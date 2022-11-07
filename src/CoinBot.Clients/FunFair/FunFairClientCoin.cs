@@ -22,7 +22,7 @@ public sealed class FunFairClientCoin : FunFairClientBase, ICoinClient
 
         return source.RemoveNulls()
                      .Where(predicate: price => price.FiatCurrencySymbol == @"USD")
-                     .Select(this.CreateCoinInfo)
+                     .Select(CreateCoinInfo)
                      .ToList();
     }
 
@@ -34,7 +34,7 @@ public sealed class FunFairClientCoin : FunFairClientBase, ICoinClient
         return Task.FromResult(none);
     }
 
-    private ICoinInfo CreateCoinInfo(FunFairWalletPriceResultPairDto item)
+    private static ICoinInfo CreateCoinInfo(FunFairWalletPriceResultPairDto item)
     {
         return new FunFairWalletCoin(priceUsd: item.Price, symbol: item.TokenSymbol, lastUpdated: item.LastUpdated);
     }

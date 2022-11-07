@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using CoinBot.Clients.Extensions;
 using CoinBot.Core;
@@ -68,6 +69,7 @@ internal sealed class Startup
     /// </summary>
     /// <param name="provider">The <see cref="IServiceProvider" />.</param>
     /// <returns></returns>
+    [SuppressMessage(category: "codecracker.CSharp", checkId: "CSE007: Handle disposal correctly", Justification = "Lives for program lifetime")]
     private static async Task RunAsync(IServiceProvider provider)
     {
         ILoggerFactory loggerFactory = provider.GetRequiredService<ILoggerFactory>();
