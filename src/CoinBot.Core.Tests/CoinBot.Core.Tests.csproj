@@ -42,7 +42,7 @@
   <ItemGroup>
     <PackageReference Include="AsyncFixer" Version="1.6.0" PrivateAssets="All"/>
     <PackageReference Include="codecracker.CSharp" Version="1.1.0" PrivateAssets="All"/>
-    <PackageReference Include="Credfeto.Enumeration.Source.Generation" Version="0.0.5.7" PrivateAssets="All"/>
+    <PackageReference Include="Credfeto.Enumeration.Source.Generation" Version="0.0.6.44-main" PrivateAssets="All"/>
     <PackageReference Include="coverlet.collector" Version="3.2.0" PrivateAssets="All"/>
     <PackageReference Include="coverlet.msbuild" Version="3.2.0" PrivateAssets="All"/>
     <PackageReference Include="FunFair.CodeAnalysis" Version="5.9.0.1493" PrivateAssets="All"/>
