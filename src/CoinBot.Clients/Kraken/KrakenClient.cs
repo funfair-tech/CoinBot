@@ -53,55 +53,7 @@ public sealed class KrakenClient : CoinClientBase, IMarketClient
         {
             IReadOnlyList<KrakenAsset> assets = await this.GetAssetsAsync();
 
-            bool IsValid(KrakenPair pair)
-            {
-                // todo: can't get kraken details on these markets
-                if (pair.PairId.EndsWith(value: ".d", comparisonType: StringComparison.Ordinal))
-                {
-                    return false;
-                }
-
-                string? bc = FindCurrency(assets: assets, search: pair.BaseCurrency);
-
-                if (bc == null)
-                {
-                    return false;
-                }
-
-                string? qc = FindCurrency(assets: assets, search: pair.QuoteCurrency);
-
-                if (qc == null)
-                {
-                    return false;
-                }
-
-                Currency? baseCurrency = builder.Get(bc);
-
-                if (baseCurrency == null)
-                {
-                    return false;
-                }
-
-                Currency? quoteCurrency = builder.Get(qc);
-
-                if (quoteCurrency == null)
-                {
-                    return false;
-                }
-
-                return true;
-            }
-
-            IReadOnlyList<KrakenPair> pairs = await this.GetPairsAsync();
-
-            IReadOnlyList<KrakenTicker?> tickers = await Batched.WhenAllAsync(concurrent: 5,
-                                                                              pairs.Where(IsValid)
-                                                                                   .Select(this.GetTickerAsync));
-
-            return tickers.RemoveNulls()
-                          .Select(selector: m => this.CreateMarketSummaryDto(assets: assets, ticker: m, builder: builder))
-                          .RemoveNulls()
-                          .ToList();
+            return await this.GetResultsAsync(builder: builder, assets: assets);
         }
         catch (Exception e)
         {
@@ -109,6 +61,59 @@ public sealed class KrakenClient : CoinClientBase, IMarketClient
 
             throw;
         }
+    }
+
+    private async Task<IReadOnlyCollection<MarketSummaryDto>> GetResultsAsync(ICoinBuilder builder, IReadOnlyList<KrakenAsset> assets)
+    {
+        bool IsValid(KrakenPair pair)
+        {
+            // todo: can't get kraken details on these markets
+            if (pair.PairId.EndsWith(value: ".d", comparisonType: StringComparison.Ordinal))
+            {
+                return false;
+            }
+
+            string? bc = FindCurrency(assets: assets, search: pair.BaseCurrency);
+
+            if (bc == null)
+            {
+                return false;
+            }
+
+            string? qc = FindCurrency(assets: assets, search: pair.QuoteCurrency);
+
+            if (qc == null)
+            {
+                return false;
+            }
+
+            Currency? baseCurrency = builder.Get(bc);
+
+            if (baseCurrency == null)
+            {
+                return false;
+            }
+
+            Currency? quoteCurrency = builder.Get(qc);
+
+            if (quoteCurrency == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        IReadOnlyList<KrakenPair> pairs = await this.GetPairsAsync();
+
+        IReadOnlyList<KrakenTicker?> tickers = await Batched.WhenAllAsync(concurrent: 5,
+                                                                          pairs.Where(IsValid)
+                                                                               .Select(this.GetTickerAsync));
+
+        return tickers.RemoveNulls()
+                      .Select(selector: m => this.CreateMarketSummaryDto(assets: assets, ticker: m, builder: builder))
+                      .RemoveNulls()
+                      .ToList();
     }
 
     private MarketSummaryDto? CreateMarketSummaryDto(IReadOnlyList<KrakenAsset> assets, KrakenTicker ticker, ICoinBuilder builder)
@@ -178,6 +183,7 @@ public sealed class KrakenClient : CoinClientBase, IMarketClient
     ///     Get the ticker.
     /// </summary>
     /// <returns></returns>
+    [SuppressMessage(category: "codecracker.CSharp", checkId: "CSE007: Handle disposal correctly", Justification = "Handled by the using statement.")]
     private async Task<IReadOnlyList<KrakenAsset>> GetAssetsAsync()
     {
         HttpClient httpClient = this.CreateHttpClient();
@@ -215,6 +221,7 @@ public sealed class KrakenClient : CoinClientBase, IMarketClient
     ///     Get the market summaries.
     /// </summary>
     /// <returns></returns>
+    [SuppressMessage(category: "codecracker.CSharp", checkId: "CSE007: Handle disposal correctly", Justification = "Handled by the using statement.")]
     private async Task<IReadOnlyList<KrakenPair>> GetPairsAsync()
     {
         HttpClient httpClient = this.CreateHttpClient();
@@ -254,6 +261,7 @@ public sealed class KrakenClient : CoinClientBase, IMarketClient
     ///     Get the ticker.
     /// </summary>
     /// <returns></returns>
+    [SuppressMessage(category: "codecracker.CSharp", checkId: "CSE007: Handle disposal correctly", Justification = "Handled by the using statement.")]
     private async Task<KrakenTicker?> GetTickerAsync(KrakenPair pair)
     {
         try

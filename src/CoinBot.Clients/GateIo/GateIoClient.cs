@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
@@ -89,6 +90,7 @@ public sealed class GateIoClient : CoinClientBase, IMarketClient
     ///     Get the market summaries.
     /// </summary>
     /// <returns></returns>
+    [SuppressMessage(category: "codecracker.CSharp", checkId: "CSE007: Handle disposal correctly", Justification = "Handled by the using statement.")]
     private async Task<IReadOnlyList<GateIoTicker>> GetTickersAsync()
     {
         HttpClient httpClient = this.CreateHttpClient();

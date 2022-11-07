@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
@@ -63,6 +64,7 @@ public sealed class GdaxClient : CoinClientBase, IMarketClient
         }
     }
 
+    [SuppressMessage(category: "Philips.CodeAnalysis.DuplicateCodeAnalyzer", checkId: "PH2071: Duplicate shape", Justification = "Needs review")]
     private MarketSummaryDto? CreateMarketSummaryDto(GdaxTicker ticker, ICoinBuilder builder)
     {
         // always look at the quoted currency first as if that does not exist, then no point creating doing any more
@@ -87,6 +89,7 @@ public sealed class GdaxClient : CoinClientBase, IMarketClient
     ///     Get the products.
     /// </summary>
     /// <returns></returns>
+    [SuppressMessage(category: "codecracker.CSharp", checkId: "CSE007: Handle disposal correctly", Justification = "Handled by the using statement.")]
     private async Task<GdaxTicker?> GetTickerAsync(string productId)
     {
         try
@@ -132,6 +135,7 @@ public sealed class GdaxClient : CoinClientBase, IMarketClient
     ///     Get the products.
     /// </summary>
     /// <returns></returns>
+    [SuppressMessage(category: "codecracker.CSharp", checkId: "CSE007: Handle disposal correctly", Justification = "Handled by the using statement.")]
     private async Task<IReadOnlyList<GdaxProduct>> GetProductsAsync()
     {
         HttpClient httpClient = this.CreateHttpClient();

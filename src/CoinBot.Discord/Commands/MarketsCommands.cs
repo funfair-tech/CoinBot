@@ -63,82 +63,7 @@ public sealed class MarketsCommands : CommandBase
                     return;
                 }
 
-                EmbedBuilder builder = new();
-                builder.WithTitle(primaryCurrency.GetTitle());
-                CoinMarketCapCoin? details = primaryCurrency.Getdetails<CoinMarketCapCoin>();
-
-                if (details != null)
-                {
-                    builder.WithUrl(details.Url);
-                }
-
-                AddAuthor(builder);
-
-                if (primaryCurrency.ImageUrl != null)
-                {
-                    builder.WithThumbnailUrl(primaryCurrency.ImageUrl);
-                }
-
-                // Group by exchange, and if looking for a pair orderby volume
-                IEnumerable<IGrouping<string, MarketSummaryDto>> grouped = secondaryCurrency != null
-                    ? markets.GroupBy(keySelector: m => m.Market)
-                             .OrderByDescending(keySelector: g => g.Sum(selector: m => m.Volume * m.Last))
-                    : markets.GroupBy(keySelector: m => m.Market);
-
-                foreach (IGrouping<string, MarketSummaryDto> group in grouped)
-                {
-                    string exchangeName = group.Key;
-                    const int maxResults = 3;
-                    int totalResults = group.Count();
-
-                    StringBuilder marketDetails = new();
-
-                    if (secondaryCurrency == null && totalResults > maxResults)
-                    {
-                        int diff = totalResults - maxResults;
-
-                        if (totalResults < 10)
-                        {
-                            WriteMarketSummaries(builder: marketDetails, group.Take(maxResults));
-
-                            marketDetails.AppendLine()
-                                         .Append("Found ")
-                                         .Append(diff)
-                                         .Append(" more ")
-                                         .Append(primaryCurrency.Symbol)
-                                         .Append(" market(s) at ")
-                                         .Append(exchangeName)
-                                         .AppendLine(":")
-                                         .AppendJoin(separator: ", ",
-                                                     group.Skip(maxResults)
-                                                          .Select(selector: m => $"{m.BaseCurrency.Symbol}/{m.MarketCurrency.Symbol}"))
-                                         .AppendLine();
-                        }
-                        else
-                        {
-                            marketDetails.Append("`Found ")
-                                         .Append(diff)
-                                         .Append(" more ")
-                                         .Append(primaryCurrency.Symbol)
-                                         .Append(" market(s) at ")
-                                         .Append(exchangeName)
-                                         .AppendLine(".`");
-                        }
-                    }
-                    else
-                    {
-                        WriteMarketSummaries(builder: marketDetails, markets: group);
-                    }
-
-                    builder.AddField($"{exchangeName}", value: marketDetails);
-                }
-
-                DateTime? lastUpdated = markets.Min(selector: m => m.LastUpdated);
-                AddFooter(builder: builder, dateTime: lastUpdated);
-
-                string operationName = secondaryCurrency != null
-                    ? $"{primaryCurrency.Name}/{secondaryCurrency.Name}"
-                    : primaryCurrency.Name;
+                EmbedBuilder builder = BuildEmbed(primaryCurrency: primaryCurrency, secondaryCurrency: secondaryCurrency, markets: markets, out string operationName);
 
                 await this.ReplyAsync($"Markets for `{operationName}`:", isTTS: false, builder.Build());
             }
@@ -148,6 +73,106 @@ public sealed class MarketsCommands : CommandBase
                 await this.ReplyAsync(message: "oops, something went wrong, sorry!");
             }
         }
+    }
+
+    private static EmbedBuilder BuildEmbed(Currency primaryCurrency, Currency? secondaryCurrency, List<MarketSummaryDto> markets, out string operationName)
+    {
+        EmbedBuilder builder = new();
+        builder.WithTitle(primaryCurrency.GetTitle());
+        CoinMarketCapCoin? details = primaryCurrency.Getdetails<CoinMarketCapCoin>();
+
+        AddUrl(details: details, builder: builder);
+        AddAuthor(builder);
+        AddImage(primaryCurrency: primaryCurrency, builder: builder);
+
+        // Group by exchange, and if looking for a pair orderby volume
+        IEnumerable<IGrouping<string, MarketSummaryDto>> grouped = secondaryCurrency != null
+            ? markets.GroupBy(keySelector: m => m.Market, comparer: StringComparer.Ordinal)
+                     .OrderByDescending(keySelector: g => g.Sum(selector: m => m.Volume * m.Last))
+            : markets.GroupBy(keySelector: m => m.Market, comparer: StringComparer.Ordinal);
+
+        foreach (IGrouping<string, MarketSummaryDto> group in grouped)
+        {
+            string exchangeName = group.Key;
+            const int maxResults = 3;
+            int totalResults = group.Count();
+
+            StringBuilder marketDetails = new();
+
+            if (secondaryCurrency == null && totalResults > maxResults)
+            {
+                int diff = totalResults - maxResults;
+
+                if (totalResults < 10)
+                {
+                    WriteMarketSummaries(builder: marketDetails, group.Take(maxResults));
+
+                    AppendMarketSummaries(primaryCurrency: primaryCurrency, marketDetails: marketDetails, diff: diff, exchangeName: exchangeName, group: group, maxResults: maxResults);
+                }
+                else
+                {
+                    AppendMarket(primaryCurrency: primaryCurrency, marketDetails: marketDetails, diff: diff, exchangeName: exchangeName);
+                }
+            }
+            else
+            {
+                WriteMarketSummaries(builder: marketDetails, markets: group);
+            }
+
+            builder.AddField($"{exchangeName}", value: marketDetails);
+        }
+
+        DateTime? lastUpdated = markets.Min(selector: m => m.LastUpdated);
+        AddFooter(builder: builder, dateTime: lastUpdated);
+
+        operationName = secondaryCurrency != null
+            ? $"{primaryCurrency.Name}/{secondaryCurrency.Name}"
+            : primaryCurrency.Name;
+
+        return builder;
+    }
+
+    private static void AddImage(Currency primaryCurrency, EmbedBuilder builder)
+    {
+        if (primaryCurrency.ImageUrl != null)
+        {
+            builder.WithThumbnailUrl(primaryCurrency.ImageUrl);
+        }
+    }
+
+    private static void AddUrl(CoinMarketCapCoin? details, EmbedBuilder builder)
+    {
+        if (details != null)
+        {
+            builder.WithUrl(details.Url);
+        }
+    }
+
+    private static void AppendMarket(Currency primaryCurrency, StringBuilder marketDetails, int diff, string exchangeName)
+    {
+        marketDetails.Append("`Found ")
+                     .Append(diff)
+                     .Append(" more ")
+                     .Append(primaryCurrency.Symbol)
+                     .Append(" market(s) at ")
+                     .Append(exchangeName)
+                     .AppendLine(".`");
+    }
+
+    private static void AppendMarketSummaries(Currency primaryCurrency, StringBuilder marketDetails, int diff, string exchangeName, IGrouping<string, MarketSummaryDto> group, int maxResults)
+    {
+        marketDetails.AppendLine()
+                     .Append("Found ")
+                     .Append(diff)
+                     .Append(" more ")
+                     .Append(primaryCurrency.Symbol)
+                     .Append(" market(s) at ")
+                     .Append(exchangeName)
+                     .AppendLine(":")
+                     .AppendJoin(separator: ", ",
+                                 group.Skip(maxResults)
+                                      .Select(selector: m => $"{m.BaseCurrency.Symbol}/{m.MarketCurrency.Symbol}"))
+                     .AppendLine();
     }
 
     private static void WriteMarketSummaries(StringBuilder builder, IEnumerable<MarketSummaryDto> markets)
