@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NonBlocking;
 
@@ -10,7 +11,7 @@ internal sealed class CoinBuilder : ICoinBuilder
 
     public CoinBuilder()
     {
-        this._coinsBySymbol = new();
+        this._coinsBySymbol = new(StringComparer.Ordinal);
 
         this._coinsBySymbol.TryAdd(key: @"EUR", new(symbol: "EUR", name: "Euro") { IsFiat = true });
         this._coinsBySymbol.TryAdd(key: @"USD", new(symbol: "USD", name: "United States dollar") { IsFiat = true });

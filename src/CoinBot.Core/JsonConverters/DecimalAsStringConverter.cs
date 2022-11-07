@@ -18,7 +18,7 @@ public sealed class DecimalAsStringConverter : JsonConverter<decimal>
         {
             string? s = reader.GetString();
 
-            if (!decimal.TryParse(s: s, out decimal converted))
+            if (!decimal.TryParse(s: s, provider: CultureInfo.InvariantCulture, out decimal converted))
             {
                 throw new JsonException($"Can't convert {s} to {nameof(Decimal)}");
             }

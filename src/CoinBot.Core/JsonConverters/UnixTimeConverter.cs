@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -18,7 +19,7 @@ public sealed class UnixTimeConverter : JsonConverter<DateTime>
     /// <inheritdoc />
     public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
     {
-        throw new NotImplementedException();
+        throw new NotSupportedException();
     }
 
     /// <inheritdoc />
@@ -28,7 +29,7 @@ public sealed class UnixTimeConverter : JsonConverter<DateTime>
         {
             string? value = reader.GetString();
 
-            long seconds = long.Parse(value ?? string.Empty);
+            long seconds = long.Parse(value ?? string.Empty, provider: CultureInfo.InvariantCulture);
 
             return Epoch.AddSeconds(seconds);
         }

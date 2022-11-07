@@ -1,4 +1,6 @@
-﻿namespace CoinBot.Core.Extensions;
+﻿using System.Globalization;
+
+namespace CoinBot.Core.Extensions;
 
 /// <summary>
 ///     <see cref="decimal" /> extension methods.
@@ -17,7 +19,7 @@ public static class DecimalExtensions
     /// <returns></returns>
     public static string AsPrice(this decimal? d)
     {
-        return d?.ToString(format: "#,##0.#################") ?? UNKNOWN_RESPONSE;
+        return d?.ToString(format: "#,##0.#################", provider: CultureInfo.InvariantCulture) ?? UNKNOWN_RESPONSE;
     }
 
     /// <summary>
@@ -27,6 +29,6 @@ public static class DecimalExtensions
     /// <returns></returns>
     public static string AsVolume(this decimal? d)
     {
-        return d?.ToString(format: "N2") ?? UNKNOWN_RESPONSE;
+        return d?.ToString(format: "N2", provider: CultureInfo.InvariantCulture) ?? UNKNOWN_RESPONSE;
     }
 }

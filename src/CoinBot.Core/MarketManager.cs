@@ -41,7 +41,8 @@ public sealed class MarketManager : TickingService
         this._currencyListUpdater = currencyListUpdater;
         this._coinClients = coinClients.ToList() ?? throw new ArgumentNullException(nameof(coinClients));
         this._marketClients = marketClients.ToList() ?? throw new ArgumentNullException(nameof(marketClients));
-        this._exchanges = new ReadOnlyDictionary<string, Exchange>(this._marketClients.ToDictionary(keySelector: client => client.Name, elementSelector: _ => new Exchange()));
+        this._exchanges = new ReadOnlyDictionary<string, Exchange>(
+            this._marketClients.ToDictionary(keySelector: client => client.Name, elementSelector: _ => new Exchange(), comparer: StringComparer.Ordinal));
     }
 
     public IEnumerable<MarketSummaryDto> Get(Currency currency)
@@ -63,9 +64,9 @@ public sealed class MarketManager : TickingService
                 IEnumerable<MarketSummaryDto> markets = exchange.Markets.Where(predicate: m =>
                                                                                           {
                                                                                               if (m.BaseCurrency.Symbol.Equals(value: currency.Symbol,
-                                                                                                      comparisonType: StringComparison.OrdinalIgnoreCase) ||
+                                                                                                                               comparisonType: StringComparison.OrdinalIgnoreCase) ||
                                                                                                   m.MarketCurrency.Symbol.Equals(value: currency.Symbol,
-                                                                                                      comparisonType: StringComparison.OrdinalIgnoreCase))
+                                                                                                                                 comparisonType: StringComparison.OrdinalIgnoreCase))
                                                                                               {
                                                                                                   return true;
                                                                                               }
@@ -102,13 +103,13 @@ public sealed class MarketManager : TickingService
                 IEnumerable<MarketSummaryDto> markets = exchange.Markets.Where(predicate: m =>
                                                                                           {
                                                                                               if (m.BaseCurrency.Symbol.Equals(value: currency1.Symbol,
-                                                                                                      comparisonType: StringComparison.OrdinalIgnoreCase) &&
+                                                                                                                               comparisonType: StringComparison.OrdinalIgnoreCase) &&
                                                                                                   m.MarketCurrency.Symbol.Equals(value: currency2.Symbol,
-                                                                                                      comparisonType: StringComparison.OrdinalIgnoreCase) ||
+                                                                                                                                 comparisonType: StringComparison.OrdinalIgnoreCase) ||
                                                                                                   m.BaseCurrency.Symbol.Equals(value: currency2.Symbol,
-                                                                                                      comparisonType: StringComparison.OrdinalIgnoreCase) &&
+                                                                                                                               comparisonType: StringComparison.OrdinalIgnoreCase) &&
                                                                                                   m.MarketCurrency.Symbol.Equals(value: currency1.Symbol,
-                                                                                                      comparisonType: StringComparison.OrdinalIgnoreCase))
+                                                                                                                                 comparisonType: StringComparison.OrdinalIgnoreCase))
                                                                                               {
                                                                                                   return true;
                                                                                               }
@@ -162,7 +163,7 @@ public sealed class MarketManager : TickingService
         IReadOnlyCollection<ICoinInfo>[] allCoinInfos = await Task.WhenAll(this._coinClients.Select(this.GetCoinInfoAsync));
 
         var cryptoInfos = allCoinInfos.SelectMany(selector: ci => ci)
-                                      .GroupBy(keySelector: c => c.Symbol)
+                                      .GroupBy(keySelector: c => c.Symbol, comparer: StringComparer.Ordinal)
                                       .Select(selector: c => new { Symbol = c.Key, Coins = c.ToArray() });
 
         foreach (var cryptoInfo in cryptoInfos)
