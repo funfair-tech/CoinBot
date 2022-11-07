@@ -2,7 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using Credfeto.Enumeration.Source.Generation.Attributes;
 
-namespace CoinBot.Clients.FunFair;
+namespace CoinBot.Clients.Extensions;
 
 [EnumText(typeof(HttpStatusCode))]
 [SuppressMessage(category: "ReSharper", checkId: "PartialTypeWithSinglePart", Justification = "Needed for generated code")]
