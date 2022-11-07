@@ -46,6 +46,7 @@ public sealed class MarketManager : TickingService
             this._marketClients.ToDictionary(keySelector: client => client.Name, elementSelector: _ => new Exchange(), comparer: StringComparer.Ordinal));
     }
 
+    [SuppressMessage(category: "Philips.CodeAnalysis.DuplicateCodeAnalyzer", checkId: "PH2071: Duplicate shape", Justification = "Needs review")]
     public IEnumerable<MarketSummaryDto> Get(Currency currency)
     {
         List<MarketSummaryDto> results = new();

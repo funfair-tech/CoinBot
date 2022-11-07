@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using CoinBot.Clients.Extensions;
 using CoinBot.Core;
 using CoinBot.Core.Helpers;
 using CoinBot.Core.JsonConverters;
