@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
@@ -64,6 +65,7 @@ public abstract class TickingService
         }
     }
 
+    [SuppressMessage(category: "codecracker.CSharp", checkId: "CSE007: Handle disposal correctly", Justification = "The buffer block is disposed by the caller.")]
     private static BufferBlock<Func<Task>> CreateBufferBlock()
     {
         BufferBlock<Func<Task>> bufferBlock = new();

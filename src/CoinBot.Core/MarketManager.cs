@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -84,6 +85,7 @@ public sealed class MarketManager : TickingService
         return results;
     }
 
+    [SuppressMessage(category: "Philips.CodeAnalysis.DuplicateCodeAnalyzer", checkId: "PH2071: Duplicate shape", Justification = "Needs review")]
     public IEnumerable<MarketSummaryDto> GetPair(Currency currency1, Currency currency2)
     {
         List<MarketSummaryDto> results = new();
