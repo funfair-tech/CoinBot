@@ -40,7 +40,7 @@
   <ItemGroup>
     <PackageReference Include="AsyncFixer" Version="1.6.0" PrivateAssets="All"/>
     <PackageReference Include="codecracker.CSharp" Version="1.1.0" PrivateAssets="All"/>
-    <PackageReference Include="Credfeto.Enumeration.Source.Generation" Version="0.0.6.8" PrivateAssets="all" ExcludeAssets="runtime"/>
+    <PackageReference Include="Credfeto.Enumeration.Source.Generation" Version="0.0.6.8" PrivateAssets="All" ExcludeAssets="runtime"/>
     <PackageReference Include="Discord.Net.Analyzers" Version="3.7.0" PrivateAssets="All"/>
     <PackageReference Include="FunFair.CodeAnalysis" Version="5.9.0.1493" PrivateAssets="All"/>
     <PackageReference Include="Meziantou.Analyzer" Version="1.0.745" PrivateAssets="All"/>
