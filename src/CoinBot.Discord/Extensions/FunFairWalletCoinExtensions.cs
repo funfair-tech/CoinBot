@@ -17,6 +17,6 @@ public static class FunFairWalletCoinExtensions
     /// <returns></returns>
     public static string GetPriceSummary(this FunFairWalletCoin details)
     {
-        return $"{details.PriceUsd.AsUsdPrice(USD_PRICE_PRECISION)}";
+        return details.PriceUsd.AsUsdPrice(USD_PRICE_PRECISION);
     }
 }

@@ -119,7 +119,7 @@ public sealed class MarketsCommands : CommandBase
                 WriteMarketSummaries(builder: marketDetails, markets: group);
             }
 
-            builder.AddField($"{exchangeName}", value: marketDetails);
+            builder.AddField(name: exchangeName, value: marketDetails);
         }
 
         DateTime? lastUpdated = markets.Min(selector: m => m.LastUpdated);
