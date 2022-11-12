@@ -259,6 +259,7 @@ public sealed class KrakenClient : CoinClientBase, IMarketClient
     /// <summary>
     ///     Get the ticker.
     /// </summary>
+    /// <param name="pair">The pair to get</param>
     /// <returns></returns>
     [SuppressMessage(category: "codecracker.CSharp", checkId: "CSE007: Handle disposal correctly", Justification = "Handled by the using statement.")]
     private async Task<KrakenTicker?> GetTickerAsync(KrakenPair pair)

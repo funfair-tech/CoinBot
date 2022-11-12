@@ -88,7 +88,8 @@ public sealed class GdaxClient : CoinClientBase, IMarketClient
     /// <summary>
     ///     Get the products.
     /// </summary>
-    /// <returns></returns>
+    /// <param name="productId">The product id to get</param>
+    /// <returns>The ticker.</returns>
     [SuppressMessage(category: "codecracker.CSharp", checkId: "CSE007: Handle disposal correctly", Justification = "Handled by the using statement.")]
     private async Task<GdaxTicker?> GetTickerAsync(string productId)
     {
