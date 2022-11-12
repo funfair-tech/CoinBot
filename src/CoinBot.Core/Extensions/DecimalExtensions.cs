@@ -23,7 +23,7 @@ public static class DecimalExtensions
     }
 
     /// <summary>
-    ///     todo
+    ///     Formats the <paramref name="d" /> as a volume.
     /// </summary>
     /// <param name="d"></param>
     /// <returns></returns>
