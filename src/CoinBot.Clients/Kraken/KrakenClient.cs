@@ -67,7 +67,6 @@ public sealed class KrakenClient : CoinClientBase, IMarketClient
     {
         bool IsValid(KrakenPair pair)
         {
-            // todo: can't get kraken details on these markets
             if (pair.PairId.EndsWith(value: ".d", comparisonType: StringComparison.Ordinal))
             {
                 return false;
