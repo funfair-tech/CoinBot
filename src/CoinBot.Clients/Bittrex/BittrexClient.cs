@@ -122,7 +122,12 @@ public sealed class BittrexClient : CoinClientBase, IMarketClient
             return null;
         }
 
-        return new(market: this.Name, baseCurrency: baseCurrency, marketCurrency: marketCurrency, volume: marketSummary.BaseVolume, last: marketSummary.Last, lastUpdated: marketSummary.TimeStamp);
+        return new(market: this.Name,
+                   baseCurrency: baseCurrency,
+                   marketCurrency: marketCurrency,
+                   volume: marketSummary.BaseVolume,
+                   last: marketSummary.Last,
+                   lastUpdated: marketSummary.TimeStamp);
     }
 
     /// <summary>

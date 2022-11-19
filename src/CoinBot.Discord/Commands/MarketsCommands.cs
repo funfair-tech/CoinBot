@@ -107,7 +107,12 @@ public sealed class MarketsCommands : CommandBase
                 {
                     WriteMarketSummaries(builder: marketDetails, group.Take(maxResults));
 
-                    AppendMarketSummaries(primaryCurrency: primaryCurrency, marketDetails: marketDetails, diff: diff, exchangeName: exchangeName, group: group, maxResults: maxResults);
+                    AppendMarketSummaries(primaryCurrency: primaryCurrency,
+                                          marketDetails: marketDetails,
+                                          diff: diff,
+                                          exchangeName: exchangeName,
+                                          group: group,
+                                          maxResults: maxResults);
                 }
                 else
                 {
@@ -159,7 +164,12 @@ public sealed class MarketsCommands : CommandBase
                      .AppendLine(".`");
     }
 
-    private static void AppendMarketSummaries(Currency primaryCurrency, StringBuilder marketDetails, int diff, string exchangeName, IGrouping<string, MarketSummaryDto> group, int maxResults)
+    private static void AppendMarketSummaries(Currency primaryCurrency,
+                                              StringBuilder marketDetails,
+                                              int diff,
+                                              string exchangeName,
+                                              IGrouping<string, MarketSummaryDto> group,
+                                              int maxResults)
     {
         marketDetails.AppendLine()
                      .Append("Found ")
