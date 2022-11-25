@@ -11,10 +11,10 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 - FF-3881 - Updated DotNet SDK to 7.0.100
 - FF-1429 - Updated Microsoft.VisualStudio.Threading.Analyzers to 17.4.27
 - FF-1429 - Updated Philips.CodeAnalysis.MaintainabilityAnalyzers to 1.2.30
-- FF-1429 - Updated Meziantou.Analyzer to 1.0.750
 - FF-1429 - Updated Credfeto.Enumeration.Source.Generation to 1.0.0.12
 - FF-1429 - Updated SonarAnalyzer.CSharp to 8.49.0.57237
 - FF-1429 - Updated FunFair.Test.Common to 6.0.9.2379
+- FF-1429 - Updated Meziantou.Analyzer to 1.0.752
 ### Removed
 ### Deployment Changes
 
