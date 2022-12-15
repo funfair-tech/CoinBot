@@ -9,6 +9,7 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Fixed
 ### Changed
 - FF-1429 - Updated FunFair.Test.Common to 6.0.10.2422
+- FF-1429 - Updated Credfeto.Enumeration.Source.Generation to 1.0.1.13
 ### Removed
 ### Deployment Changes
 
