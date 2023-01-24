@@ -8,9 +8,9 @@ Please ADD ALL Changes to the UNRELEASED SECTION and not a specific release
 ### Added
 ### Fixed
 ### Changed
-- FF-1429 - Updated FunFair.Test.Common to 6.0.17.2561
 - FF-1429 - Updated NSubstitute.Analyzers.CSharp to 1.0.16
 - FF-1429 - Updated Meziantou.Analyzer to 2.0.13
+- FF-1429 - Updated FunFair.Test.Common to 6.0.18.2581
 ### Removed
 ### Deployment Changes
 
