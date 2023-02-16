@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 using CoinBot.Core;
 using CoinBot.Core.Extensions;
@@ -66,14 +67,14 @@ public sealed class PoloniexClient : CoinClientBase, IMarketClient
 
     private MarketSummaryDto? CreateMarketSummaryDto(PoloniexTicker ticker, ICoinBuilder builder)
     {
-        Currency? baseCurrency = builder.Get(ticker.Pair.Substring(startIndex: 0, ticker.Pair.IndexOf(value: '_')));
+        Currency? baseCurrency = builder.Get(ticker.Pair.Substring(startIndex: 0, ticker.Pair.IndexOf(value: '_', comparisonType: StringComparison.Ordinal)));
 
         if (baseCurrency == null)
         {
             return null;
         }
 
-        Currency? marketCurrency = builder.Get(ticker.Pair.Substring(ticker.Pair.IndexOf(value: '_') + 1));
+        Currency? marketCurrency = builder.Get(ticker.Pair.Substring(ticker.Pair.IndexOf(value: '_', comparisonType: StringComparison.Ordinal) + 1));
 
         if (marketCurrency == null)
         {
@@ -92,11 +93,11 @@ public sealed class PoloniexClient : CoinClientBase, IMarketClient
     {
         HttpClient httpClient = this.CreateHttpClient();
 
-        using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "public?command=returnTicker", uriKind: UriKind.Relative)))
+        using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "public?command=returnTicker", uriKind: UriKind.Relative), cancellationToken: CancellationToken.None))
         {
             response.EnsureSuccessStatusCode();
 
-            string json = await response.Content.ReadAsStringAsync();
+            string json = await response.Content.ReadAsStringAsync(CancellationToken.None);
 
             try
             {

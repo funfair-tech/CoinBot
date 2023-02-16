@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 using CoinBot.Core;
 using CoinBot.Core.Extensions;
@@ -69,14 +70,14 @@ public sealed class GateIoClient : CoinClientBase, IMarketClient
     private MarketSummaryDto? CreateMarketSummaryDto(GateIoTicker marketSummary, ICoinBuilder builder)
     {
         // always look at the quoted currency first as if that does not exist, then no point creating doing any more
-        Currency? marketCurrency = builder.Get(marketSummary.Pair.Substring(marketSummary.Pair.IndexOf(PAIR_SEPARATOR) + 1));
+        Currency? marketCurrency = builder.Get(marketSummary.Pair.Substring(marketSummary.Pair.IndexOf(value: PAIR_SEPARATOR, comparisonType: StringComparison.Ordinal) + 1));
 
         if (marketCurrency == null)
         {
             return null;
         }
 
-        Currency? baseCurrency = builder.Get(marketSummary.Pair.Substring(startIndex: 0, marketSummary.Pair.IndexOf(PAIR_SEPARATOR)));
+        Currency? baseCurrency = builder.Get(marketSummary.Pair.Substring(startIndex: 0, marketSummary.Pair.IndexOf(value: PAIR_SEPARATOR, comparisonType: StringComparison.Ordinal)));
 
         if (baseCurrency == null)
         {
@@ -95,11 +96,11 @@ public sealed class GateIoClient : CoinClientBase, IMarketClient
     {
         HttpClient httpClient = this.CreateHttpClient();
 
-        using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "tickers", uriKind: UriKind.Relative)))
+        using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "tickers", uriKind: UriKind.Relative), cancellationToken: CancellationToken.None))
         {
             response.EnsureSuccessStatusCode();
 
-            string json = await response.Content.ReadAsStringAsync();
+            string json = await response.Content.ReadAsStringAsync(CancellationToken.None);
 
             try
             {

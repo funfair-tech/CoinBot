@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 using CoinBot.Core;
 using CoinBot.Core.Extensions;
@@ -81,11 +82,11 @@ public sealed class BittrexClient : CoinClientBase, IMarketClient
     {
         HttpClient httpClient = this.CreateHttpClient();
 
-        using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "getcurrencies", uriKind: UriKind.Relative)))
+        using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "getcurrencies", uriKind: UriKind.Relative), cancellationToken: CancellationToken.None))
         {
             response.EnsureSuccessStatusCode();
 
-            string content = await response.Content.ReadAsStringAsync();
+            string content = await response.Content.ReadAsStringAsync(CancellationToken.None);
 
             try
             {
@@ -108,26 +109,21 @@ public sealed class BittrexClient : CoinClientBase, IMarketClient
     private MarketSummaryDto? CreateMarketSummaryDto(BittrexMarketSummaryDto marketSummary, ICoinBuilder builder)
     {
         // always look at the quoted currency first as if that does not exist, then no point creating doing any more
-        Currency? marketCurrency = builder.Get(marketSummary.MarketName.Substring(marketSummary.MarketName.IndexOf(value: '-') + 1));
+        Currency? marketCurrency = builder.Get(marketSummary.MarketName.Substring(marketSummary.MarketName.IndexOf(value: '-', comparisonType: StringComparison.Ordinal) + 1));
 
         if (marketCurrency == null)
         {
             return null;
         }
 
-        Currency? baseCurrency = builder.Get(marketSummary.MarketName.Substring(startIndex: 0, marketSummary.MarketName.IndexOf(value: '-')));
+        Currency? baseCurrency = builder.Get(marketSummary.MarketName.Substring(startIndex: 0, marketSummary.MarketName.IndexOf(value: '-', comparisonType: StringComparison.Ordinal)));
 
         if (baseCurrency == null)
         {
             return null;
         }
 
-        return new(market: this.Name,
-                   baseCurrency: baseCurrency,
-                   marketCurrency: marketCurrency,
-                   volume: marketSummary.BaseVolume,
-                   last: marketSummary.Last,
-                   lastUpdated: marketSummary.TimeStamp);
+        return new(market: this.Name, baseCurrency: baseCurrency, marketCurrency: marketCurrency, volume: marketSummary.BaseVolume, last: marketSummary.Last, lastUpdated: marketSummary.TimeStamp);
     }
 
     /// <summary>
@@ -140,11 +136,11 @@ public sealed class BittrexClient : CoinClientBase, IMarketClient
     {
         HttpClient httpClient = this.CreateHttpClient();
 
-        using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "getmarketsummaries", uriKind: UriKind.Relative)))
+        using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "getmarketsummaries", uriKind: UriKind.Relative), cancellationToken: CancellationToken.None))
         {
             response.EnsureSuccessStatusCode();
 
-            string content = await response.Content.ReadAsStringAsync();
+            string content = await response.Content.ReadAsStringAsync(CancellationToken.None);
 
             try
             {

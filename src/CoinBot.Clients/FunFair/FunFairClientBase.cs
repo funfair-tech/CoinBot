@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 using CoinBot.Clients.Extensions;
 using CoinBot.Core;
@@ -100,7 +101,7 @@ public abstract class FunFairClientBase : CoinClientBase
 
             Uri uri = BuildUri(tokenSymbol: tokenSymbol, fiatCurrencySymbol: fiatCurrencySymbol);
 
-            using (HttpResponseMessage response = await client.GetAsync(uri))
+            using (HttpResponseMessage response = await client.GetAsync(requestUri: uri, cancellationToken: CancellationToken.None))
             {
                 if (!response.IsSuccessStatusCode)
                 {
@@ -109,7 +110,7 @@ public abstract class FunFairClientBase : CoinClientBase
                     return null;
                 }
 
-                string msg = await response.Content.ReadAsStringAsync();
+                string msg = await response.Content.ReadAsStringAsync(CancellationToken.None);
 
                 if (string.IsNullOrWhiteSpace(msg))
                 {

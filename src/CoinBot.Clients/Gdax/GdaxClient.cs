@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 using CoinBot.Core;
 using CoinBot.Core.Extensions;
@@ -68,14 +69,14 @@ public sealed class GdaxClient : CoinClientBase, IMarketClient
     private MarketSummaryDto? CreateMarketSummaryDto(GdaxTicker ticker, ICoinBuilder builder)
     {
         // always look at the quoted currency first as if that does not exist, then no point creating doing any more
-        Currency? marketCurrency = builder.Get(ticker.ProductId.Substring(ticker.ProductId.IndexOf(value: '-') + 1));
+        Currency? marketCurrency = builder.Get(ticker.ProductId.Substring(ticker.ProductId.IndexOf(value: '-', comparisonType: StringComparison.Ordinal) + 1));
 
         if (marketCurrency == null)
         {
             return null;
         }
 
-        Currency? baseCurrency = builder.Get(ticker.ProductId.Substring(startIndex: 0, ticker.ProductId.IndexOf(value: '-')));
+        Currency? baseCurrency = builder.Get(ticker.ProductId.Substring(startIndex: 0, ticker.ProductId.IndexOf(value: '-', comparisonType: StringComparison.Ordinal)));
 
         if (baseCurrency == null)
         {
@@ -97,11 +98,11 @@ public sealed class GdaxClient : CoinClientBase, IMarketClient
         {
             HttpClient httpClient = this.CreateHttpClient();
 
-            using (HttpResponseMessage response = await httpClient.GetAsync(new Uri($"products/{productId}/ticker", uriKind: UriKind.Relative)))
+            using (HttpResponseMessage response = await httpClient.GetAsync(new Uri($"products/{productId}/ticker", uriKind: UriKind.Relative), cancellationToken: CancellationToken.None))
             {
                 response.EnsureSuccessStatusCode();
 
-                string json = await response.Content.ReadAsStringAsync();
+                string json = await response.Content.ReadAsStringAsync(CancellationToken.None);
 
                 try
                 {
@@ -141,11 +142,11 @@ public sealed class GdaxClient : CoinClientBase, IMarketClient
     {
         HttpClient httpClient = this.CreateHttpClient();
 
-        using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "products/", uriKind: UriKind.Relative)))
+        using (HttpResponseMessage response = await httpClient.GetAsync(new Uri(uriString: "products/", uriKind: UriKind.Relative), cancellationToken: CancellationToken.None))
         {
             response.EnsureSuccessStatusCode();
 
-            string json = await response.Content.ReadAsStringAsync();
+            string json = await response.Content.ReadAsStringAsync(CancellationToken.None);
 
             try
             {

@@ -14,7 +14,7 @@ public sealed class UnixTimeConverter : JsonConverter<DateTime>
     ///     The <see cref="DateTime" /> to start with when adding seconds.
     /// </summary>
     /// <remarks>It is a static readonly field for performance reasons.</remarks>
-    private static readonly DateTime Epoch = new(year: 1970, month: 1, day: 1, hour: 0, minute: 0, second: 0, kind: DateTimeKind.Utc);
+    private static readonly DateTime Epoch = DateTime.UnixEpoch;
 
     /// <inheritdoc />
     public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
